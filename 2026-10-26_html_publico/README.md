@@ -49,6 +49,7 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 - **Dicas com quantidades absolutas:** passar o mouse sobre um percentual mostra, nesta ordem, 1º turno, 2º turno e diferença (pedido do Vinicius), e a base do percentual nos dois turnos.
   - Quando votos e percentual andam em sentidos opostos, a dica explica. Exemplo de Sergipe: Flávio ganhou 15.515 votos (+3,7%), mas os válidos cresceram 4,3%, e o percentual caiu 0,16 ponto.
   - Desde 26/10/2026, pedido do Vinicius, essas dicas são uma tabela 1º turno × 2º turno × diferença, com a coluna do turno em destaque. Vale para os mapas (Lula, Flávio, vantagem, comparecimento), as tabelas (votos, base, %) e o resultado nacional do 2º turno.
+  - Nos mapas, a tabela tem dois blocos, também a pedido do Vinicius: "Percentuais" e "Em números" (votos de Lula e de Flávio, válidos, compareceram, aptos). No celular ela fica compacta: mede 337 px no Sudeste, numa tela de 390 px.
 - **Tela parada ao trocar filtro:** `executarSemPular` compensa a rolagem para o controle clicado ficar no mesmo lugar. Vale para a base, o mapa e o recorte, e a ancoragem automática do navegador foi desligada para não somar duas correções.
   - Testado em 26/10/2026: os cinco controles ficam no mesmo pixel.
 - **Largura e rolagem lateral:**

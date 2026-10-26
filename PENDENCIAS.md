@@ -73,3 +73,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Virada com rótulos "à frente por" / "puxou"; Sankey por região de quem anulou ou não votou → Lula (Sudeste 42%, Nordeste 31%).
   - ✅ Poda da migração: saíram os cartões de sensibilidade e de crescimento.
   - ✅ Dicas dos mapas, tabelas e resultado em formato de tabela (1º × 2º × diferença).
+  - ✅ Dica dos mapas com números absolutos (votos, válidos, compareceram, aptos).

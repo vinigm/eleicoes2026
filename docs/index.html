@@ -765,6 +765,22 @@ th button:hover { color: var(--tinta); }
 .dica .dica-tabela td { font-weight: 500; color: var(--tinta-2); }
 .dica .dica-tabela .dica-coluna-destaque { font-weight: 700; color: var(--tinta); }
 .dica .dica-tabela td.valor-negativo { color: var(--texto-negativo); }
+/* Rótulos das linhas podem quebrar e, no celular, a tabela fica mais compacta para caber na tela. */
+.dica .dica-tabela th[scope="row"] { white-space: normal; }
+@media (max-width: 560px) {
+  .dica .dica-tabela { font-size: 11.5px; }
+  .dica .dica-tabela th, .dica .dica-tabela td { padding-left: 8px; }
+  .dica .dica-tabela th:first-child { padding-left: 0; }
+}
+.dica .dica-tabela .dica-grupo th {
+  padding: 8px 0 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+  border-bottom: 1px solid var(--grade);
+}
 
 .visualmente-oculto {
   position: absolute;
@@ -1165,6 +1181,16 @@ function criarTabelaDica(tabela) {
   const corpo = document.createElement("tbody");
   for (const linha of tabela.linhas) {
     const elementoLinha = document.createElement("tr");
+    if (linha.grupo) {
+      // Subtítulo de bloco dentro da tabela, ocupando todas as colunas.
+      elementoLinha.className = "dica-grupo";
+      const celulaGrupo = document.createElement("th");
+      celulaGrupo.colSpan = tabela.colunas.length + 1;
+      celulaGrupo.textContent = linha.grupo;
+      elementoLinha.appendChild(celulaGrupo);
+      corpo.appendChild(elementoLinha);
+      continue;
+    }
     const rotulo = document.createElement("th");
     rotulo.scope = "row";
     if (linha.cor) {
@@ -1929,6 +1955,11 @@ function gruposEleitorado(linha) {
 
 function textoVariacaoInteiro(valor) {
   return setaVariacao(valor, 0.5) + formatarInteiro(Math.round(Math.abs(valor)));
+}
+
+function linhaContagemDica(rotulo, cor, valor1t, valor2t) {
+  // Linha de números absolutos na tabela da dica: 1º turno, 2º turno e a diferença.
+  return { rotulo: rotulo, cor: cor, valores: [formatarInteiro(valor1t), formatarInteiro(valor2t), textoVariacaoInteiro(valor2t - valor1t)] };
 }
 
 function primeiraMaiuscula(texto) {
@@ -2726,10 +2757,17 @@ function criarMosaico(turno, escala) {
           colunas: ["1º turno", "2º turno", "Diferença"],
           colunaDestaque: turno - 1,
           linhas: [
+            { grupo: "Percentuais" },
             { rotulo: "Lula", cor: lerCor("--cor-lula"), valores: [formatarPercentual(fonte.pct_lula_1t, 2), formatarPercentual(fonte.pct_lula_2t, 2), textoVariacaoPontos(fonte.pct_lula_2t - fonte.pct_lula_1t, 2)] },
             { rotulo: "Flávio", cor: lerCor("--cor-flavio"), valores: [formatarPercentual(fonte.pct_flavio_1t, 2), formatarPercentual(flavio2t, 2), textoVariacaoPontos(flavio2t - fonte.pct_flavio_1t, 2)] },
             { rotulo: "Vantagem de Lula", valores: [formatarNumeroComSinal(vantagem1t, 2), formatarNumeroComSinal(vantagem2t, 2), textoVariacaoPontos(vantagem2t - vantagem1t, 2)] },
             { rotulo: "Comparecimento", valores: [formatarPercentual(fonte.comparecimento_pct_1t, 2), formatarPercentual(fonte.comparecimento_pct_2t, 2), textoVariacaoPontos(fonte.comparecimento_pct_2t - fonte.comparecimento_pct_1t, 2)] },
+            { grupo: "Em números" },
+            linhaContagemDica("Votos de Lula", lerCor("--cor-lula"), fonte.votos_1t_13, fonte.votos_2t_13),
+            linhaContagemDica("Votos de Flávio", lerCor("--cor-flavio"), fonte.votos_1t_22, fonte.votos_2t_22),
+            linhaContagemDica("Votos válidos", null, fonte.validos_1t, fonte.validos_2t),
+            linhaContagemDica("Compareceram", null, fonte.comparecimento_1t, fonte.comparecimento_2t),
+            linhaContagemDica("Eleitores aptos", null, fonte.aptos_1t, fonte.aptos_2t),
           ],
         },
         nota: nota,
