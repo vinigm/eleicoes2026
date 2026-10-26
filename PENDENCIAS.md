@@ -54,6 +54,10 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
 
 - ⏳ Religião por município (Censo 2022) como próximo índice da dispersão: confirmar se as tabelas de religião descem a município.
 
+- ⏳ Bairros (levantado pelo Vinicius, não decidido): zona não serve (POA: 10 zonas, 346 locais); caminho = seção → local de votação → bairro/coordenadas (`eleitorado_local_votacao_2026.zip`, 167 MB). Depende do boletim de urna do 2º turno.
+
+- ⏳ Voto por escolaridade (levantado pelo Vinicius, não decidido): só pesquisa mede; estimativa possível = inferência ecológica por seção com `perfil_eleitor_secao_2026` (cadastro: 11,2% com superior, subestimado). Depende do 2º turno por seção.
+
 ---
 
 ## Registro cronológico
@@ -90,3 +94,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Dispersão sem reta de tendência e com eixo simétrico (só Lula … empate … só Flávio).
   - ✅ Dispersão: cards Lula × Flávio por painel (depois reduzidos e discretos); legenda e texto do cartão retirados.
   - ✅ Dispersão: filtro de faixa do índice, com seleção múltipla (resto em cinza; cards = votos das cidades das faixas). Cidades: filtro "Virou" (225). Recálculo independente APROVADO.
+  - ⏳ Bairros e voto por escolaridade avaliados: viáveis só por seção, após o 2º turno sair nos dados abertos.
