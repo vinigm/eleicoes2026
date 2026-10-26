@@ -24,7 +24,8 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
 
 - **HTML público pronto localmente** — `docs/index.html` + `docs/dados.js`, gerado por `2026-10-26_html_publico/`.
   - Verificado no Chrome headless: desktop, celular e modo escuro, sem erro no console.
-  - **Código no GitHub** (`vinigm/eleicoes2026`, branch `main`, 26/10/2026). **Página ainda fora do ar:** falta ativar o GitHub Pages.
+  - **No ar em https://vinigm.github.io/eleicoes2026/** (GitHub Pages, branch `main`, pasta `/docs`, desde 26/10/2026).
+  - Atualizar a página = regenerar `docs/`, fazer commit e push; o Pages republica sozinho.
 
 ## O que NÃO faz (limitações)
 
@@ -41,7 +42,6 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
 
 ## PRONTO para fazer
 
-- Pôr o HTML no ar: ativar o GitHub Pages (branch `main`, pasta `/docs`).
 - Cruzamentos com dados do IBGE pelo `cd_municipio_ibge`.
 
 ## Maquiagem de visualização

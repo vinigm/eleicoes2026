@@ -48,7 +48,7 @@ Criado em: 26/10/2026 · Atualizado em: 26/10/2026
 - **Nunca versionar:** `*.zip` (1,1 GB; arquivo de 452 MB passa do limite de 100 MB do GitHub) e `dados/json_tse/` (milhares de JSONs, regeneráveis pelo script de coleta). Vão para o `.gitignore`.
 - **Pode versionar:** scripts, READMEs, docs vivos e `dados/processados/` (~1,7 MB).
 - **Repo é público:** nada de caminho local, e-mail ou credencial em arquivo versionado.
-- **Objetivo de publicação:** um HTML público com a análise, para o Vinicius mostrar a algumas pessoas.
+- **Página pública:** https://vinigm.github.io/eleicoes2026/ (GitHub Pages servindo `docs/` da branch `main`). Todo push em `docs/` republica a página: confira o HTML localmente antes de enviar.
 
 ---
 

@@ -10,7 +10,7 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
 
 - ✅ Migração por região no HTML: incluída com aviso forte de instabilidade (26/10/2026, Vinicius).
 
-- ⏳ Ativar o GitHub Pages (branch `main`, pasta `/docs`): é o que coloca a página no ar em `vinigm.github.io/eleicoes2026`.
+- ✅ GitHub Pages ativo (branch `main`, pasta `/docs`): página no ar em https://vinigm.github.io/eleicoes2026/ (26/10/2026).
 
 - ✅ Escopo do HTML: UF + região + migração dos eliminados (26/10/2026).
 
@@ -52,4 +52,5 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Inferência ecológica: A e B idênticas; robusto = bloco e origem do crescimento; candidato individual frágil.
   - ✅ HTML público montado e verificado (desktop, celular, escuro); não publicado.
   - ✅ HTML: seletor de região na migração, com aviso de instabilidade por região e link `#regiao=`.
-  - ✅ Primeiro push para o GitHub (52 arquivos + README); página ainda fora do ar até ativar o Pages.
+  - ✅ Primeiro push para o GitHub (52 arquivos + README).
+  - ✅ GitHub Pages ativado; página publicada idêntica à local e renderizando sem erro.
