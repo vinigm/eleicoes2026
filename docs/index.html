@@ -585,7 +585,7 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
   .painel-filtros-cidades .campo-filtro { flex: 1 1 100%; }
   .filtros-cidades select { width: 100%; min-width: 0; }
 }
-/* Card do recorte ao lado da busca: só Lula x% e Flávio y% no 2º turno. */
+/* Card do recorte ao lado da busca: Lula x% e Flávio y% no 2º turno, com os votos embaixo. */
 .selecao-cidades {
   display: flex;
   flex-direction: column;
@@ -598,9 +598,11 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 }
 .rotulo-selecao { font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tinta-2); }
 .valores-selecao { display: flex; flex-wrap: wrap; gap: 4px 22px; }
-.valor-selecao { display: flex; align-items: center; gap: 6px; }
+/* Amostra, nome e % na primeira linha; os votos abreviados ficam embaixo do %. */
+.valor-selecao { display: grid; grid-template-columns: auto auto auto; align-items: center; column-gap: 6px; }
 .valor-selecao .nome-selecao { font-size: 14px; color: var(--tinta-2); }
 .valor-selecao strong { font-size: 24px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.valor-selecao .votos-selecao { grid-column: 3; font-size: 13px; line-height: 1.2; color: var(--tinta-2); font-variant-numeric: tabular-nums; }
 /* Coluna da direita: card de % e, embaixo, o filtro por vencedor com contagens. */
 .coluna-selecao { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
 .filtro-vencedor { margin: 0; }
@@ -1128,6 +1130,7 @@ th button:hover { color: var(--tinta); }
   .filtros-cidades select { padding-right: 30px; background-position: right 10px center; }
   .selecao-cidades { padding: 8px 12px; }
   .valor-selecao strong { font-size: 20px; }
+  .valor-selecao .votos-selecao { font-size: 12px; }
 }
 </style>
 </head>
@@ -1412,6 +1415,24 @@ function formatarQuantidadeEleitores(valor) {
     return "0";
   }
   return "menos de mil";
+}
+
+function formatarVotosAbreviados(valor) {
+  // Votos de um recorte de cidades: abreviado, mas sem esconder o valor de cidades pequenas
+  // ("64,26 mi", "239 mil", "4,7 mil", "812").
+  if (valor >= 1e6) {
+    return formatarMilhoes(valor, 2) + " votos";
+  }
+  if (valor >= 1e4) {
+    return formatarNumero(valor / 1000, 0) + " mil votos";
+  }
+  if (valor >= 1000) {
+    return formatarNumero(valor / 1000, 1) + " mil votos";
+  }
+  if (valor === 1) {
+    return "1 voto";
+  }
+  return formatarInteiro(valor) + " votos";
 }
 
 /* ---------- Cores ---------- */
@@ -5176,6 +5197,11 @@ function renderizarSelecaoCidades(encontradas) {
     const percentual = document.createElement("strong");
     percentual.textContent = totalFinalistas > 0 ? formatarPercentual(100 * candidato.votos / totalFinalistas, 2) : "—";
     valor.appendChild(percentual);
+    const votos = document.createElement("span");
+    votos.className = "votos-selecao";
+    votos.textContent = totalFinalistas > 0 ? formatarVotosAbreviados(candidato.votos) : "";
+    votos.title = formatarInteiro(candidato.votos) + " votos";
+    valor.appendChild(votos);
     valores.appendChild(valor);
   }
   conteiner.appendChild(valores);

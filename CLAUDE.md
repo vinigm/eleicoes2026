@@ -40,6 +40,7 @@ Criado em: 26/10/2026 · Atualizado em: 26/10/2026
 - `*.zip` (raiz) → dados abertos do TSE baixados em 26/10/2026. **Não mover nem descompactar em disco.**
 - `dados/json_tse/` → JSON de divulgação do TSE (cache bruto da coleta).
 - `dados/ibge/` → download bruto da população do IBGE (fora do git).
+- `dados/tse_atualizado_2026-10-26/` → `detalhe_votacao_secao_2026.zip` baixado em 26/10/2026, já com o 2º turno por seção (o da raiz é a versão de 06/10, só 1º turno). Fora do git.
 - `dados/processados/` → bases geradas (parquet/csv). Regeneráveis.
 - `AAAA-MM-DD_descricao/` → scripts de cada etapa, com `README.md` de contexto.
 - `docs/` → HTML público (`index.html` + `dados.js` + `municipios.js`, gerados por `2026-10-26_html_publico/`). Pasta pensada para o GitHub Pages.

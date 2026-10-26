@@ -168,7 +168,8 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
     - Tokens: `--fundo-lula`, `--fundo-flavio`, `--cabecalho-*` e `--titulo-*`, com versões para o claro e o escuro.
   - "Virou" aparece num selo vermelho (`--fundo-virou`) aqui, no mapa e nos cartões de região do resumo.
   - A lista mostra 100 cidades por vez (25 no celular, onde cada uma vira uma ficha), com o botão "Mostrar mais". O padrão é ordenar pelo número de eleitores, maior primeiro.
-  - Ao lado da busca, um card mostra só Lula x% e Flávio y% no 2º turno, a pedido do Vinicius. A conta soma as cidades do recorte: Brasil, estado, cidades encontradas ou a cidade.
+  - Ao lado da busca, um card mostra Lula x% e Flávio y% no 2º turno, a pedido do Vinicius. A conta soma as cidades do recorte: Brasil, estado, cidades encontradas ou a cidade.
+    - Embaixo de cada %, os votos abreviados ("64,26 mi votos", "239 mil votos", "4,7 mil votos"; abaixo de mil, o número exato), também a pedido do Vinicius. O valor exato aparece ao passar o mouse.
     - Conferido em 26/10/2026: Brasil 51,79/48,21; MG 50,43/49,57; exterior 53,86/46,14; Belo Horizonte 49,20/50,80.
   - Embaixo do card, os botões "Todas · N", "Lula ganhou · N" e "Flávio ganhou · N" filtram a lista pelo vencedor do 2º turno, a pedido do Vinicius.
   - O botão "Virou · N" mostra só as cidades em que o vencedor entre os dois finalistas mudou do 1º para o 2º turno (mesma regra do selo vermelho; empate no 2º não conta). Brasil e exterior: 225, sendo 220 para Lula (MG 76) e 5 para Flávio (4 no exterior, 1 em GO), conferido de forma independente.

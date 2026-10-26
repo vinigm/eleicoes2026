@@ -30,13 +30,15 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
 
 - ✅ Primeiro push para `vinigm/eleicoes2026` (26/10/2026): README na raiz, autor com e-mail noreply do GitHub, caminhos absolutos trocados por relativos.
 
-- ⏳ Quando o TSE publicar o 2º turno nos dados abertos: trocar a fonte e reconciliar (checar `NR_TURNO=2` no `detalhe_votacao_munzona_2026.zip`).
+- ⏳ Quando o TSE publicar os votos por candidato do 2º turno (`votacao_candidato_munzona` / `votacao_secao`): trocar a fonte e reconciliar.
 
 - ⏳ Robustez da migração: EI hierárquica (King/Rosen) como segunda opinião, ou dados por seção quando o 2º turno sair nos dados abertos.
 
 ## TSE (externo)
 
-- ⏳ Publicar o 2º turno nos dados abertos (sem prazo; em 26/10/2026 10:42 ainda não havia).
+- ⏳ Publicar votos por candidato, boletim de urna e logs do 2º turno. O detalhe por seção do 2º turno saiu em 26/10/2026 (~12h35) e bate com as âncoras (em `dados/tse_atualizado_2026-10-26/`).
+
+- ⏳ Votos após as 17h (prorrogação do STF): 34.330 (CNN/setup.news) × 35.521 (levantamento nos logs); conferir quando sair o log das urnas do 2º turno.
 
 - ⏳ Publicar o perfil de comparecimento do 2º turno (mostraria quem são os +2,96 mi eleitores a mais).
 
@@ -80,8 +82,7 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Regiões e estados fundidos (Regiões padrão), ▲▼ nos mapas, dicas na ordem 1º/2º/diferença, legenda dos mapas sem texto.
   - ✅ Virada com rótulos "à frente por" / "puxou"; Sankey por região de quem anulou ou não votou → Lula (Sudeste 42%, Nordeste 31%).
   - ✅ Poda da migração: saíram os cartões de sensibilidade e de crescimento.
-  - ✅ Dicas dos mapas, tabelas e resultado em formato de tabela (1º × 2º × diferença).
-  - ✅ Dica dos mapas com números absolutos (votos, válidos, compareceram, aptos).
+  - ✅ Dicas dos mapas, tabelas e resultado em formato de tabela (1º × 2º × diferença), com números absolutos (votos, válidos, compareceram, aptos).
   - ✅ Regiões e estados enxutos: só o mapa do 2º turno; saíram mapa do 1º, tabelas e base eleitorado do cartão.
   - ✅ Resumo executivo no topo: big numbers do Brasil e cartões por região, com 1º turno, 2º turno e variação.
   - ✅ Mapa com filtros na coluna lateral e aviso de uso; seções na ordem da história; seção Cidades (busca + filtro por estado).
@@ -90,10 +91,10 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Cidades: botões "mais petista" / "mais bolsonarista" (Brasil: Carnaubeira da Penha 92,3%; Nova Pádua 90,6%).
   - ✅ Cidades: filtro por faixa de habitantes (até 50 mil … mais de 300 mil) aplicado a todo o recorte.
   - ✅ Mapa de calor tamanho × voto e dispersão alfabetização/PIB × voto por região (IBGE; conferência independente aprovada).
-  - ✅ Dispersão com pontos neutros e faixas "Flávio venceu / Lula venceu"; filtros de cidades em painel destacado e maiores.
-  - ✅ Dispersão sem reta de tendência e com eixo simétrico (só Lula … empate … só Flávio).
+  - ✅ Dispersão com pontos neutros, faixas "Flávio venceu / Lula venceu", sem reta de tendência e eixo simétrico; filtros de cidades em painel destacado.
   - ✅ Dispersão: cards Lula × Flávio por painel (depois reduzidos e discretos); legenda e texto do cartão retirados.
   - ✅ Dispersão: filtro de faixa do índice, com seleção múltipla (resto em cinza; cards = votos das cidades das faixas). Cidades: filtro "Virou" (225). Recálculo independente APROVADO.
   - ⏳ Bairros e voto por escolaridade avaliados: viáveis só por seção, após o 2º turno sair nos dados abertos.
-  - ✅ Revisão no celular (320–768 px): mapa de calor legível, filtros 2 por linha, rótulos cortados corrigidos.
-  - ✅ Celular com layout próprio: sem dica flutuante (mapa mostra detalhes abaixo ao tocar), abas, cidades em ficha curta; 30 → 16 telas.
+  - ✅ Celular (320–768 px): rótulos cortados corrigidos e layout próprio (sem dica flutuante, abas, cidades em ficha curta); 30 → 16 telas.
+  - ✅ TSE publicou o detalhe por seção com o 2º turno: comparecimento, aptos e nominais batem com as âncoras; 1º turno inalterado.
+  - ✅ Card do recorte das cidades com os votos abreviados embaixo do % (SP 200–300 mil: 1,02 × 1,26 mi; Brasil = âncoras).
