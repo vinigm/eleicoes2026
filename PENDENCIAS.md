@@ -24,7 +24,7 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
 
 - 🚫 Cartão "Regiões" separado: removido por redundância com o seletor Regiões | Estados (26/10/2026, Vinicius).
 
-- ⏳ Cartão "De onde veio o crescimento" (seção de migração) repete parte da conclusão: manter (segue o filtro de recorte) ou podar?
+- 🚫 Cartões "De onde veio o crescimento" e "Quanto a estimativa muda conforme o modelo" (sensibilidade): removidos; repetiam a conclusão (26/10/2026, Vinicius).
 
 ## Agente (executa)
 
@@ -71,3 +71,5 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Conclusão "de onde vieram os votos a mais de Lula" (cascata + virada); certificação independente achou e corrigiu a troca direta Flávio → Lula (E3).
   - ✅ Regiões e estados fundidos (Regiões padrão), ▲▼ nos mapas, dicas na ordem 1º/2º/diferença, legenda dos mapas sem texto.
   - ✅ Virada com rótulos "à frente por" / "puxou"; Sankey por região de quem anulou ou não votou → Lula (Sudeste 42%, Nordeste 31%).
+  - ✅ Poda da migração: saíram os cartões de sensibilidade e de crescimento.
+  - ✅ Dicas dos mapas, tabelas e resultado em formato de tabela (1º × 2º × diferença).

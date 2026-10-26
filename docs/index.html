@@ -234,34 +234,6 @@ h2 {
 @media (max-width: 560px) {
   .modo-eleitorado td, .modo-eleitorado th { font-size: 11.5px; }
 }
-/* Faixas de crescimento: mínimo–máximo entre os três modelos + ponto do principal. */
-.linha-faixa {
-  display: grid;
-  grid-template-columns: minmax(160px, 300px) minmax(0, 1fr) 130px;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 14px;
-}
-.nome-faixa { display: flex; align-items: center; gap: 8px; font-size: 14px; }
-.nome-faixa strong { font-weight: 650; }
-.trilho-faixa { position: relative; height: 18px; }
-.trilho-faixa .fundo-faixa { position: absolute; left: 0; right: 0; top: 8px; height: 2px; background: var(--grade); }
-.trilho-faixa .intervalo-faixa { position: absolute; top: 4px; height: 10px; border-radius: 5px; background: currentColor; opacity: 0.35; }
-.trilho-faixa .ponto-faixa {
-  position: absolute; top: 3px; width: 12px; height: 12px; border-radius: 50%;
-  transform: translateX(-50%); background: currentColor; box-shadow: 0 0 0 2px var(--superficie);
-}
-.valor-faixa { font-size: 14px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
-.eixo-faixa { margin-top: -6px; }
-.marcas-faixa { position: relative; height: 16px; font-size: 12px; color: var(--tinta-3); }
-.marcas-faixa span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
-.marcas-faixa span:first-child { transform: none; }
-.marcas-faixa span:last-child { transform: translateX(-100%); }
-@media (max-width: 560px) {
-  .linha-faixa { grid-template-columns: minmax(0, 1fr) 92px; gap: 6px 10px; }
-  .nome-faixa { grid-column: 1 / -1; }
-  .eixo-faixa > div:first-child, .eixo-faixa > div:last-child { display: none; }
-}
 .etiqueta-titulo { font-size: 12px; vertical-align: middle; margin-left: 8px; font-weight: 600; }
 /* Abaixo de 1.280 px, cabeçalhos e textos quebram linha em vez de forçar rolagem lateral. */
 @media (max-width: 1279px) {
@@ -282,71 +254,11 @@ h2 {
   .tabela-turno.modo-eleitorado .variacao { font-size: 10px; }
   .tabela-turno.modo-eleitorado .celula-nome { flex-wrap: wrap; }
 }
-/* Faixa de sensibilidade: trilho 0–100%, intervalo do principal e os três modelos. */
-.faixa-modelos {
-  position: relative;
-  height: 16px;
-  min-width: 70px;
-  margin-top: 2px;
-}
-.faixa-modelos .trilho {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 7px;
-  height: 2px;
-  background: var(--grade);
-}
-.faixa-modelos .marca-metade {
-  position: absolute;
-  left: 50%;
-  top: 3px;
-  width: 1px;
-  height: 10px;
-  background: var(--eixo);
-}
-.faixa-modelos .intervalo {
-  position: absolute;
-  top: 6px;
-  height: 4px;
-  border-radius: 2px;
-  background: currentColor;
-  opacity: 0.35;
-}
-.faixa-modelos .ponto {
-  position: absolute;
-  border-radius: 50%;
-  transform: translateX(-50%);
-}
-.faixa-modelos .ponto-principal {
-  top: 3px;
-  width: 10px;
-  height: 10px;
-  background: currentColor;
-  box-shadow: 0 0 0 2px var(--superficie);
-  z-index: 2;
-}
-.faixa-modelos .ponto-alternativo {
-  top: 4px;
-  width: 8px;
-  height: 8px;
-  background: var(--superficie);
-  box-shadow: inset 0 0 0 1.5px currentColor;
-  z-index: 1;
-}
-.tabela-sensibilidade .celula-faixa { width: 28%; }
-.tabela-sensibilidade td:first-child { white-space: normal; }
-.tabela-sensibilidade .variacao { font-size: 11px; }
-.tabela-sensibilidade .etiqueta { font-size: 10px; padding: 0 5px; }
 @media (max-width: 560px) {
-  .tabela-sensibilidade td, .tabela-sensibilidade th { padding: 6px 3px; font-size: 12px; }
-  .tabela-sensibilidade .faixa-modelos { min-width: 44px; }
-  .tabela-sensibilidade .etiqueta { padding: 0 3px; }
   .tabela-regioes td, .tabela-regioes th { padding: 6px 3px; }
   .tabela-regioes .celula-barra { min-width: 40px; }
   /* Cabeçalhos e linhas secundárias podem quebrar: são eles que alargavam a tabela no celular. */
   .tabela-turno th { white-space: normal; }
-  .tabela-sensibilidade .variacao { white-space: normal; }
 }
 .tabela-turno .variacao-vazia { visibility: hidden; }
 /* Variação negativa em vermelho de alerta (sempre com ▼), distinto do vermelho de Lula nas barras. */
@@ -829,7 +741,7 @@ th button:hover { color: var(--tinta); }
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   padding: 10px 12px;
   font-size: 13px;
-  max-width: 280px;
+  max-width: min(400px, calc(100vw - 16px));
   opacity: 0;
   transition: opacity 80ms;
 }
@@ -844,6 +756,15 @@ th button:hover { color: var(--tinta); }
 .dica .dica-valor { font-weight: 650; }
 .dica .dica-rotulo { color: var(--tinta-2); }
 .dica .dica-nota { color: var(--tinta-3); margin-top: 6px; font-size: 12px; }
+/* Tabela dentro da dica: 1º turno × 2º turno × diferença, coluna do turno em destaque. */
+.dica .dica-tabela { width: auto; font-size: 12.5px; }
+.dica .dica-tabela th, .dica .dica-tabela td { padding: 3px 0 3px 14px; border-bottom: 0; }
+.dica .dica-tabela th:first-child { padding-left: 0; font-weight: 500; color: var(--tinta-2); }
+.dica .dica-tabela th .amostra-linha { margin-right: 6px; vertical-align: middle; }
+.dica .dica-tabela thead th { font-size: 11.5px; color: var(--tinta-3); border-bottom: 1px solid var(--grade); }
+.dica .dica-tabela td { font-weight: 500; color: var(--tinta-2); }
+.dica .dica-tabela .dica-coluna-destaque { font-weight: 700; color: var(--tinta); }
+.dica .dica-tabela td.valor-negativo { color: var(--texto-negativo); }
 
 .visualmente-oculto {
   position: absolute;
@@ -930,34 +851,9 @@ th button:hover { color: var(--tinta); }
       <div class="grafico-svg" id="grafico-sankey"></div>
     </div>
     <div class="cartao">
-      <h3>De onde veio o crescimento de cada candidato</h3>
-      <ul class="legenda" id="legenda-entradas" style="margin-top:12px"></ul>
-      <div id="barras-entradas"></div>
-      <details class="tabela-detalhe">
-        <summary>Ver tabela (com a faixa entre os três modelos)</summary>
-        <div class="tabela-rolagem" id="tabela-entradas"></div>
-      </details>
-    </div>
-    <div class="cartao">
       <h3>O que os demais grupos do 1º turno fizeram no 2º</h3>
       <ul class="legenda" id="legenda-migracao"></ul>
       <div id="barras-migracao"></div>
-    </div>
-    <div class="cartao cartao-comparativo">
-      <h3 class="titulo-cartao-grande">Quanto a estimativa muda conforme o modelo</h3>
-      <ul class="legenda" style="margin:16px 0 0">
-        <li><span class="amostra" style="background:var(--tinta-2)"></span>Modelo principal</li>
-        <li><span class="amostra" style="background:var(--superficie);box-shadow:inset 0 0 0 2px var(--tinta-2)"></span>Modelos alternativos</li>
-        <li><span class="amostra-linha" style="background:var(--tinta-3);height:4px"></span>Intervalo de 95% do principal</li>
-      </ul>
-      <div class="paineis-turnos">
-        <div class="painel-turno" id="painel-sensibilidade-lula"></div>
-        <div class="painel-turno" id="painel-sensibilidade-flavio"></div>
-      </div>
-      <details class="tabela-detalhe">
-        <summary>Ver tabela da estimativa (modelo principal, com intervalos)</summary>
-        <div class="tabela-rolagem" id="tabela-migracao"></div>
-      </details>
     </div>
   </section>
 
@@ -1040,6 +936,16 @@ function formatarMilhoesComSinal(valor, casas) {
     sinal = "+";
   }
   return sinal + formatarMilhoes(valor, casas);
+}
+
+function formatarNumeroComSinal(valor, casas) {
+  let sinal = "";
+  if (valor > 0) {
+    sinal = "+";
+  } else if (valor < 0) {
+    sinal = "−";
+  }
+  return sinal + formatarNumero(Math.abs(valor), casas);
 }
 
 function formatarInteiro(valor) {
@@ -1237,14 +1143,66 @@ function criarEscalaSequencial(minimo, maximo, corInicio, corFim) {
 
 const dica = document.getElementById("dica");
 
-function preencherDica(titulo, linhas, nota) {
+function criarTabelaDica(tabela) {
+  // Tabela compacta dentro da dica: rótulo da linha + colunas (ex.: 1º turno, 2º turno, diferença).
+  const elementoTabela = document.createElement("table");
+  elementoTabela.className = "dica-tabela";
+  const cabecalho = document.createElement("thead");
+  const linhaCabecalho = document.createElement("tr");
+  linhaCabecalho.appendChild(document.createElement("th"));
+  tabela.colunas.forEach(function (textoColuna, indiceColuna) {
+    const celulaCabecalho = document.createElement("th");
+    celulaCabecalho.scope = "col";
+    celulaCabecalho.textContent = textoColuna;
+    if (indiceColuna === tabela.colunaDestaque) {
+      celulaCabecalho.className = "dica-coluna-destaque";
+    }
+    linhaCabecalho.appendChild(celulaCabecalho);
+  });
+  cabecalho.appendChild(linhaCabecalho);
+  elementoTabela.appendChild(cabecalho);
+
+  const corpo = document.createElement("tbody");
+  for (const linha of tabela.linhas) {
+    const elementoLinha = document.createElement("tr");
+    const rotulo = document.createElement("th");
+    rotulo.scope = "row";
+    if (linha.cor) {
+      const chave = document.createElement("span");
+      chave.className = "amostra-linha";
+      chave.style.background = linha.cor;
+      rotulo.appendChild(chave);
+    }
+    rotulo.appendChild(document.createTextNode(linha.rotulo));
+    elementoLinha.appendChild(rotulo);
+    linha.valores.forEach(function (valor, indiceValor) {
+      const celula = document.createElement("td");
+      celula.textContent = valor;
+      if (String(valor).indexOf("▼") === 0) {
+        celula.classList.add("valor-negativo");
+      }
+      if (indiceValor === tabela.colunaDestaque) {
+        celula.classList.add("dica-coluna-destaque");
+      }
+      elementoLinha.appendChild(celula);
+    });
+    corpo.appendChild(elementoLinha);
+  }
+  elementoTabela.appendChild(corpo);
+  return elementoTabela;
+}
+
+function preencherDica(titulo, linhas, nota, tabela) {
   dica.replaceChildren();
   const elementoTitulo = document.createElement("div");
   elementoTitulo.className = "dica-titulo";
   elementoTitulo.textContent = titulo;
   dica.appendChild(elementoTitulo);
 
-  for (const linha of linhas) {
+  if (tabela) {
+    dica.appendChild(criarTabelaDica(tabela));
+  }
+  for (const linha of linhas || []) {
     const elementoLinha = document.createElement("div");
     elementoLinha.className = "dica-linha";
     if (linha.cor) {
@@ -1295,7 +1253,7 @@ function ligarDica(elemento, montarConteudo) {
   // Mesma dica no mouse e no foco do teclado: a dica nunca é a única forma de ler o valor.
   elemento.addEventListener("pointermove", function (evento) {
     const conteudo = montarConteudo();
-    preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota);
+    preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota, conteudo.tabela);
     dica.classList.add("visivel");
     posicionarDica(evento.clientX, evento.clientY);
   });
@@ -1304,7 +1262,7 @@ function ligarDica(elemento, montarConteudo) {
   });
   elemento.addEventListener("focus", function () {
     const conteudo = montarConteudo();
-    preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota);
+    preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota, conteudo.tabela);
     dica.classList.add("visivel");
     const caixa = elemento.getBoundingClientRect();
     posicionarDica(caixa.right, caixa.top);
@@ -1354,9 +1312,7 @@ const DESTINOS = [
 // Grupos estimados individualmente que mudam muito de um modelo para outro.
 const ORIGENS_FRAGEIS = ["caiado", "cury", "renan"];
 const ORIGENS_BLOCO = ["caiado", "cury", "renan"];
-const ORIGENS_TODOS_ELIMINADOS = ["caiado", "cury", "renan", "demais"];
 const ORIGENS_CONTEXTO = ["branco_nulo", "abstencao", "lula", "flavio"];
-const ORIGENS_TABELA = ["bloco", "caiado", "cury", "renan", "demais", "branco_nulo", "abstencao", "lula", "flavio"];
 const ESPECIFICACOES_REGIONAIS = [
   { codigo: "E1", nome: "Por região (principal)" },
   { codigo: "E2", nome: "Nacional único" },
@@ -1380,12 +1336,6 @@ const LIMITE_FRONTEIRA = 1e-6;
 const TOTAL_CELULAS_MIGRACAO = 32;
 let regiaoMigracaoAtual = REGIAO_BRASIL;
 let tipoRecorteAtual = "brasil";
-
-const GRUPOS_ENTRADA = [
-  { codigo: "eliminados", nome: "Eleitores dos 10 eliminados", origens: ORIGENS_TODOS_ELIMINADOS, variavelCor: "--ponte-1" },
-  { codigo: "abstencao", nome: "Não tinham votado no 1º turno", origens: ["abstencao"], variavelCor: "--ponte-2" },
-  { codigo: "branco_nulo", nome: "Votaram branco ou nulo no 1º turno", origens: ["branco_nulo"], variavelCor: "--ponte-3" },
-];
 
 /* ---------- Cabeçalho e indicadores ---------- */
 
@@ -1471,18 +1421,21 @@ function montarDicaCandidato(candidato, turno, votos, validos) {
     { valor: formatarInteiro(votos), rotulo: "votos" },
   ];
   if (turno === 2) {
-    // Mesma ordem em toda dica: 1º turno, 2º turno e a diferença.
+    // Mesma tabela das outras dicas: 1º turno × 2º turno × diferença, com o 2º turno em destaque.
     const votos1t = votosDoCandidato(candidato, 1);
     const percentual1t = 100 * votos1t / DADOS.brasil.validos_1t;
     const percentual2t = 100 * votos / validos;
-    linhas = [
-      { valor: formatarPercentual(percentual1t, 2), rotulo: "dos válidos no 1º turno" },
-      { valor: formatarPercentual(percentual2t, 2), rotulo: "dos válidos no 2º turno", cor: lerCor(candidato.variavelCor) },
-      { valor: textoVariacaoPontos(percentual2t - percentual1t, 2), rotulo: "pontos de diferença" },
-      { valor: formatarInteiro(votos1t), rotulo: "votos no 1º turno" },
-      { valor: formatarInteiro(votos), rotulo: "votos no 2º turno" },
-      { valor: textoVariacaoInteiro(votos - votos1t), rotulo: "votos de diferença" },
-    ];
+    return {
+      titulo: nomeComPartido(candidato),
+      tabela: {
+        colunas: ["1º turno", "2º turno", "Diferença"],
+        colunaDestaque: 1,
+        linhas: [
+          { rotulo: "% dos válidos", cor: lerCor(candidato.variavelCor), valores: [formatarPercentual(percentual1t, 2), formatarPercentual(percentual2t, 2), textoVariacaoPontos(percentual2t - percentual1t, 2)] },
+          { rotulo: "Votos", valores: [formatarInteiro(votos1t), formatarInteiro(votos), textoVariacaoInteiro(votos - votos1t)] },
+        ],
+      },
+    };
   }
   if (candidato.codigo === "outros") {
     for (const outro of listarOutrosCandidatos()) {
@@ -1978,36 +1931,41 @@ function textoVariacaoInteiro(valor) {
   return setaVariacao(valor, 0.5) + formatarInteiro(Math.round(Math.abs(valor)));
 }
 
+function primeiraMaiuscula(texto) {
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
 function ligarDicaContagem(celula, titulo, unidade, valor1t, valor2t, turno, base) {
-  // Ao passar o mouse (ou focar) num percentual, mostra a quantidade de pessoas por trás dele
-  // e a base do percentual nos dois turnos: votos podem subir enquanto o percentual cai.
+  // Ao passar o mouse (ou focar) num percentual, mostra as quantidades por trás dele numa tabela
+  // 1º turno × 2º turno × diferença, com a base do percentual: votos podem subir enquanto o percentual cai.
   celula.classList.add("numero-com-dica");
   celula.tabIndex = 0;
   ligarDica(celula, function () {
-    const linhas = [];
+    const percentual1t = 100 * valor1t / base.valor1t;
+    const percentual2t = 100 * valor2t / base.valor2t;
     let nota = null;
-    if (turno === 1) {
-      linhas.push({ valor: formatarInteiro(valor1t), rotulo: unidade + " no 1º turno" });
-      linhas.push({ valor: formatarInteiro(base.valor1t), rotulo: base.rotulo + " no 1º turno" });
-    } else {
-      // Mesma ordem em toda dica: 1º turno, 2º turno e a diferença.
-      linhas.push({ valor: formatarInteiro(valor1t), rotulo: unidade + " no 1º turno" });
-      linhas.push({ valor: formatarInteiro(valor2t), rotulo: unidade + " no 2º turno" });
-      linhas.push({ valor: textoVariacaoInteiro(valor2t - valor1t), rotulo: "de diferença" });
-      linhas.push({ valor: formatarInteiro(base.valor1t), rotulo: base.rotulo + " no 1º turno" });
-      linhas.push({ valor: formatarInteiro(base.valor2t), rotulo: base.rotulo + " no 2º turno" });
-      const crescimentoValor = 100 * (valor2t / valor1t - 1);
-      const crescimentoBase = 100 * (base.valor2t / base.valor1t - 1);
-      const fatiaSubiu = valor2t / base.valor2t > valor1t / base.valor1t;
-      if (valor2t > valor1t && !fatiaSubiu) {
-        nota = "Os " + unidade + " subiram " + formatarPercentual(crescimentoValor, 1) + ", mas os " + base.rotulo +
-          " subiram " + formatarPercentual(crescimentoBase, 1) + ": por isso o percentual caiu.";
-      } else if (valor2t < valor1t && fatiaSubiu) {
-        nota = "Os " + unidade + " caíram " + formatarPercentual(-crescimentoValor, 1) + ", mas os " + base.rotulo +
-          " caíram mais (" + formatarPercentual(-crescimentoBase, 1) + "): por isso o percentual subiu.";
-      }
+    const crescimentoValor = 100 * (valor2t / valor1t - 1);
+    const crescimentoBase = 100 * (base.valor2t / base.valor1t - 1);
+    if (valor2t > valor1t && percentual2t < percentual1t) {
+      nota = "Os " + unidade + " subiram " + formatarPercentual(crescimentoValor, 1) + ", mas os " + base.rotulo +
+        " subiram " + formatarPercentual(crescimentoBase, 1) + ": por isso o percentual caiu.";
+    } else if (valor2t < valor1t && percentual2t > percentual1t) {
+      nota = "Os " + unidade + " caíram " + formatarPercentual(-crescimentoValor, 1) + ", mas os " + base.rotulo +
+        " caíram mais (" + formatarPercentual(-crescimentoBase, 1) + "): por isso o percentual subiu.";
     }
-    return { titulo: titulo, linhas: linhas, nota: nota };
+    return {
+      titulo: titulo,
+      tabela: {
+        colunas: ["1º turno", "2º turno", "Diferença"],
+        colunaDestaque: turno - 1,
+        linhas: [
+          { rotulo: primeiraMaiuscula(unidade), valores: [formatarInteiro(valor1t), formatarInteiro(valor2t), textoVariacaoInteiro(valor2t - valor1t)] },
+          { rotulo: primeiraMaiuscula(base.rotulo), valores: [formatarInteiro(base.valor1t), formatarInteiro(base.valor2t), textoVariacaoInteiro(base.valor2t - base.valor1t)] },
+          { rotulo: "% dos " + base.rotulo, valores: [formatarPercentual(percentual1t, 2), formatarPercentual(percentual2t, 2), textoVariacaoPontos(percentual2t - percentual1t, 2)] },
+        ],
+      },
+      nota: nota,
+    };
   });
 }
 
@@ -2754,36 +2712,27 @@ function criarMosaico(turno, escala) {
     }
 
     ligarDica(ladrilho, function () {
-      const pctLula = turno === 1 ? fonte.pct_lula_1t : fonte.pct_lula_2t;
-      const pctFlavio = turno === 1 ? fonte.pct_flavio_1t : 100 - fonte.pct_lula_2t;
-      const comparecimento = turno === 1 ? fonte.comparecimento_pct_1t : fonte.comparecimento_pct_2t;
-      let linhasDica = [
-        { valor: formatarPercentual(pctLula, 2), rotulo: "Lula", cor: lerCor("--cor-lula") },
-        { valor: formatarPercentual(pctFlavio, 2), rotulo: "Flávio", cor: lerCor("--cor-flavio") },
-        { valor: formatarPontos(vantagemLula(fonte, turno), 2), rotulo: "vantagem de Lula" },
-        { valor: formatarPercentual(comparecimento, 2), rotulo: "comparecimento" },
-      ];
-      if (turno === 2) {
-        // Mesma ordem em toda dica: 1º turno, 2º turno e a diferença.
-        linhasDica = [
-          { valor: formatarPercentual(pctLula, 2), rotulo: "Lula", cor: lerCor("--cor-lula") },
-          { valor: formatarPercentual(pctFlavio, 2), rotulo: "Flávio", cor: lerCor("--cor-flavio") },
-          { valor: formatarPontos(vantagemLula(fonte, 1), 2), rotulo: "vantagem de Lula no 1º turno" },
-          { valor: formatarPontos(vantagemLula(fonte, 2), 2), rotulo: "vantagem de Lula no 2º turno" },
-          { valor: textoVariacaoPontos(vantagemLula(fonte, 2) - vantagemLula(fonte, 1), 2), rotulo: "pontos de diferença" },
-          { valor: formatarPercentual(fonte.comparecimento_pct_1t, 2), rotulo: "comparecimento no 1º turno" },
-          { valor: formatarPercentual(fonte.comparecimento_pct_2t, 2), rotulo: "comparecimento no 2º turno" },
-          { valor: textoVariacaoPontos(fonte.comparecimento_pct_2t - fonte.comparecimento_pct_1t, 2), rotulo: "pontos de diferença" },
-        ];
-      }
-      let notaVirada = null;
+      // Tabela 1º turno × 2º turno × diferença, com a coluna do turno do mapa em destaque.
+      const vantagem1t = vantagemLula(fonte, 1);
+      const vantagem2t = vantagemLula(fonte, 2);
+      const flavio2t = 100 - fonte.pct_lula_2t;
+      let nota = "Lula e Flávio em % dos votos válidos; vantagem e diferença em pontos.";
       if (fonte.vencedor_1t !== fonte.vencedor_2t) {
-        notaVirada = "Virou: " + fonte.vencedor_1t + " venceu o 1º turno, " + fonte.vencedor_2t + " o 2º.";
+        nota = "Virou: " + fonte.vencedor_1t + " venceu o 1º turno, " + fonte.vencedor_2t + " o 2º. " + nota;
       }
       return {
-        titulo: nomeLadrilho + " · " + turno + "º turno",
-        linhas: linhasDica,
-        nota: notaVirada,
+        titulo: nomeLadrilho,
+        tabela: {
+          colunas: ["1º turno", "2º turno", "Diferença"],
+          colunaDestaque: turno - 1,
+          linhas: [
+            { rotulo: "Lula", cor: lerCor("--cor-lula"), valores: [formatarPercentual(fonte.pct_lula_1t, 2), formatarPercentual(fonte.pct_lula_2t, 2), textoVariacaoPontos(fonte.pct_lula_2t - fonte.pct_lula_1t, 2)] },
+            { rotulo: "Flávio", cor: lerCor("--cor-flavio"), valores: [formatarPercentual(fonte.pct_flavio_1t, 2), formatarPercentual(flavio2t, 2), textoVariacaoPontos(flavio2t - fonte.pct_flavio_1t, 2)] },
+            { rotulo: "Vantagem de Lula", valores: [formatarNumeroComSinal(vantagem1t, 2), formatarNumeroComSinal(vantagem2t, 2), textoVariacaoPontos(vantagem2t - vantagem1t, 2)] },
+            { rotulo: "Comparecimento", valores: [formatarPercentual(fonte.comparecimento_pct_1t, 2), formatarPercentual(fonte.comparecimento_pct_2t, 2), textoVariacaoPontos(fonte.comparecimento_pct_2t - fonte.comparecimento_pct_1t, 2)] },
+          ],
+        },
+        nota: nota,
       };
     });
     mosaico.appendChild(ladrilho);
@@ -3337,187 +3286,8 @@ function faixaEntreModelos(todas, calcular) {
   return { minimo: minimo, maximo: maximo };
 }
 
-function calcularEntrada(transferencias, grupo, codigoDestino) {
-  let soma = 0;
-  for (const origem of grupo.origens) {
-    soma += transferencias[origem][codigoDestino].votos;
-  }
-  return soma;
-}
-
-function calcularPerdas(transferencias, codigoCandidato) {
-  let soma = 0;
-  for (const destino of DESTINOS) {
-    if (destino.codigo !== codigoCandidato) {
-      soma += transferencias[codigoCandidato][destino.codigo].votos;
-    }
-  }
-  return soma;
-}
-
-function formatarFaixaMilhoes(faixa) {
-  return formatarNumero(faixa.minimo / 1e6, 1) + " a " + formatarNumero(faixa.maximo / 1e6, 1) + " mi";
-}
-
 function formatarFaixaPercentual(faixa) {
   return formatarNumero(100 * faixa.minimo, 0) + "% a " + formatarNumero(100 * faixa.maximo, 0) + "%";
-}
-
-function arredondarEscalaAcima(valor) {
-  // Teto "redondo" e justo para o eixo (ex.: 6,58 mi → 7 mi), para a escala não sobrar vazia.
-  if (valor <= 0) {
-    return 1;
-  }
-  const potencia = Math.pow(10, Math.floor(Math.log10(valor)));
-  for (const multiplo of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 10]) {
-    if (multiplo * potencia >= valor) {
-      return multiplo * potencia;
-    }
-  }
-  return 10 * potencia;
-}
-
-function renderizarEntradas(todas) {
-  // Cada candidato × origem do crescimento: faixa entre os três modelos e o ponto do modelo principal.
-  const principal = todas[ESPECIFICACAO_PRINCIPAL];
-  const candidatos = [
-    { codigo: "lula", nome: "Lula", variavelCor: "--cor-lula" },
-    { codigo: "flavio", nome: "Flávio", variavelCor: "--cor-flavio" },
-  ];
-  const origens = [
-    { nome: "dos 10 eliminados", grupos: [GRUPOS_ENTRADA[0]] },
-    { nome: "de quem anulou ou não votou", grupos: [GRUPOS_ENTRADA[1], GRUPOS_ENTRADA[2]] },
-  ];
-  function entradaDaOrigem(transferencias, origem, codigoCandidato) {
-    let soma = 0;
-    for (const grupo of origem.grupos) {
-      soma += calcularEntrada(transferencias, grupo, codigoCandidato);
-    }
-    return soma;
-  }
-
-  const linhasFaixa = [];
-  let maiorValor = 0;
-  for (const candidato of candidatos) {
-    for (const origem of origens) {
-      const faixa = faixaEntreModelos(todas, function (transferencias) { return entradaDaOrigem(transferencias, origem, candidato.codigo); });
-      const valorPrincipal = entradaDaOrigem(principal, origem, candidato.codigo);
-      linhasFaixa.push({ candidato: candidato, origem: origem, faixa: faixa, principal: valorPrincipal });
-      maiorValor = Math.max(maiorValor, faixa.maximo);
-    }
-  }
-  const tetoEscala = arredondarEscalaAcima(maiorValor);
-
-  const legenda = document.getElementById("legenda-entradas");
-  legenda.replaceChildren();
-  const itemPonto = document.createElement("li");
-  const ponto = document.createElement("span");
-  ponto.className = "amostra";
-  ponto.style.background = "var(--tinta-2)";
-  itemPonto.appendChild(ponto);
-  itemPonto.appendChild(document.createTextNode("Modelo principal"));
-  legenda.appendChild(itemPonto);
-  const itemFaixa = document.createElement("li");
-  const faixaAmostra = document.createElement("span");
-  faixaAmostra.className = "amostra-linha";
-  faixaAmostra.style.cssText = "width:22px;height:8px;border-radius:4px;background:var(--tinta-2);opacity:0.35";
-  itemFaixa.appendChild(faixaAmostra);
-  itemFaixa.appendChild(document.createTextNode("Do menor ao maior valor entre os três modelos"));
-  legenda.appendChild(itemFaixa);
-
-  const conteiner = document.getElementById("barras-entradas");
-  conteiner.replaceChildren();
-  for (const linhaFaixa of linhasFaixa) {
-    const linha = document.createElement("div");
-    linha.className = "linha-faixa";
-
-    const nome = document.createElement("div");
-    nome.className = "nome-faixa";
-    const amostra = document.createElement("span");
-    amostra.className = "amostra amostra-quadrada";
-    amostra.style.background = "var(" + linhaFaixa.candidato.variavelCor + ")";
-    nome.appendChild(amostra);
-    const textoNome = document.createElement("span");
-    const forte = document.createElement("strong");
-    forte.textContent = linhaFaixa.candidato.nome;
-    textoNome.appendChild(forte);
-    textoNome.appendChild(document.createTextNode(" " + linhaFaixa.origem.nome));
-    nome.appendChild(textoNome);
-    linha.appendChild(nome);
-
-    const trilho = document.createElement("div");
-    trilho.className = "trilho-faixa";
-    trilho.style.color = lerCor(linhaFaixa.candidato.variavelCor);
-    const fundo = document.createElement("span");
-    fundo.className = "fundo-faixa";
-    trilho.appendChild(fundo);
-    const intervalo = document.createElement("span");
-    intervalo.className = "intervalo-faixa";
-    intervalo.style.left = (100 * linhaFaixa.faixa.minimo / tetoEscala) + "%";
-    intervalo.style.width = Math.max(1, 100 * (linhaFaixa.faixa.maximo - linhaFaixa.faixa.minimo) / tetoEscala) + "%";
-    trilho.appendChild(intervalo);
-    const ponto = document.createElement("span");
-    ponto.className = "ponto-faixa";
-    ponto.style.left = (100 * linhaFaixa.principal / tetoEscala) + "%";
-    trilho.appendChild(ponto);
-    trilho.tabIndex = 0;
-    trilho.setAttribute("aria-label", linhaFaixa.candidato.nome + " " + linhaFaixa.origem.nome + ": de " +
-      formatarQuantidadeEleitores(linhaFaixa.faixa.minimo) + " a " + formatarQuantidadeEleitores(linhaFaixa.faixa.maximo));
-    ligarDica(trilho, function () {
-      const linhasDica = [];
-      for (const especificacao of ESPECIFICACOES) {
-        const valor = entradaDaOrigem(todas[especificacao.codigo], linhaFaixa.origem, linhaFaixa.candidato.codigo);
-        linhasDica.push({
-          valor: formatarInteiro(Math.round(valor)),
-          rotulo: nomeEspecificacao(especificacao),
-          cor: especificacao.codigo === ESPECIFICACAO_PRINCIPAL ? lerCor(linhaFaixa.candidato.variavelCor) : null,
-        });
-      }
-      return { titulo: linhaFaixa.candidato.nome + " " + linhaFaixa.origem.nome, linhas: linhasDica, nota: notaInstabilidade() };
-    });
-    linha.appendChild(trilho);
-
-    const valor = document.createElement("div");
-    valor.className = "valor-faixa";
-    valor.textContent = formatarQuantidadeEleitores(linhaFaixa.faixa.minimo) + " – " + formatarQuantidadeEleitores(linhaFaixa.faixa.maximo);
-    linha.appendChild(valor);
-    conteiner.appendChild(linha);
-  }
-
-  // Eixo comum, na mesma escala para os dois candidatos.
-  const eixo = document.createElement("div");
-  eixo.className = "linha-faixa eixo-faixa";
-  eixo.appendChild(document.createElement("div"));
-  const marcas = document.createElement("div");
-  marcas.className = "marcas-faixa";
-  for (const fracao of [0, 0.5, 1]) {
-    const marca = document.createElement("span");
-    marca.style.left = (100 * fracao) + "%";
-    marca.textContent = fracao === 0 ? "0" : formatarQuantidadeEleitores(tetoEscala * fracao);
-    marcas.appendChild(marca);
-  }
-  eixo.appendChild(marcas);
-  eixo.appendChild(document.createElement("div"));
-  conteiner.appendChild(eixo);
-
-  const linhasTabela = [];
-  for (const candidato of candidatos) {
-    for (const grupo of GRUPOS_ENTRADA) {
-      const faixa = faixaEntreModelos(todas, function (transferencias) { return calcularEntrada(transferencias, grupo, candidato.codigo); });
-      linhasTabela.push({
-        candidato: candidato.nome,
-        grupo: grupo.nome,
-        principal: calcularEntrada(principal, grupo, candidato.codigo),
-        faixa: faixa,
-      });
-    }
-  }
-  criarTabela([
-    { titulo: "Candidato", formatar: function (linha) { return linha.candidato; } },
-    { titulo: "Origem", formatar: function (linha) { return linha.grupo; } },
-    { titulo: "Modelo principal", formatar: function (linha) { return formatarQuantidadeEleitores(linha.principal); } },
-    { titulo: "Entre os três modelos", formatar: function (linha) { return formatarQuantidadeEleitores(linha.faixa.minimo) + " – " + formatarQuantidadeEleitores(linha.faixa.maximo); } },
-  ], linhasTabela, "tabela-entradas", false);
 }
 
 function criarLinhaMigracao(codigoOrigem, todas) {
@@ -3745,203 +3515,12 @@ function renderizarSankey(todas) {
   preencherLegenda(document.getElementById("legenda-sankey"), itensLegenda);
 }
 
-// Grupos do 1º turno na tabela de sensibilidade, com o rótulo do bloco a que pertencem.
-const GRUPOS_SENSIBILIDADE = [
-  { rotulo: "Eleitores dos eliminados", origens: ["bloco", "caiado", "cury", "renan"] },
-  { rotulo: "Quem não escolheu candidato no 1º turno", origens: ["branco_nulo", "abstencao"] },
-];
-// Abaixo desta diferença entre o maior e o menor modelo (em pontos), a estimativa é tratada como estável.
-const LIMITE_ESTAVEL_PONTOS = 10;
-
-function criarFaixaModelos(todas, codigoOrigem, destino) {
-  const faixa = document.createElement("div");
-  faixa.className = "faixa-modelos";
-  faixa.style.color = lerCor(destino.variavelCor);
-
-  const trilho = document.createElement("span");
-  trilho.className = "trilho";
-  faixa.appendChild(trilho);
-  const metade = document.createElement("span");
-  metade.className = "marca-metade";
-  faixa.appendChild(metade);
-
-  const principal = todas[ESPECIFICACAO_PRINCIPAL][codigoOrigem][destino.codigo];
-  if (principal.beta_ic_inf !== null) {
-    const intervalo = document.createElement("span");
-    intervalo.className = "intervalo";
-    intervalo.style.left = (100 * principal.beta_ic_inf) + "%";
-    intervalo.style.width = Math.max(0.5, 100 * (principal.beta_ic_sup - principal.beta_ic_inf)) + "%";
-    faixa.appendChild(intervalo);
-  }
-  for (const especificacao of ESPECIFICACOES) {
-    if (especificacao.codigo === ESPECIFICACAO_PRINCIPAL) {
-      continue;
-    }
-    const alternativa = todas[especificacao.codigo][codigoOrigem][destino.codigo];
-    const pontoAlternativo = document.createElement("span");
-    pontoAlternativo.className = "ponto ponto-alternativo";
-    pontoAlternativo.style.left = (100 * alternativa.beta) + "%";
-    faixa.appendChild(pontoAlternativo);
-  }
-  const pontoPrincipal = document.createElement("span");
-  pontoPrincipal.className = "ponto ponto-principal";
-  pontoPrincipal.style.left = (100 * principal.beta) + "%";
-  faixa.appendChild(pontoPrincipal);
-
-  faixa.tabIndex = 0;
-  faixa.setAttribute("aria-label", NOMES_ORIGEM[codigoOrigem].nome + " para " + destino.nome + ": " + formatarPercentual(100 * principal.beta, 1) + " no modelo principal");
-  ligarDica(faixa, function () {
-    const linhasDica = [];
-    for (const especificacao of ESPECIFICACOES) {
-      const registro = todas[especificacao.codigo][codigoOrigem][destino.codigo];
-      let texto = nomeEspecificacao(especificacao);
-      if (registro.beta_ic_inf !== null) {
-        texto += " (95%: " + formatarNumero(100 * registro.beta_ic_inf, 0) + "–" + formatarNumero(100 * registro.beta_ic_sup, 0) + "%)";
-      }
-      linhasDica.push({
-        valor: formatarPercentual(100 * registro.beta, 1),
-        rotulo: texto,
-        cor: especificacao.codigo === ESPECIFICACAO_PRINCIPAL ? lerCor(destino.variavelCor) : null,
-      });
-    }
-    return { titulo: NOMES_ORIGEM[codigoOrigem].nome + " → " + destino.nome, linhas: linhasDica, nota: notaInstabilidade() };
-  });
-  return faixa;
-}
-
-function criarLinhaSensibilidade(todas, codigoOrigem, destino) {
-  const linha = document.createElement("tr");
-  const principal = todas[ESPECIFICACAO_PRINCIPAL][codigoOrigem][destino.codigo];
-  const faixaEntre = faixaEntreModelos(todas, function (transferencias) { return transferencias[codigoOrigem][destino.codigo].beta; });
-  const amplitudePontos = 100 * (faixaEntre.maximo - faixaEntre.minimo);
-
-  const celulaNome = criarCelulaTexto(codigoOrigem === "bloco" ? "Os 3 juntos" : NOMES_ORIGEM[codigoOrigem].nome);
-  if (codigoOrigem === "bloco") {
-    celulaNome.style.fontWeight = "700";
-  }
-  linha.appendChild(celulaNome);
-
-  const celulaFaixa = document.createElement("td");
-  celulaFaixa.className = "celula-faixa";
-  celulaFaixa.appendChild(criarFaixaModelos(todas, codigoOrigem, destino));
-  linha.appendChild(celulaFaixa);
-
-  // Valor do modelo principal; embaixo, o intervalo de 95% quando existe (o bloco não tem).
-  let textoIntervalo = "sem intervalo";
-  if (principal.beta_ic_inf !== null) {
-    textoIntervalo = "IC " + formatarNumero(100 * principal.beta_ic_inf, 0) + "–" + formatarNumero(100 * principal.beta_ic_sup, 0) + "%";
-  }
-  linha.appendChild(criarCelulaComVariacao(formatarPercentual(100 * principal.beta, 0), textoIntervalo, "Intervalo de 95% do modelo principal (bootstrap)"));
-
-  const celulaEntre = document.createElement("td");
-  // Formato compacto ("43–46%"): a coluna precisa caber na metade do cartão.
-  celulaEntre.appendChild(document.createTextNode(formatarNumero(100 * faixaEntre.minimo, 0) + "–" + formatarPercentual(100 * faixaEntre.maximo, 0)));
-  const linhaAmplitude = document.createElement("span");
-  linhaAmplitude.className = "variacao";
-  linhaAmplitude.appendChild(document.createTextNode(formatarNumero(amplitudePontos, 0) + " pts "));
-  const etiqueta = document.createElement("span");
-  etiqueta.className = "etiqueta";
-  // Valor preso em 0% ou 100% não é estabilidade: é o modelo encostado no limite.
-  if (codigoOrigem !== "bloco" && estaNaFronteira(principal.beta)) {
-    etiqueta.textContent = "no limite";
-  } else if (amplitudePontos < LIMITE_ESTAVEL_PONTOS) {
-    etiqueta.textContent = "estável";
-  } else {
-    etiqueta.textContent = "frágil";
-  }
-  linhaAmplitude.appendChild(etiqueta);
-  celulaEntre.appendChild(linhaAmplitude);
-  linha.appendChild(celulaEntre);
-  return linha;
-}
-
-function renderizarPainelSensibilidade(todas, destino, idPainel) {
-  const painel = document.getElementById(idPainel);
-  painel.replaceChildren();
-  const titulo = document.createElement("h4");
-  titulo.textContent = "Foi para " + destino.nome;
-  painel.appendChild(titulo);
-  const subtitulo = document.createElement("p");
-  subtitulo.className = "sub-painel";
-  subtitulo.textContent = "% dos eleitores de cada grupo que votou em " + destino.nome + " no 2º turno";
-  painel.appendChild(subtitulo);
-
-  const rolagem = document.createElement("div");
-  rolagem.className = "tabela-rolagem tabela-turno tabela-sensibilidade";
-  const tabela = document.createElement("table");
-  const cabecalho = document.createElement("thead");
-  const linhaCabecalho = document.createElement("tr");
-  for (const textoColuna of ["Grupo", "0 — 50 — 100%", "Principal", "Modelos"]) {
-    const celulaCabecalho = document.createElement("th");
-    celulaCabecalho.scope = "col";
-    celulaCabecalho.textContent = textoColuna;
-    if (textoColuna === "0 — 50 — 100%") {
-      celulaCabecalho.className = "celula-faixa";
-      celulaCabecalho.style.textAlign = "center";
-    }
-    linhaCabecalho.appendChild(celulaCabecalho);
-  }
-  cabecalho.appendChild(linhaCabecalho);
-  tabela.appendChild(cabecalho);
-
-  const corpo = document.createElement("tbody");
-  for (const grupo of GRUPOS_SENSIBILIDADE) {
-    corpo.appendChild(criarLinhaGrupo(grupo.rotulo));
-    for (const codigoOrigem of grupo.origens) {
-      corpo.appendChild(criarLinhaSensibilidade(todas, codigoOrigem, destino));
-    }
-  }
-  tabela.appendChild(corpo);
-  rolagem.appendChild(tabela);
-  painel.appendChild(rolagem);
-}
-
-function renderizarIncerteza(todas) {
-  renderizarPainelSensibilidade(todas, DESTINOS[0], "painel-sensibilidade-lula");
-  renderizarPainelSensibilidade(todas, DESTINOS[1], "painel-sensibilidade-flavio");
-}
-
-function renderizarTabelaMigracao(todas) {
-  const principal = todas[ESPECIFICACAO_PRINCIPAL];
-  const linhas = [];
-  for (const codigoOrigem of ORIGENS_TABELA) {
-    const registrosOrigem = principal[codigoOrigem];
-    let nomeLinha = NOMES_ORIGEM[codigoOrigem].nome + " (" + NOMES_ORIGEM[codigoOrigem].detalhe + ")";
-    if (codigoOrigem === "demais") {
-      nomeLinha += " · muito frágil";
-    }
-    const linha = { origem: nomeLinha, tamanho: tamanhoDoGrupo(registrosOrigem) };
-    for (const destino of DESTINOS) {
-      linha[destino.codigo] = registrosOrigem[destino.codigo];
-    }
-    linhas.push(linha);
-  }
-  function formatarCelula(registro) {
-    let texto = formatarPercentual(100 * registro.beta, 1);
-    if (registro.beta_ic_inf !== null) {
-      texto += " (" + formatarNumero(100 * registro.beta_ic_inf, 1) + "–" + formatarNumero(100 * registro.beta_ic_sup, 1) + ")";
-    }
-    return texto;
-  }
-  const colunas = [
-    { titulo: "Grupo no 1º turno", formatar: function (linha) { return linha.origem; } },
-    { titulo: "Eleitores", formatar: function (linha) { return formatarInteiro(Math.round(linha.tamanho)); } },
-  ];
-  for (const destino of DESTINOS) {
-    colunas.push({ titulo: "→ " + destino.nome, formatar: function (linha) { return formatarCelula(linha[destino.codigo]); } });
-  }
-  criarTabela(colunas, linhas, "tabela-migracao", false);
-}
-
 function renderizarMigracao() {
   const todas = transferenciasPorEspecificacao();
   renderizarControlesMigracao();
   renderizarAvisoRegional(todas);
   renderizarSankey(todas);
-  renderizarEntradas(todas);
   renderizarBarrasMigracao(todas);
-  renderizarIncerteza(todas);
-  renderizarTabelaMigracao(todas);
 }
 
 /* ---------- Conclusão: de onde vieram os votos a mais ---------- */

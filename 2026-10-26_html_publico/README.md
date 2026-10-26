@@ -48,6 +48,7 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - Link direto: `#base=eleitorado`.
 - **Dicas com quantidades absolutas:** passar o mouse sobre um percentual mostra, nesta ordem, 1º turno, 2º turno e diferença (pedido do Vinicius), e a base do percentual nos dois turnos.
   - Quando votos e percentual andam em sentidos opostos, a dica explica. Exemplo de Sergipe: Flávio ganhou 15.515 votos (+3,7%), mas os válidos cresceram 4,3%, e o percentual caiu 0,16 ponto.
+  - Desde 26/10/2026, pedido do Vinicius, essas dicas são uma tabela 1º turno × 2º turno × diferença, com a coluna do turno em destaque. Vale para os mapas (Lula, Flávio, vantagem, comparecimento), as tabelas (votos, base, %) e o resultado nacional do 2º turno.
 - **Tela parada ao trocar filtro:** `executarSemPular` compensa a rolagem para o controle clicado ficar no mesmo lugar. Vale para a base, o mapa e o recorte, e a ancoragem automática do navegador foi desligada para não somar duas correções.
   - Testado em 26/10/2026: os cinco controles ficam no mesmo pixel.
 - **Largura e rolagem lateral:**
@@ -59,15 +60,12 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 - **Poda de texto (26/10/2026, pedido do Vinicius):**
   - saíram a seção de metodologia, o parágrafo de abertura, os subtítulos explicativos das seções e cartões, os rodapés dos cartões e o quadro "Como ler";
   - o aviso de instabilidade ficou em uma linha;
-  - a frase "nos três modelos…" virou o gráfico de faixas "De onde veio o crescimento" (mínimo–máximo entre os modelos + ponto do principal);
+  - a frase "nos três modelos…" virou um gráfico de faixas, que depois saiu (ver abaixo);
   - a metodologia completa continua no repositório (READMEs, `ESPECIFICACAO.md`, `COMPARACAO_A_B.md`).
-- **Sensibilidade da migração (26/10/2026):** cartão com "Foi para Lula" e "Foi para Flávio" lado a lado. As linhas são os grupos do 1º turno: os 3 eliminados juntos, Caiado, Cury, Renan, quem votou branco/nulo e quem não votou.
-  - Colunas:
-    - faixa 0–100% com o principal (ponto cheio), as alternativas (círculos vazados) e o IC 95%;
-    - valor principal com o IC embaixo;
-    - mínimo–máximo entre os modelos, com a amplitude e uma etiqueta.
-  - **Etiquetas:** "estável" (< 10 pontos), "frágil" (≥ 10) ou "no limite" (principal preso em 0% ou 100%; isso não é estabilidade).
-  - Segue o filtro de recorte (Brasil, região ou estado).
+- **Cartões removidos da seção de migração (26/10/2026, pedido do Vinicius):**
+  - "Quanto a estimativa muda conforme o modelo" (sensibilidade, com etiquetas estável/frágil/no limite) e a tabela da estimativa com IC 95%;
+  - "De onde veio o crescimento de cada candidato" (faixas entre modelos), que repetia a conclusão.
+  - A incerteza continua visível na dica do Sankey (IC 95% e faixa entre os 3 modelos) e nas faixas da conclusão. Os números completos ficam nos CSVs do repositório.
 - **Variação negativa em vermelho (26/10/2026, pedido do Vinicius):** todo ▼ (tabelas e dicas) usa `--texto-negativo` (#c62828 no claro, #ff8a80 no escuro).
   - É um vermelho de texto, diferente do vermelho de Lula nas barras, e sempre vem junto da seta ▼.
 - **Variação explícita no 2º turno (26/10/2026, pedido do Vinicius):** nas tabelas de resultado, regiões e estados, cada número do 2º turno leva embaixo a diferença para o 1º (▲▼ em pontos percentuais; votos em milhões no resultado).
@@ -90,7 +88,7 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 - **Filtro de recorte** (um seletor): Brasil, 5 regiões e 27 estados.
   - O estado vem de `2026-10-26_migracao_por_uf/transferencias_uf.csv` (implementação A, idêntica à B).
   - Link direto: `#uf=GO` ou `#regiao=Norte`.
-  - No estado, a sensibilidade compara "estado com peso mínimo da região" (κ = 0,25) e "só os demais estados da região" (κ = ∞).
+  - No estado, os modelos alternativos (na dica do Sankey) são "estado com peso mínimo da região" (κ = 0,25) e "só os demais estados da região" (κ = ∞).
 - **`dados.js` tem ~600 KB** por causa das 2.592 linhas por estado (o GitHub Pages serve compactado).
 - **Migração por região:** seletor na seção (Brasil é o padrão).
   - Em qualquer região aparece um aviso de instabilidade, montado com números da própria região:

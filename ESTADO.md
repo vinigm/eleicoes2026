@@ -44,7 +44,7 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
 - **2º turno não desce abaixo de município.** Zona e seção só quando o TSE publicar o 2º turno nos dados abertos.
 - **A divisão por candidato eliminado NÃO é robusta.**
   - Exemplo: Renan → Lula sai 47% no modelo principal e 33% no nacional.
-  - No HTML aparece marcada como "estimativa frágil".
+  - No HTML, a fragilidade aparece na dica de cada eliminado na conclusão e na faixa entre os modelos.
 - **A migração por região é exibida, mas é instável** (77 de 160 células na fronteira 0 ou 1; n efetivo de 20 a 145 municípios).
   - O HTML mostra, em cada região, um aviso com esses números.
   - O Brasil continua sendo o recorte padrão e o único sem aviso.
@@ -59,4 +59,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
 ## Maquiagem de visualização
 
 - **Mapa de estados é um mosaico**, não um mapa geográfico: a posição de cada UF é aproximada; no nível Regiões, os blocos são os quadrados das UFs colados (formato aproximado).
-- **No HTML, as barras de migração mostram só o modelo principal.** A faixa entre os modelos aparece na dica do mouse, nas tabelas e no gráfico de sensibilidade.
+- **No HTML, o Sankey e as barras de migração mostram só o modelo principal.** A faixa entre os modelos aparece na dica do mouse e nas faixas da conclusão.
