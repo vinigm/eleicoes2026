@@ -18,6 +18,7 @@ Criado em: 26/10/2026 · Atualizado em: 26/10/2026
   - 1º turno → dados abertos do TSE (CSV, zips na raiz).
   - 2º turno → JSON de divulgação do TSE (`resultados.tse.jus.br`, eleição `6258`) **enquanto o CSV do 2º turno não sair nos dados abertos**. Quando sair, o CSV vence e a base é reconciliada.
 - **"Quantos habitantes tem cada cidade?"** → estimativa 2026 do IBGE (tabela 6579), em `2026-10-26_populacao_ibge/`.
+- **"Alfabetização e PIB per capita por cidade?"** → IBGE (Censo 2022, tabela 9543; PIB 2023, tabela 5938), em `2026-10-26_indicadores_ibge/`.
 - **"O que a base FAZ hoje?"** → o código em `2026-10-26_base_presidente_1t_2t/` vence.
 - **"O que a análise DEVERIA fazer?"** → a decisão mais recente do Vinicius, registrada em PENDENCIAS.
 - A diferença entre os dois últimos é ⏳ pendência, não contradição.

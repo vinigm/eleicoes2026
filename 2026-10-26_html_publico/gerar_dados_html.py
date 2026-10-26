@@ -50,6 +50,10 @@ CAMINHO_SAIDA = RAIZ_PROJETO / "docs" / "dados.js"
 CAMINHO_SAIDA_MUNICIPIOS = RAIZ_PROJETO / "docs" / "municipios.js"
 # População estimada 2026 do IBGE por município (gerada e conferida em 2026-10-26_populacao_ibge/).
 CAMINHO_POPULACAO = RAIZ_PROJETO / "dados" / "processados" / "populacao_municipios_ibge.csv"
+# Alfabetização (Censo 2022) e PIB per capita 2023 por município (2026-10-26_indicadores_ibge/).
+CAMINHO_INDICADORES_IBGE = RAIZ_PROJETO / "dados" / "processados" / "indicadores_municipios_ibge.csv"
+# Únicos municípios brasileiros sem esses índices (criados depois do Censo 2022).
+MUNICIPIOS_SEM_INDICADORES_IBGE = {"5101837"}
 CAMINHO_HTML = RAIZ_PROJETO / "docs" / "index.html"
 
 # Tamanho da versão gravada nas tags de script (`dados.js?v=<hash>`).
@@ -953,6 +957,7 @@ def montar_municipios(
     caminho_base: pathlib.Path,
     indicadores_brasil: pd.DataFrame,
     caminho_populacao: pathlib.Path,
+    caminho_indicadores_ibge: pathlib.Path,
 ) -> dict[str, object]:
     """Monta a tabela de cidades (1º e 2º turno) para a seção "Cidades" do HTML.
 
@@ -966,6 +971,7 @@ def montar_municipios(
         caminho_base: Parquet da base por município.
         indicadores_brasil: Uma linha, Brasil com exterior.
         caminho_populacao: CSV `cd_municipio_ibge;populacao` já conferido.
+        caminho_indicadores_ibge: CSV com alfabetização 2022 e PIB per capita 2023 já conferidos.
 
     Returns:
         Dicionário com `campos` (nomes das colunas) e `linhas` (listas de valores).
@@ -982,7 +988,20 @@ def montar_municipios(
     colunas_lidas = ["sg_uf", "nm_municipio", "cd_municipio_ibge", "fl_exterior"] + CAMPOS_NUMERICOS_MUNICIPIO
     base_municipios = pd.read_parquet(caminho_base, columns=colunas_lidas)
     base_municipios = base_municipios.merge(populacao, on="cd_municipio_ibge", how="left")
+    indicadores_ibge = ler_csv_obrigatorio(caminho_indicadores_ibge)
+    indicadores_ibge["cd_municipio_ibge"] = indicadores_ibge["cd_municipio_ibge"].astype(str)
+    base_municipios = base_municipios.merge(
+        indicadores_ibge[["cd_municipio_ibge", "alfabetizacao_15mais_2022", "pib_per_capita_2023"]],
+        on="cd_municipio_ibge",
+        how="left",
+    )
     linha_brasil = indicadores_brasil.iloc[0]
+
+    # Todo município brasileiro tem os índices, exceto os criados depois do Censo 2022.
+    mascara_sem_indice = (~base_municipios["fl_exterior"]) & base_municipios["alfabetizacao_15mais_2022"].isna()
+    codigos_sem_indice = set(base_municipios.loc[mascara_sem_indice, "cd_municipio_ibge"])
+    if codigos_sem_indice != MUNICIPIOS_SEM_INDICADORES_IBGE:
+        raise ValueError(f"Municípios sem alfabetização/PIB diferentes do esperado: {sorted(codigos_sem_indice)}.")
 
     mascara_brasil = ~base_municipios["fl_exterior"]
     sem_populacao = int(base_municipios.loc[mascara_brasil, "populacao"].isna().sum())
@@ -1011,6 +1030,10 @@ def montar_municipios(
         for campo in CAMPOS_NUMERICOS_MUNICIPIO:
             registro.append(int(linha_municipio[campo]))
         registro.append(inteiro_ou_nulo(linha_municipio["populacao"]))
+        # Duas casas, como o IBGE publica: arredondar a uma casa mudava a inclinação da
+        # dispersão na 3ª casa decimal (achado da conferência independente de 26/10/2026).
+        registro.append(arredondar_ou_nulo(linha_municipio["alfabetizacao_15mais_2022"], 2))
+        registro.append(inteiro_ou_nulo(linha_municipio["pib_per_capita_2023"]))
         linhas.append(registro)
 
     LOGGER.info(
@@ -1018,7 +1041,8 @@ def montar_municipios(
         len(linhas),
         soma_populacao,
     )
-    return {"campos": ["uf", "nome"] + CAMPOS_NUMERICOS_MUNICIPIO + ["populacao"], "linhas": linhas}
+    campos = ["uf", "nome"] + CAMPOS_NUMERICOS_MUNICIPIO + ["populacao", "alfabetizacao", "pib_per_capita"]
+    return {"campos": campos, "linhas": linhas}
 
 
 def gravar_municipios_js(municipios: dict[str, object], caminho_saida: pathlib.Path) -> None:
@@ -1082,7 +1106,9 @@ def gerar_dados_html() -> None:
     gravar_dados_js(dados_html, CAMINHO_SAIDA)
     versionar_script_no_html(CAMINHO_SAIDA, CAMINHO_HTML)
 
-    municipios = montar_municipios(CAMINHO_BASE_MUNICIPIOS, indicadores_brasil, CAMINHO_POPULACAO)
+    municipios = montar_municipios(
+        CAMINHO_BASE_MUNICIPIOS, indicadores_brasil, CAMINHO_POPULACAO, CAMINHO_INDICADORES_IBGE
+    )
     gravar_municipios_js(municipios, CAMINHO_SAIDA_MUNICIPIOS)
     versionar_script_no_html(CAMINHO_SAIDA_MUNICIPIOS, CAMINHO_HTML)
 

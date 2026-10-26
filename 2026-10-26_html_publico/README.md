@@ -130,6 +130,22 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
     - Causa: faltava a troca direta entre finalistas (5,2 mil votos Flávio → Lula na E3), que caía dentro do ajuste.
     - Corrigido com a "troca direta" como origem própria; todo o resto conferiu.
 
+- **Perfil das cidades (26/10/2026, pedido do Vinicius):** dois cartões no topo da seção "Cidades".
+  - **Mapa de calor "tamanho da cidade × voto":**
+    - Linhas: Brasil e regiões, ou cada região seguida dos seus estados (botão Regiões | Estados).
+    - Colunas: as 5 faixas de habitantes e "Todas". Cada célula mostra o % de Flávio no 2º turno (votos somados), com a mesma cor do mapa (azul = Flávio, vermelho = Lula) e o número de cidades.
+    - A frase de cima é gerada dos dados.
+    - **Fato:** Flávio tem 43,9% nas cidades até 50 mil habitantes, o seu pior tamanho, porque 38% de quem mora nelas está no Nordeste. Dentro das regiões o desenho muda. No Nordeste e no Norte, Flávio cresce com o tamanho da cidade. No Sul, vai um pouco melhor nas pequenas e médias. No Sudeste, o pior resultado dele é acima de 300 mil.
+  - **Dispersão "índices sociais × voto":** 6 painéis (Brasil e as 5 regiões); cada ponto é uma cidade, colorido pelo vencedor.
+    - Índice no eixo x: alfabetização (Censo 2022) ou PIB per capita (2023, escala log). Fonte: `2026-10-26_indicadores_ibge/`.
+    - Cada painel tem a reta de mínimos quadrados e o r de Pearson. Cada cidade pesa igual, e o PIB entra em log10.
+    - O texto do cartão avisa: os índices medem acesso a estudo e renda, não inteligência; e a relação entre cidades não diz como votou cada eleitor.
+    - **Fato:** dentro de todas as regiões, cidades com mais alfabetização e mais PIB per capita deram mais votos a Flávio.
+      - Alfabetização: r de +0,20 (Norte) a +0,65 (Sudeste).
+      - PIB: r de +0,30 (Sul) a +0,54 (Norte).
+      - O r do Brasil (+0,81 em alfabetização) fica inflado pela diferença entre regiões.
+    - **Conferência independente (26/10/2026):** aprovada para o heatmap (36 células) e para as regressões.
+      - Uma ressalva foi corrigida: a alfabetização era gravada com 1 casa e mudava inclinações na 3ª casa decimal. Agora vai com as 2 casas do IBGE.
 - **Cidades (26/10/2026, pedido do Vinicius):** última seção. Tem filtro por estado (ou "Todos os estados", ou "Exterior"), busca por nome sem acento ("sao joao" acha "São João del Rei") e lista ordenável clicando no cabeçalho.
   - Colunas: barra do 2º turno; Lula e Flávio com 1º turno, 2º turno e variação, cada uma com % (ou pontos) em cima e votos embaixo; vantagem e comparecimento (2º turno e ▲▼); eleitores; habitantes (IBGE 2026, ver `2026-10-26_populacao_ibge/`).
   - Entre 820 e 1.279 px saem a barra e a vantagem, para não haver rolagem lateral. Na tabela, a palavra "votos" fica só no cabeçalho ("Lula · % e votos"); nas fichas do celular, aparece em cada número.
@@ -148,6 +164,10 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - Embaixo dos botões aparecem "Mais petista" e "Mais bolsonarista", a pedido do Vinicius: a cidade com o maior % de Lula e a com o maior % de Flávio no 2º turno, dentro do recorte. Clicar mostra só aquela cidade; clicar de novo volta.
     - O exterior só entra quando "Exterior" está selecionado, e é preciso ter pelo menos 100 votos válidos. Sem essa regra, Havana (44 votos, 97,7% Lula) e Katmandu (13 votos) disputariam.
     - Brasil em 26/10/2026: Carnaubeira da Penha (PE), Lula 92,3%; Nova Pádua (RS), Flávio 90,6%.
+  - Seletor "Habitantes" ao lado de "Estado", a pedido do Vinicius, para não comparar só cidades de 2 mil habitantes. Faixas: até 50 mil, 50–100, 100–200, 200–300 e mais de 300 mil, cada uma com a contagem do recorte.
+    - A faixa vale para tudo: lista, card de %, placar, botões de vencedor e "mais petista/bolsonarista". O exterior sai, porque não tem população.
+    - Fato, 26/10/2026: Lula tem 56,07% nas cidades até 50 mil, cai até 45,87% em 200–300 mil e volta a 50,37% acima de 300 mil.
+    - Acima de 300 mil habitantes (98 cidades), a mais petista é Juazeiro do Norte (CE), com 74,0% para Lula; a mais bolsonarista é Boa Vista (RR), com 75,8% para Flávio.
   - O placar no topo vale para o estado escolhido. Exemplo de MG: Lula 528 × Flávio 325 cidades (no 1º turno, 452 × 401).
   - **Dados:** `municipios.js` (`window.DADOS_MUNICIPIOS`, em colunas + linhas), gravado pelo gerador a partir do parquet certificado.
     - O gerador confere que a soma das 5.757 linhas bate com o Brasil nos 10 campos (aptos, comparecimento, válidos e votos de Lula e Flávio, nos dois turnos).

@@ -50,6 +50,10 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
 
 - ⏳ Causa da diferença de aptos por município entre turnos (hipótese: voto em trânsito por turno).
 
+- ✅ "Flávio mais forte nas cidades pequenas do interior" (Vinicius): não se confirma no agregado (43,9% até 50 mil, seu pior tamanho, por peso do Nordeste); só no Sul há sinal leve (26/10/2026).
+
+- ⏳ Religião por município (Censo 2022) como próximo índice da dispersão: confirmar se as tabelas de religião descem a município.
+
 ---
 
 ## Registro cronológico
@@ -80,3 +84,5 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Cidades com 1º/2º turno/variação em % e votos e habitantes (IBGE 2026, soma = Brasil); "virou" em selo vermelho.
   - ✅ Card Lula × Flávio (2º turno) ao lado da busca de cidades e filtro "Lula ganhou / Flávio ganhou" com contagens.
   - ✅ Cidades: botões "mais petista" / "mais bolsonarista" (Brasil: Carnaubeira da Penha 92,3%; Nova Pádua 90,6%).
+  - ✅ Cidades: filtro por faixa de habitantes (até 50 mil … mais de 300 mil) aplicado a todo o recorte.
+  - ✅ Mapa de calor tamanho × voto e dispersão alfabetização/PIB × voto por região (IBGE; conferência independente aprovada).

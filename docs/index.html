@@ -651,6 +651,37 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
   .tabela-cidades .celula-barra-cidade::before { content: none; }
   .tabela-cidades .celula-barra-cidade .barra-resumo-regiao { flex: 1 1 100%; margin-top: 0; }
 }
+/* Mapa de calor: região/estado × tamanho da cidade (% de Flávio no 2º turno). */
+.grafico-calor { margin-top: 12px; }
+.tabela-calor { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; }
+.tabela-calor th, .tabela-calor td { border: 0; padding: 0; white-space: normal; text-align: center; }
+.tabela-calor thead th { font-size: 12px; font-weight: 600; color: var(--tinta-2); padding: 4px 2px; }
+.tabela-calor th[scope="row"] { width: 160px; text-align: left; font-size: 13.5px; font-weight: 700; color: var(--tinta); padding-right: 8px; }
+.tabela-calor thead th:first-child { width: 160px; text-align: left; }
+.tabela-calor .linha-calor-uf th[scope="row"] { font-weight: 400; color: var(--tinta-2); padding-left: 14px; }
+.tabela-calor .linha-calor-total th[scope="row"] { font-size: 14.5px; }
+.celula-calor { height: 46px; border-radius: 6px; cursor: default; }
+.celula-calor:focus-visible { outline: 2px solid var(--tinta); outline-offset: 1px; }
+.celula-calor-vazia { background: var(--realce-fundo); color: var(--tinta-3); }
+.percentual-calor { display: block; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.contagem-calor { display: block; font-size: 11px; opacity: 0.85; }
+.tabela-calor .linha-calor-total td { box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18); }
+@media (max-width: 560px) {
+  .tabela-calor th[scope="row"], .tabela-calor thead th:first-child { width: 84px; font-size: 12px; }
+  .tabela-calor thead th { font-size: 10.5px; }
+  .contagem-calor { display: none; }
+  .percentual-calor { font-size: 12px; }
+  .celula-calor { height: 34px; }
+  .tabela-calor .celula-calor-total, .tabela-calor thead th:last-child { display: none; }
+}
+/* Dispersão "índice × voto": um painel por região, mesma escala em todos. */
+.grade-dispersao { display: grid; gap: 20px; margin-top: 12px; }
+.painel-dispersao h4 { font-size: 15px; margin: 0; }
+.resumo-dispersao { font-size: 12.5px; line-height: 1.5; color: var(--tinta-2); margin: 2px 0 6px; min-height: 3em; }
+#controles-calor, #controles-dispersao { align-items: center; }
+#controles-calor .rotulo-controle, #controles-dispersao .rotulo-controle { margin-right: 4px; }
+.marca-dispersao { font-size: 11px; fill: var(--tinta-3); }
+.painel-dispersao svg { display: block; touch-action: pan-y; }
 /* Mapa em mosaico */
 /* Mapa do 2º turno: filtros e legenda numa coluna à esquerda, mapa à direita; destaques embaixo. */
 .corpo-mapa { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 16px; }
@@ -1049,11 +1080,33 @@ th button:hover { color: var(--tinta); }
 
   <section id="cidades" aria-labelledby="titulo-cidades">
     <h2 id="titulo-cidades">Cidades</h2>
+    <div class="cartao cartao-comparativo">
+      <h3 class="titulo-cartao-grande">Tamanho da cidade × voto</h3>
+      <p class="sub-cartao-grande" id="sub-calor"></p>
+      <div class="controles" id="controles-calor" role="group" aria-label="Linhas por região ou por estado" style="margin:16px 0 8px"></div>
+      <div class="escala-legenda" id="legenda-calor"></div>
+      <div class="grafico-calor" id="grafico-calor"></div>
+    </div>
+    <div class="cartao cartao-comparativo">
+      <h3 class="titulo-cartao-grande">Índices sociais × voto, dentro de cada região</h3>
+      <p class="sub-cartao-grande">Cada ponto é uma cidade; a linha é a tendência, e o r mede a força da relação (de −1 a +1). Alfabetização e PIB medem acesso a estudo e renda, não inteligência, e a relação entre cidades não diz como votou cada eleitor.</p>
+      <div class="controles" id="controles-dispersao" role="group" aria-label="Índice do eixo horizontal" style="margin:16px 0 8px"></div>
+      <ul class="legenda">
+        <li><span class="amostra" style="background:var(--cor-lula)"></span>Cidade onde Lula venceu</li>
+        <li><span class="amostra" style="background:var(--cor-flavio)"></span>Cidade onde Flávio venceu</li>
+        <li><span class="amostra-linha" style="background:var(--tinta);height:3px"></span>Tendência (cada cidade pesa igual)</li>
+      </ul>
+      <div class="grade-dispersao" id="grafico-dispersao"></div>
+    </div>
     <div class="cartao">
       <div class="filtros-cidades">
         <label class="campo-filtro">
           <span class="rotulo-controle">Estado</span>
           <select id="filtro-uf-cidades"></select>
+        </label>
+        <label class="campo-filtro">
+          <span class="rotulo-controle">Habitantes</span>
+          <select id="filtro-habitantes"></select>
         </label>
         <label class="campo-filtro campo-busca">
           <span class="rotulo-controle">Buscar cidade</span>
@@ -1077,7 +1130,7 @@ th button:hover { color: var(--tinta); }
 <div class="dica" id="dica" role="tooltip" aria-hidden="true"></div>
 
 <script src="dados.js?v=d8440162fc0c"></script>
-<script src="municipios.js?v=b9bfef419036"></script>
+<script src="municipios.js?v=fdea405db0bb"></script>
 <script>
 "use strict";
 
@@ -4341,6 +4394,33 @@ function cidadesPorPagina() {
 }
 let ufCidadesAtual = "";
 let buscaCidadesAtual = "";
+// Faixas de habitantes (IBGE 2026); intervalo [mínimo, máximo). O exterior não tem população.
+const FAIXAS_HABITANTES = [
+  { codigo: "", rotulo: "Todas", minimo: null, maximo: null, descricao: "" },
+  { codigo: "ate50", rotulo: "Até 50 mil", minimo: 0, maximo: 50000, descricao: "com até 50 mil habitantes" },
+  { codigo: "50a100", rotulo: "50 a 100 mil", minimo: 50000, maximo: 100000, descricao: "com 50 a 100 mil habitantes" },
+  { codigo: "100a200", rotulo: "100 a 200 mil", minimo: 100000, maximo: 200000, descricao: "com 100 a 200 mil habitantes" },
+  { codigo: "200a300", rotulo: "200 a 300 mil", minimo: 200000, maximo: 300000, descricao: "com 200 a 300 mil habitantes" },
+  { codigo: "mais300", rotulo: "Mais de 300 mil", minimo: 300000, maximo: Infinity, descricao: "com mais de 300 mil habitantes" },
+];
+let faixaHabitantesAtual = "";
+
+function buscarFaixaHabitantes(codigo) {
+  for (const faixa of FAIXAS_HABITANTES) {
+    if (faixa.codigo === codigo) {
+      return faixa;
+    }
+  }
+  return FAIXAS_HABITANTES[0];
+}
+
+function estaNaFaixa(cidade, faixa) {
+  if (!faixa.codigo) {
+    return true;
+  }
+  return cidade.populacao !== null && cidade.populacao >= faixa.minimo && cidade.populacao < faixa.maximo;
+}
+
 // Filtro por vencedor do 2º turno: "" (todas), "Lula" ou "Flávio".
 let vencedorCidadesAtual = "";
 // Destaque "cidade mais petista / mais bolsonarista": "" (desligado), "lula" ou "flavio".
@@ -4423,14 +4503,39 @@ const COLUNAS_CIDADES = [
   { campo: "habitantes", titulo: "Habitantes", ordenar: function (cidade) { return cidade.populacao; } },
 ];
 
-function filtrarCidades() {
+function filtrarCidades(ignorarFaixa) {
+  // Recorte = estado + faixa de habitantes + busca. Com ignorarFaixa, serve às contagens do seletor.
   const termo = normalizarBusca(buscaCidadesAtual);
+  const faixa = buscarFaixaHabitantes(ignorarFaixa ? "" : faixaHabitantesAtual);
   return carregarCidades().filter(function (cidade) {
     if (ufCidadesAtual && cidade.uf !== ufCidadesAtual) {
       return false;
     }
+    if (!estaNaFaixa(cidade, faixa)) {
+      return false;
+    }
     return termo === "" || cidade.chaveBusca.indexOf(termo) >= 0;
   });
+}
+
+function atualizarOpcoesHabitantes() {
+  // Cada faixa mostra quantas cidades do estado e da busca atuais caem nela.
+  const seletor = document.getElementById("filtro-habitantes");
+  const semFaixa = filtrarCidades(true);
+  seletor.replaceChildren();
+  for (const faixa of FAIXAS_HABITANTES) {
+    let quantidade = 0;
+    for (const cidade of semFaixa) {
+      if (estaNaFaixa(cidade, faixa)) {
+        quantidade += 1;
+      }
+    }
+    const opcao = document.createElement("option");
+    opcao.value = faixa.codigo;
+    opcao.textContent = faixa.rotulo + " (" + formatarInteiro(quantidade) + ")";
+    seletor.appendChild(opcao);
+  }
+  seletor.value = faixaHabitantesAtual;
 }
 
 function ordenarCidades(cidades) {
@@ -4685,26 +4790,33 @@ function textoResumoCidades(cidadesDoFiltro) {
     lula1t += cidade.vencedor_1t === "Lula" ? 1 : 0;
     flavio1t += cidade.vencedor_1t === "Flávio" ? 1 : 0;
   }
-  const onde = ufCidadesAtual ? (ufCidadesAtual === "ZZ" ? "cidades do exterior" : "cidades de " + buscarUf(ufCidadesAtual).nm_uf) : "cidades do Brasil e do exterior";
+  const faixa = buscarFaixaHabitantes(faixaHabitantesAtual);
+  let onde = ufCidadesAtual ? (ufCidadesAtual === "ZZ" ? "cidades do exterior" : "cidades de " + buscarUf(ufCidadesAtual).nm_uf) : "cidades do Brasil e do exterior";
+  if (faixa.codigo) {
+    onde = (ufCidadesAtual ? onde : "cidades do Brasil") + " " + faixa.descricao;
+  }
   return "Lula venceu em " + formatarInteiro(lula2t) + " e Flávio em " + formatarInteiro(flavio2t) + " das " +
-    formatarInteiro(comVotos.length) + " " + onde + " com votos (no 1º turno: " + formatarInteiro(lula1t) + " e " + formatarInteiro(flavio1t) + ").";
+    formatarInteiro(comVotos.length) + " " + onde + (faixa.codigo ? "" : " com votos") + " (no 1º turno: " + formatarInteiro(lula1t) + " e " + formatarInteiro(flavio1t) + ").";
 }
 
 function nomeDaSelecaoCidades(encontradas) {
-  // Como o card descreve o recorte: a cidade, as cidades encontradas, o estado ou o Brasil.
+  // Como o card descreve o recorte: a cidade, as cidades encontradas, o estado ou o Brasil,
+  // com a faixa de habitantes quando houver ("Brasil · mais de 300 mil hab.").
+  const faixa = buscarFaixaHabitantes(faixaHabitantesAtual);
+  const sufixoFaixa = faixa.codigo ? " · " + faixa.rotulo.toLowerCase() + " hab." : "";
   if (buscaCidadesAtual.trim() !== "") {
     if (encontradas.length === 1) {
       return encontradas[0].nome + " (" + (encontradas[0].uf === "ZZ" ? "exterior" : encontradas[0].uf) + ")";
     }
-    return formatarInteiro(encontradas.length) + " cidades encontradas";
+    return formatarInteiro(encontradas.length) + " cidades encontradas" + sufixoFaixa;
   }
   if (ufCidadesAtual === "ZZ") {
-    return "Exterior";
+    return "Exterior" + sufixoFaixa;
   }
   if (ufCidadesAtual) {
-    return buscarUf(ufCidadesAtual).nm_uf;
+    return buscarUf(ufCidadesAtual).nm_uf + sufixoFaixa;
   }
-  return "Brasil e exterior";
+  return (faixa.codigo ? "Brasil" : "Brasil e exterior") + sufixoFaixa;
 }
 
 function renderizarSelecaoCidades(encontradas) {
@@ -4856,8 +4968,12 @@ function renderizarDestaquesCidades(extremos) {
 }
 
 function renderizarListaCidades() {
-  const doFiltroUf = carregarCidades().filter(function (cidade) { return !ufCidadesAtual || cidade.uf === ufCidadesAtual; });
+  const faixaAtual = buscarFaixaHabitantes(faixaHabitantesAtual);
+  const doFiltroUf = carregarCidades().filter(function (cidade) {
+    return (!ufCidadesAtual || cidade.uf === ufCidadesAtual) && estaNaFaixa(cidade, faixaAtual);
+  });
   document.getElementById("resumo-cidades").textContent = textoResumoCidades(doFiltroUf);
+  atualizarOpcoesHabitantes();
 
   // O card de % e as contagens usam o recorte (estado + busca); a lista aplica também o vencedor.
   const recorte = filtrarCidades();
@@ -4935,6 +5051,12 @@ function renderizarCidades() {
       limiteCidadesAtual = cidadesPorPagina();
       renderizarListaCidades();
     });
+    const seletorHabitantes = document.getElementById("filtro-habitantes");
+    seletorHabitantes.addEventListener("change", function () {
+      faixaHabitantesAtual = seletorHabitantes.value;
+      limiteCidadesAtual = cidadesPorPagina();
+      renderizarListaCidades();
+    });
     const campoBusca = document.getElementById("busca-cidade");
     campoBusca.addEventListener("input", function () {
       window.clearTimeout(temporizadorBuscaCidades);
@@ -4946,6 +5068,486 @@ function renderizarCidades() {
     });
   }
   renderizarListaCidades();
+}
+
+/* ---------- Perfil das cidades: tamanho × voto (mapa de calor) e índices × voto (dispersão) ---------- */
+
+const REGIOES_PERFIL = ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"];
+let nivelCalorAtual = "regiao";
+
+function cidadesBrasileirasComPopulacao() {
+  return carregarCidades().filter(function (cidade) { return cidade.uf !== "ZZ" && cidade.populacao !== null; });
+}
+
+function regiaoDaUf(siglaUf) {
+  const uf = buscarUf(siglaUf);
+  return uf ? uf.nm_regiao : null;
+}
+
+function somarGrupoCidades(cidades) {
+  // Soma votos, eleitores e habitantes de um grupo de cidades e calcula o % de Flávio no 2º turno.
+  const soma = { cidades: cidades.length, lula: 0, flavio: 0, aptos: 0, habitantes: 0 };
+  for (const cidade of cidades) {
+    soma.lula += cidade.votos_2t_13;
+    soma.flavio += cidade.votos_2t_22;
+    soma.aptos += cidade.aptos_2t;
+    soma.habitantes += cidade.populacao;
+  }
+  soma.pctFlavio = soma.lula + soma.flavio > 0 ? 100 * soma.flavio / (soma.lula + soma.flavio) : null;
+  return soma;
+}
+
+function faixasDeTamanho() {
+  // As faixas do seletor de habitantes, sem a opção "Todas".
+  return FAIXAS_HABITANTES.filter(function (faixa) { return faixa.codigo !== ""; });
+}
+
+function linhasDoCalor() {
+  // Linhas do mapa de calor: Brasil, depois regiões; no nível "Estados", cada região seguida dos seus estados.
+  const cidades = cidadesBrasileirasComPopulacao();
+  const linhas = [{ nome: "Brasil", tipo: "total", cidades: cidades }];
+  for (const nomeRegiao of REGIOES_PERFIL) {
+    const daRegiao = cidades.filter(function (cidade) { return regiaoDaUf(cidade.uf) === nomeRegiao; });
+    linhas.push({ nome: nomeRegiao, tipo: "regiao", cidades: daRegiao });
+    if (nivelCalorAtual !== "uf") {
+      continue;
+    }
+    const ufsDaRegiao = DADOS.ufs.filter(function (uf) { return uf.nm_regiao === nomeRegiao; });
+    ufsDaRegiao.sort(function (ufA, ufB) { return ufA.nm_uf.localeCompare(ufB.nm_uf, "pt-BR"); });
+    for (const uf of ufsDaRegiao) {
+      linhas.push({ nome: uf.nm_uf, tipo: "uf", cidades: daRegiao.filter(function (cidade) { return cidade.uf === uf.sg_uf; }) });
+    }
+  }
+  return linhas;
+}
+
+function criarEscalaFlavio() {
+  // Mesma lógica de cor do mapa: azul quando Flávio passa de 50%, vermelho quando Lula passa.
+  return criarEscalaDivergente(25, 50, 75, lerCor("--div-vermelho"), lerCor("--div-meio"), lerCor("--div-azul"));
+}
+
+function renderizarControlesCalor() {
+  const conteiner = document.getElementById("controles-calor");
+  conteiner.replaceChildren();
+  const rotulo = document.createElement("span");
+  rotulo.className = "rotulo-controle";
+  rotulo.textContent = "Mostrar por:";
+  conteiner.appendChild(rotulo);
+  for (const nivel of [{ codigo: "regiao", rotulo: "Regiões" }, { codigo: "uf", rotulo: "Estados" }]) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.textContent = nivel.rotulo;
+    botao.dataset.nivelCalor = nivel.codigo;
+    botao.setAttribute("aria-pressed", nivel.codigo === nivelCalorAtual ? "true" : "false");
+    botao.addEventListener("click", function () {
+      executarSemPular(function () {
+        return document.querySelector("#controles-calor [data-nivel-calor='" + nivel.codigo + "']");
+      }, function () {
+        nivelCalorAtual = nivel.codigo;
+        renderizarControlesCalor();
+        renderizarMapaCalor();
+      });
+    });
+    conteiner.appendChild(botao);
+  }
+}
+
+function criarCelulaCalor(nomeLinha, faixa, soma, escala) {
+  const celula = document.createElement("td");
+  celula.className = "celula-calor";
+  celula.dataset.rotulo = faixa ? faixa.rotulo : "Todas";
+  if (soma.cidades === 0 || soma.pctFlavio === null) {
+    celula.classList.add("celula-calor-vazia");
+    celula.textContent = "—";
+    return celula;
+  }
+  const corFundo = escala(soma.pctFlavio);
+  celula.style.background = corFundo;
+  celula.style.color = corDeTextoSobre(corFundo);
+  const percentual = document.createElement("span");
+  percentual.className = "percentual-calor";
+  percentual.textContent = formatarPercentual(soma.pctFlavio, 1);
+  celula.appendChild(percentual);
+  const contagem = document.createElement("span");
+  contagem.className = "contagem-calor";
+  contagem.textContent = formatarInteiro(soma.cidades) + (soma.cidades === 1 ? " cidade" : " cidades");
+  celula.appendChild(contagem);
+  celula.tabIndex = 0;
+  ligarDica(celula, function () {
+    return {
+      titulo: nomeLinha + " · " + (faixa ? faixa.rotulo.toLowerCase() + " habitantes" : "todas as cidades"),
+      linhas: [
+        { valor: formatarPercentual(soma.pctFlavio, 2), rotulo: "Flávio no 2º turno", cor: lerCor("--cor-flavio") },
+        { valor: formatarPercentual(100 - soma.pctFlavio, 2), rotulo: "Lula no 2º turno", cor: lerCor("--cor-lula") },
+        { valor: formatarInteiro(soma.flavio), rotulo: "votos de Flávio" },
+        { valor: formatarInteiro(soma.lula), rotulo: "votos de Lula" },
+        { valor: formatarInteiro(soma.cidades), rotulo: "cidades" },
+        { valor: formatarInteiro(soma.aptos), rotulo: "eleitores" },
+        { valor: formatarInteiro(soma.habitantes), rotulo: "habitantes (IBGE 2026)" },
+      ],
+      nota: "Percentual sobre os votos dados a Lula e Flávio nessas cidades, somados.",
+    };
+  });
+  return celula;
+}
+
+function renderizarLegendaCalor(escala) {
+  const conteiner = document.getElementById("legenda-calor");
+  conteiner.replaceChildren();
+  const paradas = [];
+  for (let indice = 0; indice <= 12; indice += 1) {
+    const valor = 75 - 50 * indice / 12;
+    paradas.push(escala(valor) + " " + (100 * indice / 12) + "%");
+  }
+  const gradiente = document.createElement("div");
+  gradiente.className = "gradiente";
+  gradiente.style.background = "linear-gradient(to right, " + paradas.join(", ") + ")";
+  conteiner.appendChild(gradiente);
+  const marcas = document.createElement("div");
+  marcas.className = "marcas";
+  for (const texto of ["Flávio 75%", "50%", "Flávio 25%"]) {
+    const marca = document.createElement("span");
+    marca.textContent = texto;
+    marcas.appendChild(marca);
+  }
+  conteiner.appendChild(marcas);
+}
+
+function renderizarMapaCalor() {
+  const escala = criarEscalaFlavio();
+  renderizarLegendaCalor(escala);
+  const faixas = faixasDeTamanho();
+  const linhas = linhasDoCalor();
+
+  const tabela = document.createElement("table");
+  tabela.className = "tabela-calor";
+  const cabecalho = document.createElement("thead");
+  const linhaCabecalho = document.createElement("tr");
+  const canto = document.createElement("th");
+  canto.scope = "col";
+  canto.textContent = nivelCalorAtual === "uf" ? "Estado" : "Região";
+  linhaCabecalho.appendChild(canto);
+  for (const faixa of faixas) {
+    const celula = document.createElement("th");
+    celula.scope = "col";
+    celula.textContent = faixa.rotulo;
+    linhaCabecalho.appendChild(celula);
+  }
+  const celulaTodas = document.createElement("th");
+  celulaTodas.scope = "col";
+  celulaTodas.textContent = "Todas";
+  linhaCabecalho.appendChild(celulaTodas);
+  cabecalho.appendChild(linhaCabecalho);
+  tabela.appendChild(cabecalho);
+
+  const corpo = document.createElement("tbody");
+  for (const linha of linhas) {
+    const elementoLinha = document.createElement("tr");
+    elementoLinha.className = "linha-calor-" + linha.tipo;
+    const nome = document.createElement("th");
+    nome.scope = "row";
+    nome.textContent = linha.nome;
+    elementoLinha.appendChild(nome);
+    for (const faixa of faixas) {
+      const daFaixa = linha.cidades.filter(function (cidade) { return estaNaFaixa(cidade, faixa); });
+      elementoLinha.appendChild(criarCelulaCalor(linha.nome, faixa, somarGrupoCidades(daFaixa), escala));
+    }
+    const celulaTotal = criarCelulaCalor(linha.nome, null, somarGrupoCidades(linha.cidades), escala);
+    celulaTotal.classList.add("celula-calor-total");
+    elementoLinha.appendChild(celulaTotal);
+    corpo.appendChild(elementoLinha);
+  }
+  tabela.appendChild(corpo);
+  const conteiner = document.getElementById("grafico-calor");
+  conteiner.replaceChildren();
+  conteiner.appendChild(tabela);
+
+  // Frase-resposta, gerada dos dados: o padrão do Brasil e o das regiões.
+  const brasil = linhas[0].cidades;
+  const pequenas = somarGrupoCidades(brasil.filter(function (cidade) { return estaNaFaixa(cidade, faixas[0]); }));
+  const nordesteTotal = brasil.filter(function (cidade) { return regiaoDaUf(cidade.uf) === "Nordeste"; });
+  const pesoNordeste = 100 * somarGrupoCidades(nordesteTotal.filter(function (cidade) { return estaNaFaixa(cidade, faixas[0]); })).habitantes / pequenas.habitantes;
+  document.getElementById("sub-calor").textContent =
+    "No Brasil, Flávio teve " + formatarPercentual(pequenas.pctFlavio, 1) + " nas cidades com até 50 mil habitantes, o seu pior resultado entre os tamanhos; " +
+    formatarPercentual(pesoNordeste, 0) + " de quem mora nelas está no Nordeste. Dentro de cada região, o desenho muda: leia linha a linha.";
+}
+
+/* Dispersão: cada ponto é uma cidade; um painel por região, com a reta e a correlação de cada uma. */
+
+const INDICADORES_DISPERSAO = [
+  {
+    codigo: "alfabetizacao",
+    rotulo: "Alfabetização (15 anos ou mais, Censo 2022)",
+    rotuloCurto: "alfabetização",
+    campo: "alfabetizacao",
+    escalaLog: false,
+    dominio: [60, 100],
+    marcas: [60, 70, 80, 90, 100],
+    formatarMarca: function (valor) { return formatarNumero(valor, 0) + "%"; },
+    formatarValor: function (valor) { return formatarPercentual(valor, 1); },
+  },
+  {
+    codigo: "pib",
+    rotulo: "PIB per capita (2023, escala logarítmica)",
+    rotuloCurto: "PIB per capita",
+    campo: "pib_per_capita",
+    escalaLog: true,
+    dominio: [5000, 700000],
+    marcas: [10000, 30000, 100000, 300000],
+    formatarMarca: function (valor) { return "R$ " + formatarNumero(valor / 1000, 0) + " mil"; },
+    formatarValor: function (valor) { return "R$ " + formatarInteiro(valor); },
+  },
+];
+let indicadorDispersaoAtual = INDICADORES_DISPERSAO[0];
+
+function valorXDispersao(cidade, indicador) {
+  const valor = cidade[indicador.campo];
+  if (valor === null || valor === undefined) {
+    return null;
+  }
+  return indicador.escalaLog ? Math.log10(valor) : valor;
+}
+
+function calcularRegressao(pontos) {
+  // Correlação de Pearson e reta de mínimos quadrados de y (% Flávio) em x (índice, ou log10 do PIB).
+  // Cada cidade pesa igual. Devolve null com menos de 3 pontos.
+  const quantidade = pontos.length;
+  if (quantidade < 3) {
+    return null;
+  }
+  let somaX = 0;
+  let somaY = 0;
+  for (const ponto of pontos) {
+    somaX += ponto.x;
+    somaY += ponto.y;
+  }
+  const mediaX = somaX / quantidade;
+  const mediaY = somaY / quantidade;
+  let covariancia = 0;
+  let varianciaX = 0;
+  let varianciaY = 0;
+  for (const ponto of pontos) {
+    covariancia += (ponto.x - mediaX) * (ponto.y - mediaY);
+    varianciaX += (ponto.x - mediaX) * (ponto.x - mediaX);
+    varianciaY += (ponto.y - mediaY) * (ponto.y - mediaY);
+  }
+  if (varianciaX === 0 || varianciaY === 0) {
+    return null;
+  }
+  const inclinacao = covariancia / varianciaX;
+  return {
+    r: covariancia / Math.sqrt(varianciaX * varianciaY),
+    inclinacao: inclinacao,
+    intercepto: mediaY - inclinacao * mediaX,
+    quantidade: quantidade,
+  };
+}
+
+function descreverCorrelacao(regressao, indicador) {
+  // "fraca", "moderada" ou "forte", com o sentido em palavras.
+  const intensidade = Math.abs(regressao.r);
+  let forca = "forte";
+  if (intensidade < 0.1) {
+    return "praticamente sem relação";
+  }
+  if (intensidade < 0.3) {
+    forca = "fraca";
+  } else if (intensidade < 0.5) {
+    forca = "moderada";
+  }
+  const sentido = regressao.r > 0 ? "mais Flávio" : "menos Flávio";
+  return "relação " + forca + ": mais " + indicador.rotuloCurto + ", " + sentido;
+}
+
+function renderizarControlesDispersao() {
+  const conteiner = document.getElementById("controles-dispersao");
+  conteiner.replaceChildren();
+  const rotulo = document.createElement("span");
+  rotulo.className = "rotulo-controle";
+  rotulo.textContent = "Índice:";
+  conteiner.appendChild(rotulo);
+  for (const indicador of INDICADORES_DISPERSAO) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.textContent = indicador.codigo === "pib" ? "PIB per capita" : "Alfabetização";
+    botao.dataset.indicadorDispersao = indicador.codigo;
+    botao.setAttribute("aria-pressed", indicador === indicadorDispersaoAtual ? "true" : "false");
+    botao.addEventListener("click", function () {
+      executarSemPular(function () {
+        return document.querySelector("#controles-dispersao [data-indicador-dispersao='" + indicador.codigo + "']");
+      }, function () {
+        indicadorDispersaoAtual = indicador;
+        renderizarControlesDispersao();
+        renderizarDispersao();
+      });
+    });
+    conteiner.appendChild(botao);
+  }
+}
+
+function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
+  const painel = document.createElement("div");
+  painel.className = "painel-dispersao";
+  const pontos = [];
+  for (const cidade of cidades) {
+    const x = valorXDispersao(cidade, indicador);
+    if (x === null || !cidade.temVotos) {
+      continue;
+    }
+    pontos.push({ x: x, y: 100 - cidade.pct_lula_2t, cidade: cidade });
+  }
+  const regressao = calcularRegressao(pontos);
+
+  const titulo = document.createElement("h4");
+  titulo.textContent = nomePainel;
+  painel.appendChild(titulo);
+  const resumo = document.createElement("p");
+  resumo.className = "resumo-dispersao";
+  if (regressao) {
+    resumo.textContent = "r = " + formatarNumeroComSinal(regressao.r, 2) + " · " + descreverCorrelacao(regressao, indicador) +
+      " · " + formatarInteiro(regressao.quantidade) + " cidades";
+  } else {
+    resumo.textContent = "Cidades insuficientes para medir a relação.";
+  }
+  painel.appendChild(resumo);
+
+  const altura = 230;
+  const margem = { esquerda: 36, direita: 10, topo: 8, base: 26 };
+  const larguraUtil = largura - margem.esquerda - margem.direita;
+  const alturaUtil = altura - margem.topo - margem.base;
+  const dominioX = indicador.escalaLog ? [Math.log10(indicador.dominio[0]), Math.log10(indicador.dominio[1])] : indicador.dominio;
+  function posicaoX(x) {
+    const limitado = Math.min(dominioX[1], Math.max(dominioX[0], x));
+    return margem.esquerda + larguraUtil * (limitado - dominioX[0]) / (dominioX[1] - dominioX[0]);
+  }
+  function posicaoY(y) {
+    return margem.topo + alturaUtil * (1 - y / 100);
+  }
+  const svg = criarSvg("svg", { width: largura, height: altura, role: "img",
+    "aria-label": nomePainel + ": % de Flávio no 2º turno por " + indicador.rotuloCurto + " de cada cidade" });
+  // Recorte da área do gráfico: a reta de tendência não invade os eixos (ex.: abaixo de 0%).
+  const idRecorte = "recorte-dispersao-" + normalizarBusca(nomePainel).replace(/[^a-z]/g, "");
+  const definicoes = criarSvg("defs", {});
+  const recorte = criarSvg("clipPath", { id: idRecorte });
+  recorte.appendChild(criarSvg("rect", { x: margem.esquerda, y: margem.topo, width: larguraUtil, height: alturaUtil }));
+  definicoes.appendChild(recorte);
+  svg.appendChild(definicoes);
+
+  // Grade, eixos e linha dos 50%.
+  for (const valorY of [0, 25, 50, 75, 100]) {
+    const y = posicaoY(valorY);
+    svg.appendChild(criarSvg("line", { x1: margem.esquerda, x2: largura - margem.direita, y1: y, y2: y,
+      stroke: lerCor(valorY === 50 ? "--eixo" : "--grade"), "stroke-width": 1, "stroke-dasharray": valorY === 50 ? "4 3" : "" }));
+    const rotuloY = criarSvg("text", { x: margem.esquerda - 6, y: y + 4, "text-anchor": "end", class: "marca-dispersao" });
+    rotuloY.textContent = valorY + "%";
+    svg.appendChild(rotuloY);
+  }
+  for (const marca of indicador.marcas) {
+    const x = posicaoX(indicador.escalaLog ? Math.log10(marca) : marca);
+    svg.appendChild(criarSvg("line", { x1: x, x2: x, y1: margem.topo, y2: altura - margem.base, stroke: lerCor("--grade"), "stroke-width": 1 }));
+    const rotuloX = criarSvg("text", { x: x, y: altura - 8, "text-anchor": "middle", class: "marca-dispersao" });
+    rotuloX.textContent = indicador.formatarMarca(marca);
+    svg.appendChild(rotuloX);
+  }
+
+  // Pontos: vermelho onde Lula venceu, azul onde Flávio venceu.
+  const corLula = lerCor("--cor-lula");
+  const corFlavio = lerCor("--cor-flavio");
+  for (const ponto of pontos) {
+    svg.appendChild(criarSvg("circle", { cx: posicaoX(ponto.x), cy: posicaoY(ponto.y), r: 2,
+      fill: ponto.y > 50 ? corFlavio : corLula, "fill-opacity": 0.45 }));
+  }
+
+  // Reta de tendência dentro da faixa de x da região.
+  if (regressao) {
+    let menorX = Infinity;
+    let maiorX = -Infinity;
+    for (const ponto of pontos) {
+      menorX = Math.min(menorX, ponto.x);
+      maiorX = Math.max(maiorX, ponto.x);
+    }
+    const yInicio = regressao.intercepto + regressao.inclinacao * menorX;
+    const yFim = regressao.intercepto + regressao.inclinacao * maiorX;
+    svg.appendChild(criarSvg("line", { x1: posicaoX(menorX), y1: posicaoY(yInicio), x2: posicaoX(maiorX), y2: posicaoY(yFim),
+      stroke: lerCor("--superficie"), "stroke-width": 5, "stroke-linecap": "round", "clip-path": "url(#" + idRecorte + ")" }));
+    svg.appendChild(criarSvg("line", { x1: posicaoX(menorX), y1: posicaoY(yInicio), x2: posicaoX(maiorX), y2: posicaoY(yFim),
+      stroke: lerCor("--tinta"), "stroke-width": 2.5, "stroke-linecap": "round", "clip-path": "url(#" + idRecorte + ")" }));
+  }
+
+  // Dica: cidade mais próxima do ponteiro (um único ouvinte por painel).
+  svg.addEventListener("pointermove", function (evento) {
+    const caixa = svg.getBoundingClientRect();
+    const xPonteiro = evento.clientX - caixa.left;
+    const yPonteiro = evento.clientY - caixa.top;
+    let maisProximo = null;
+    let menorDistancia = 64;
+    for (const ponto of pontos) {
+      const dx = posicaoX(ponto.x) - xPonteiro;
+      const dy = posicaoY(ponto.y) - yPonteiro;
+      const distancia = dx * dx + dy * dy;
+      if (distancia < menorDistancia) {
+        menorDistancia = distancia;
+        maisProximo = ponto;
+      }
+    }
+    if (!maisProximo) {
+      dica.classList.remove("visivel");
+      return;
+    }
+    const cidade = maisProximo.cidade;
+    preencherDica(cidade.nome + " (" + cidade.uf + ")", [
+      { valor: indicador.formatarValor(cidade[indicador.campo]), rotulo: indicador.rotuloCurto },
+      { valor: formatarPercentual(maisProximo.y, 1), rotulo: "Flávio no 2º turno", cor: corFlavio },
+      { valor: formatarPercentual(100 - maisProximo.y, 1), rotulo: "Lula no 2º turno", cor: corLula },
+      { valor: formatarInteiro(cidade.populacao), rotulo: "habitantes" },
+    ], null);
+    dica.classList.add("visivel");
+    posicionarDica(evento.clientX, evento.clientY);
+  });
+  svg.addEventListener("pointerleave", function () {
+    dica.classList.remove("visivel");
+  });
+  painel.appendChild(svg);
+  return { painel: painel, regressao: regressao };
+}
+
+// Correlações do último desenho, por painel (conferidas por fora contra o cálculo em Python).
+let regressoesDispersao = {};
+
+function renderizarDispersao() {
+  const conteiner = document.getElementById("grafico-dispersao");
+  conteiner.replaceChildren();
+  const cidades = cidadesBrasileirasComPopulacao();
+  // Largura de cada painel: a grade tem 3, 2 ou 1 coluna conforme a tela (ver CSS).
+  const larguraConteiner = Math.max(260, conteiner.clientWidth);
+  let colunas = 1;
+  if (larguraConteiner >= 1000) {
+    colunas = 3;
+  } else if (larguraConteiner >= 620) {
+    colunas = 2;
+  }
+  const larguraPainel = Math.floor((larguraConteiner - 20 * (colunas - 1)) / colunas);
+  conteiner.style.gridTemplateColumns = "repeat(" + colunas + ", minmax(0, 1fr))";
+  regressoesDispersao = {};
+  const paineis = [{ nome: "Brasil", cidades: cidades }];
+  for (const nomeRegiao of REGIOES_PERFIL) {
+    paineis.push({ nome: nomeRegiao, cidades: cidades.filter(function (cidade) { return regiaoDaUf(cidade.uf) === nomeRegiao; }) });
+  }
+  for (const definicao of paineis) {
+    const resultado = criarPainelDispersao(definicao.nome, definicao.cidades, indicadorDispersaoAtual, larguraPainel);
+    regressoesDispersao[definicao.nome] = resultado.regressao;
+    conteiner.appendChild(resultado.painel);
+  }
+}
+
+function renderizarPerfilCidades() {
+  if (!window.DADOS_MUNICIPIOS) {
+    return;
+  }
+  renderizarControlesCalor();
+  renderizarMapaCalor();
+  renderizarControlesDispersao();
+  renderizarDispersao();
 }
 
 /* ---------- Metodologia ---------- */
@@ -5006,6 +5608,7 @@ function renderizarTudo() {
   renderizarEstados();
   renderizarMigracao();
   renderizarConclusao();
+  renderizarPerfilCidades();
   renderizarCidades();
   renderizarRodape();
 }
@@ -5039,6 +5642,7 @@ window.addEventListener("resize", function () {
   window.clearTimeout(temporizadorRedimensionar);
   temporizadorRedimensionar = window.setTimeout(function () {
     renderizarMigracao();
+    renderizarDispersao();
     renderizarSankeyRegioes();
   }, 150);
 });
