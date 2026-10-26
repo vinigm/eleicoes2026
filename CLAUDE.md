@@ -17,6 +17,7 @@ Criado em: 26/10/2026 · Atualizado em: 26/10/2026
 - **"Quais são os números oficiais?"**
   - 1º turno → dados abertos do TSE (CSV, zips na raiz).
   - 2º turno → JSON de divulgação do TSE (`resultados.tse.jus.br`, eleição `6258`) **enquanto o CSV do 2º turno não sair nos dados abertos**. Quando sair, o CSV vence e a base é reconciliada.
+- **"Quantos habitantes tem cada cidade?"** → estimativa 2026 do IBGE (tabela 6579), em `2026-10-26_populacao_ibge/`.
 - **"O que a base FAZ hoje?"** → o código em `2026-10-26_base_presidente_1t_2t/` vence.
 - **"O que a análise DEVERIA fazer?"** → a decisão mais recente do Vinicius, registrada em PENDENCIAS.
 - A diferença entre os dois últimos é ⏳ pendência, não contradição.
@@ -37,9 +38,10 @@ Criado em: 26/10/2026 · Atualizado em: 26/10/2026
 
 - `*.zip` (raiz) → dados abertos do TSE baixados em 26/10/2026. **Não mover nem descompactar em disco.**
 - `dados/json_tse/` → JSON de divulgação do TSE (cache bruto da coleta).
+- `dados/ibge/` → download bruto da população do IBGE (fora do git).
 - `dados/processados/` → bases geradas (parquet/csv). Regeneráveis.
 - `AAAA-MM-DD_descricao/` → scripts de cada etapa, com `README.md` de contexto.
-- `docs/` → HTML público (`index.html` + `dados.js`, gerado por `2026-10-26_html_publico/`). Pasta pensada para o GitHub Pages.
+- `docs/` → HTML público (`index.html` + `dados.js` + `municipios.js`, gerados por `2026-10-26_html_publico/`). Pasta pensada para o GitHub Pages.
 
 ## Repositório e publicação
 

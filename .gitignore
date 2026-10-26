@@ -4,6 +4,9 @@
 # Cache bruto do JSON de divulgação do TSE (regenerável pelo script de coleta)
 dados/json_tse/
 
+# Download bruto da população do IBGE (regenerável por 2026-10-26_populacao_ibge/)
+dados/ibge/
+
 # Logs de execução
 *.log
 

@@ -4,8 +4,8 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 
 ## O que é
 
-- Página única para publicar no GitHub Pages: `docs/index.html` + `docs/dados.js`.
-- Seções: resultado, saldo do 2º turno, regiões e estados (mapa em mosaico), migração de votos (inferência ecológica) e conclusão (de onde vieram os votos a mais de Lula).
+- Página única para publicar no GitHub Pages: `docs/index.html` + `docs/dados.js` + `docs/municipios.js` (cidades, ~430 KB, à parte para não pesar o `dados.js`).
+- Seções, na ordem da história (26/10/2026, pedido do Vinicius): resumo, resultado nacional, regiões e estados (mapa em mosaico), saldo do 2º turno, migração de votos (inferência ecológica), conclusão (de onde vieram os votos a mais de Lula) e cidades.
 - **O HTML não calcula nada de dado eleitoral.** Ele só lê `docs/dados.js`, gerado aqui a partir de saídas já conferidas:
   - `2026-10-26_primeira_leitura_regiao_uf/indicadores_*.csv`;
   - `2026-10-26_inferencia_ecologica/transferencias.csv` (implementação A; idêntica à B nas estimativas pontuais);
@@ -20,6 +20,14 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 
 ## Decisões de design
 
+- **Resumo executivo no topo (26/10/2026, pedido do Vinicius):**
+  - 5 big numbers do Brasil: Lula, Flávio, vantagem de Lula, comparecimento, brancos e nulos.
+    - O número grande é o percentual do 2º turno, e o absoluto vem embaixo, menor (pedido do Vinicius). Depois vêm o 1º turno e a variação, primeiro em pontos e depois em mi.
+    - A vantagem de Lula aparece em pontos, com 1 casa decimal (+3,6). Com 2 casas daria 3,57, que pareceria erro diante de 51,79% − 48,21% = 3,58 (é arredondamento).
+  - Embaixo, 5 cartões por região: vencedor (ou "virou"), % de Lula e de Flávio no 2º turno com ▲▼ em pontos e em votos, e a barra do 2º turno.
+  - O exterior fica fora dos cartões; ele está no mapa.
+  - A dica de cada cartão é uma tabela 1º × 2º × diferença com os números exatos. A dos cartões de região é a mesma do mapa.
+  - A grade fica sem órfão: 5 por linha em telas largas, 3 + 2 nas médias, 2 nas pequenas e 1 no celular.
 - **Resultado nacional (26/10/2026):** cartão com 1º turno à esquerda e 2º à direita, cada um com uma barra de composição dos votos válidos e uma tabela.
   - As linhas ficam na mesma ordem nos dois lados, para comparar lado a lado.
   - Os eliminados aparecem como "—" no 2º turno.
@@ -33,8 +41,13 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 - **Toda frase com número é gerada a partir de `dados.js`** (nada digitado à mão), para não divergir quando os dados forem regenerados.
 - Modo claro/escuro (automático + botão); tabela equivalente para cada gráfico; dica no mouse e no foco do teclado.
 - **Regiões e estados num cartão só (26/10/2026, pedido do Vinicius):** botões "Mostrar por: Regiões | Estados"; Regiões é o padrão e vem primeiro.
-  - Em "Regiões", os quadrados de cada região viram um bloco único com um rótulo (nome, número, variação e "virou"); a tabela embaixo e a tabela completa passam a ser por região, e os destaques por estado somem.
-  - Em "Estados", tudo volta a ser estado por estado (contorno = estado que virou).
+  - **Só o mapa do 2º turno**, com ▲▼ desde o 1º em cada quadrado, porque a dica traz os dois turnos. Saíram o mapa do 1º turno, as tabelas embaixo dos mapas e as tabelas completas recolhidas. Pedido do Vinicius: "fica muito poluído".
+  - O subtítulo conta as vitórias no 2º turno, com as do 1º entre parênteses.
+  - Layout (pedido do Vinicius): no desktop, uma coluna à esquerda traz os filtros empilhados (Indicador, Mostrar por), a legenda de cores, o placar de vitórias e o aviso de uso. O mapa fica sozinho à direita. No celular, tudo isso fica acima do mapa.
+  - O aviso de uso "Passe o mouse (ou toque) em uma região/um estado para ver os detalhes" (pedido do Vinicius): os números estão todos na dica.
+  - Em "Regiões", os quadrados de cada região viram um bloco único com um rótulo (nome, número, variação e "virou").
+  - O mapa fica centralizado no cartão nos dois níveis (pedido do Vinicius). Em "Estados", o contorno marca o estado que virou, e os destaques "O que chama atenção" ficam embaixo do mapa.
+  - Nos blocos de região, uma tira de 1 px na cor do quadrado cobre a linha clara que o arredondamento de pixels abria entre quadrados da mesma região.
   - O antigo cartão "Regiões" saiu: repetia a tabela por região.
 - **Variação nos mapas (26/10/2026, pedido do Vinicius):** no 2º turno, cada quadrado leva ▲▼ (pontos desde o 1º turno) num selo de fundo neutro, para o ▼ vermelho ser legível em qualquer cor.
   - Fato verificado em 26/10/2026: a vantagem de Lula sobre Flávio subiu nas 27 UFs (de +2,3 pontos em RO a +7,4 no RJ).
@@ -43,7 +56,7 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - Por quê: o GitHub Pages manda o navegador guardar os arquivos por 10 minutos (`max-age=600`). Depois de um envio, quem já tinha aberto a página recebeu o HTML novo com o `dados.js` antigo, e a página parou no 1º turno do resultado.
   - Reproduzido localmente: dava `Cannot read properties of undefined (reading '13')`.
   - **Regra:** sempre regenerar `docs/` pelo gerador; nunca editar o `dados.js` à mão.
-- **Base dos percentuais (26/10/2026, pedido do Vinicius):** botão "Votos válidos" ↔ "Todo o eleitorado", repetido nos cartões de resultado, regiões e estados, mas com uma configuração só (mudar em um muda nos três).
+- **Base dos percentuais (26/10/2026, pedido do Vinicius):** botão "Votos válidos" ↔ "Todo o eleitorado" no cartão do resultado nacional. Já esteve também em regiões e estados, mas saiu de lá junto com as tabelas.
   - Na visão eleitorado entram os grupos Lula, Flávio, Outros, Branco/nulo e Abstenção ("não votou" inclui seções não instaladas). Eles somam 100% dos aptos em cada turno, então as variações ▲▼ somam zero: é saldo, não fluxo.
   - Link direto: `#base=eleitorado`.
 - **Dicas com quantidades absolutas:** passar o mouse sobre um percentual mostra, nesta ordem, 1º turno, 2º turno e diferença (pedido do Vinicius), e a base do percentual nos dois turnos.
@@ -69,20 +82,17 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - A incerteza continua visível na dica do Sankey (IC 95% e faixa entre os 3 modelos) e nas faixas da conclusão. Os números completos ficam nos CSVs do repositório.
 - **Variação negativa em vermelho (26/10/2026, pedido do Vinicius):** todo ▼ (tabelas e dicas) usa `--texto-negativo` (#c62828 no claro, #ff8a80 no escuro).
   - É um vermelho de texto, diferente do vermelho de Lula nas barras, e sempre vem junto da seta ▼.
-- **Variação explícita no 2º turno (26/10/2026, pedido do Vinicius):** nas tabelas de resultado, regiões e estados, cada número do 2º turno leva embaixo a diferença para o 1º (▲▼ em pontos percentuais; votos em milhões no resultado).
-  - Exemplo do Norte: Lula 50,01% ▲ 5,36; Flávio 49,99% ▲ 0,84.
+- **Variação explícita no 2º turno (26/10/2026, pedido do Vinicius):** na tabela do resultado, cada número do 2º turno leva embaixo a diferença para o 1º (▲▼ em pontos percentuais; votos em milhões).
   - O 1º turno reserva uma linha invisível do mesmo tamanho, para os dois lados casarem linha a linha. Com os painéis empilhados (< 820 px), ela some.
   - O rodapé avisa que parte do avanço dos dois vem de o 2º turno ter só dois candidatos.
 - **Saldo do 2º turno (26/10/2026):** cartão no mesmo estilo do resultado nacional, com "origem do saldo" e "destino do saldo" lado a lado (barra + tabela).
   - As duas colunas fecham em 14.098.232 votos.
   - O painel é gerado pela função genérica `renderizarPainelComposicao`, reaproveitável nas próximas seções.
-- **Tabela por região:** barra fina dos votos válidos, % de Lula e de Flávio com 2 casas (no Norte, o 2º turno foi 50,01% × 49,99%) e comparecimento; o vencedor de cada turno fica em negrito.
-- **Estados (26/10/2026):** cartão com 1º turno à esquerda e 2º à direita. Em cada lado, um mapa em mosaico e, embaixo, uma tabela das 27 UFs agrupadas por região (barra fina, % de Lula e Flávio com 2 casas, vencedor em negrito, etiqueta "virou").
-  - **Métrica do mapa:** vantagem de Lula sobre Flávio, em pontos (Lula − Flávio nos válidos), na mesma escala divergente ±50 nos dois turnos.
+- **Mapa dos estados:**
+  - **Métrica:** vantagem de Lula sobre Flávio, em pontos (Lula − Flávio nos válidos), na mesma escala divergente ±50 nos dois turnos.
     - O % de Lula não serviria: no 1º turno ele divide os válidos com outros 10 candidatos.
     - Abaixo de 1 ponto, a vantagem mostra casas decimais (Amapá no 1º turno: +0,05).
   - **Botão alternativo:** comparecimento, em rampa sequencial violeta de 72% a 88%. O validador reprova a ponta clara (contraste < 2:1), aceitável em mapa contínuo; todo quadrado ganhou contorno fino para não sumir no fundo.
-  - **A tabela de estados não tem comparecimento:** a largura não comporta, e ele está no mapa e na tabela completa.
 - **Sankey (26/10/2026):** eleitores dos eliminados (Cury, Renan, Caiado, Outros 7) → Lula, Flávio, branco/nulo e não votou.
   - SVG desenhado à mão, sem biblioteca. Largura da faixa = eleitores estimados; cor = destino.
   - Os grupos Lula, Flávio, branco/nulo e não votou do 1º turno ficaram nas barras, porque seus fluxos (30 a 56 mi) apagariam os dos eliminados.
@@ -119,6 +129,20 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - **Certificação independente (26/10/2026):** reprovou a 1ª versão.
     - Causa: faltava a troca direta entre finalistas (5,2 mil votos Flávio → Lula na E3), que caía dentro do ajuste.
     - Corrigido com a "troca direta" como origem própria; todo o resto conferiu.
+
+- **Cidades (26/10/2026, pedido do Vinicius):** última seção. Tem filtro por estado (ou "Todos os estados", ou "Exterior"), busca por nome sem acento ("sao joao" acha "São João del Rei") e lista ordenável clicando no cabeçalho.
+  - Colunas: barra do 2º turno; Lula e Flávio com 1º turno, 2º turno e variação, cada uma com % (ou pontos) em cima e votos embaixo; vantagem e comparecimento (2º turno e ▲▼); eleitores; habitantes (IBGE 2026, ver `2026-10-26_populacao_ibge/`).
+  - Entre 820 e 1.279 px saem a barra e a vantagem, para não haver rolagem lateral. Na tabela, a palavra "votos" fica só no cabeçalho ("Lula · % e votos"); nas fichas do celular, aparece em cada número.
+  - Não há dica ao passar o mouse nem o card de instrução, a pedido do Vinicius: a linha já mostra tudo.
+  - "Virou" aparece num selo vermelho (`--fundo-virou`) aqui, no mapa e nos cartões de região do resumo.
+  - A lista mostra 100 cidades por vez (25 no celular, onde cada uma vira uma ficha), com o botão "Mostrar mais". O padrão é ordenar pelo número de eleitores, maior primeiro.
+  - O placar no topo vale para o estado escolhido. Exemplo de MG: Lula 528 × Flávio 325 cidades (no 1º turno, 452 × 401).
+  - **Dados:** `municipios.js` (`window.DADOS_MUNICIPIOS`, em colunas + linhas), gravado pelo gerador a partir do parquet certificado.
+    - O gerador confere que a soma das 5.757 linhas bate com o Brasil nos 10 campos (aptos, comparecimento, válidos e votos de Lula e Flávio, nos dois turnos).
+    - O arquivo também é versionado pelo conteúdo (`municipios.js?v=<hash>`).
+  - Nomes passados de MAIÚSCULAS para a grafia usual, com conectivos em minúscula ("Olho d'Água das Flores", "São João del Rei", "Embu-Guaçu").
+  - 42 cidades do exterior não tiveram voto válido: aparecem com "—" e vão para o fim de qualquer ordenação.
+  - Conferido em 26/10/2026 contra o parquet, com cálculo independente: São Paulo, Rio de Janeiro, Brasília, Abadia dos Dourados e o placar de MG batem.
 
 ## Verificação feita em 26/10/2026
 

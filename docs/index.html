@@ -38,6 +38,8 @@
   --comp-alta: #4a3aa7;
   --contorno-destaque: #0b0b0b;
   --texto-negativo: #c62828;
+  --fundo-virou: #c62828;
+  --texto-virou: #ffffff;
   --seq-comp-inicio: #ece9fb;
   --seq-comp-fim: #3b2e9a;
   --status-serio: #ec835a;
@@ -76,6 +78,8 @@
     --comp-alta: #9085e9;
     --contorno-destaque: #f0efec;
     --texto-negativo: #ff8a80;
+  --fundo-virou: #ff8a80;
+  --texto-virou: #1a1a19;
     --seq-comp-inicio: #2a2640;
     --seq-comp-fim: #b3abf3;
     --status-serio: #ec835a;
@@ -114,6 +118,8 @@
   --comp-alta: #9085e9;
   --contorno-destaque: #f0efec;
   --texto-negativo: #ff8a80;
+  --fundo-virou: #ff8a80;
+  --texto-virou: #1a1a19;
   --seq-comp-inicio: #2a2640;
   --seq-comp-fim: #b3abf3;
   --status-serio: #ec835a;
@@ -205,35 +211,10 @@ h2 {
   font-size: 16px;
   margin: 0 0 4px;
 }
-.cartao .nota-cartao {
-  font-size: 14px;
-  color: var(--tinta-2);
-  margin: 0 0 16px;
-}
-/* Barra fina dentro de uma célula de tabela (regiões) */
-.celula-barra { width: 34%; min-width: 64px; text-align: left; }
-.tabela-turno th.celula-barra { text-align: left; }
-.celula-barra .barra-empilhada { height: 12px; }
-.celula-barra .segmento:first-child { border-radius: 3px 0 0 3px; }
-.celula-barra .segmento:last-child { border-radius: 0 3px 3px 0; }
-.celula-barra .segmento:only-child { border-radius: 3px; }
-.tabela-turno .valor-vencedor { font-weight: 700; color: var(--tinta); }
 /* Variação em relação ao 1º turno, embaixo do valor do 2º turno. */
 .controle-base { margin: 16px 0 0; align-items: center; }
 /* Na visão do eleitorado são 5 colunas de números: em telas médias a barra fina sai para a tabela caber na metade do cartão. */
-@media (max-width: 1279px) {
-  .modo-eleitorado .celula-barra { display: none; }
-}
-.modo-eleitorado td, .modo-eleitorado th { padding-left: 6px; padding-right: 6px; }
 .rotulo-controle { font-size: 13px; font-weight: 600; color: var(--tinta-2); margin-right: 4px; }
-.rotulo-controle-separado { margin-left: 18px; align-self: center; }
-#controles-mapa { align-items: center; }
-/* Número com dica de quantidade absoluta: realce leve ao passar o mouse. */
-.numero-com-dica { cursor: help; border-radius: 4px; }
-.numero-com-dica:hover, .numero-com-dica:focus-visible { background: var(--realce-fundo); outline: none; }
-@media (max-width: 560px) {
-  .modo-eleitorado td, .modo-eleitorado th { font-size: 11.5px; }
-}
 .etiqueta-titulo { font-size: 12px; vertical-align: middle; margin-left: 8px; font-weight: 600; }
 /* Abaixo de 1.280 px, cabeçalhos e textos quebram linha em vez de forçar rolagem lateral. */
 @media (max-width: 1279px) {
@@ -250,13 +231,6 @@ h2 {
   .tabela-fichas td:first-child::before { content: none; }
 }
 @media (max-width: 560px) {
-  .tabela-turno.modo-eleitorado td, .tabela-turno.modo-eleitorado th { padding: 6px 2px; font-size: 11px; }
-  .tabela-turno.modo-eleitorado .variacao { font-size: 10px; }
-  .tabela-turno.modo-eleitorado .celula-nome { flex-wrap: wrap; }
-}
-@media (max-width: 560px) {
-  .tabela-regioes td, .tabela-regioes th { padding: 6px 3px; }
-  .tabela-regioes .celula-barra { min-width: 40px; }
   /* Cabeçalhos e linhas secundárias podem quebrar: são eles que alargavam a tabela no celular. */
   .tabela-turno th { white-space: normal; }
 }
@@ -271,7 +245,6 @@ td.valor-negativo { color: var(--texto-negativo); }
 }
 /* Nome, barra e valor na mesma linha de cima; a variação fica na linha de baixo. */
 .tabela-turno td { vertical-align: top; }
-.tabela-turno .celula-barra .barra-empilhada { margin-top: 4px; }
 .tabela-turno .variacao {
   display: block;
   margin-top: 1px;
@@ -279,12 +252,6 @@ td.valor-negativo { color: var(--texto-negativo); }
   font-weight: 500;
   color: var(--tinta-2);
   white-space: nowrap;
-}
-.tabela-estados td:first-child { white-space: normal; }
-.tabela-estados .celula-nome { flex-wrap: wrap; row-gap: 2px; }
-@media (max-width: 560px) {
-  .tabela-regioes td, .tabela-regioes th { font-size: 12px; }
-  .celula-barra { min-width: 48px; }
 }
 
 /* Resultado nacional: 1º × 2º turno lado a lado */
@@ -351,11 +318,6 @@ td.valor-negativo { color: var(--texto-negativo); }
   border-radius: 999px;
   padding: 0 7px;
   line-height: 18px;
-}
-.rodape-cartao {
-  font-size: 13px;
-  color: var(--tinta-2);
-  margin: 20px 0 0;
 }
 @media (max-width: 560px) {
   .cartao-comparativo { padding: 16px; }
@@ -521,7 +483,139 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
   .eixo-cascata .nome-cascata { display: none; }
   .item-cascata .nome-cascata { padding-left: 0; }
 }
+/* Resumo executivo: big numbers do Brasil e cartões por região. */
+/* 5 cartões por linha: 5 em telas largas, 3 + 2 nas médias, 2 nas pequenas e 1 no celular (sem órfão de 4 + 1). */
+.grade-numeros, .grade-regioes { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@media (min-width: 520px) { .grade-numeros, .grade-regioes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 760px) { .grade-numeros, .grade-regioes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1180px) { .grade-numeros, .grade-regioes { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.cartao-numero {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-top: 4px solid var(--tinta);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.rotulo-numero { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tinta-2); }
+.valor-numero { font-size: 32px; font-weight: 750; line-height: 1.15; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.complemento-numero { font-size: 13px; color: var(--tinta-2); }
+.comparacao-numero { display: grid; gap: 4px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--grade); font-size: 13px; }
+.linha-comparacao { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.rotulo-comparacao { color: var(--tinta-3); }
+.variacao-resumo { font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.variacao-resumo.variacao-negativa { color: var(--texto-negativo); }
+.titulo-resumo-regioes { font-size: 16px; margin: 24px 0 10px; }
+.cartao-regiao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; padding: 14px 16px; }
+.cartao-numero:hover, .cartao-regiao:hover { border-color: var(--eixo); }
+.cartao-numero:focus-visible, .cartao-regiao:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+.cabecalho-regiao { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.nome-regiao { font-size: 15px; font-weight: 700; }
+.numeros-regiao { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.rotulo-numero-regiao { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--tinta-2); }
+.percentual-regiao { font-size: 22px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.percentual-regiao.percentual-vencedor { font-weight: 800; }
+.numero-regiao .linha-variacao-regiao { display: block; font-size: 12.5px; }
+.barra-resumo-regiao { display: flex; gap: 2px; height: 8px; margin-top: 10px; }
+.barra-resumo-regiao span { display: block; height: 100%; }
+.barra-resumo-regiao span:first-child { border-radius: 4px 0 0 4px; }
+.barra-resumo-regiao span:last-child { border-radius: 0 4px 4px 0; }
+/* Cidades: filtro por estado, busca sem acento e lista ordenável (100 por vez). */
+.filtros-cidades { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; margin-bottom: 14px; }
+.campo-filtro { display: flex; flex-direction: column; gap: 6px; }
+.campo-filtro .rotulo-controle { margin: 0; }
+.campo-busca { flex: 1 1 260px; }
+.filtros-cidades select, .filtros-cidades input {
+  font: inherit;
+  font-size: 15px;
+  padding: 9px 12px;
+  border: 1px solid var(--eixo);
+  border-radius: 8px;
+  background: var(--superficie);
+  color: var(--tinta);
+}
+.filtros-cidades input { width: 100%; }
+.resumo-cidades { color: var(--tinta-2); margin: 0 0 14px; }
+.tabela-cidades .celula-nome { flex-wrap: wrap; row-gap: 2px; }
+.tabela-cidades td:first-child { white-space: normal; }
+.tabela-cidades .uf-cidade { font-size: 12px; color: var(--tinta-3); }
+.tabela-cidades .valor-vencedor { font-weight: 700; color: var(--tinta); }
+.tabela-cidades .linha-principal-cidade { display: block; }
+.tabela-cidades .linha-secundaria-cidade { display: block; margin-top: 1px; font-size: 11.5px; color: var(--tinta-2); white-space: nowrap; }
+@media (min-width: 820px) {
+  .tabela-cidades .sufixo-votos { display: none; }
+}
+.tabela-cidades .variacao-negativa { color: var(--texto-negativo); }
+.tabela-cidades .celula-variacao-cidade .linha-principal-cidade { font-weight: 600; }
+.tabela-cidades .grupo-coluna-cidade { text-align: center; border-bottom: 1px solid var(--eixo); padding-bottom: 4px; }
+.tabela-cidades .subcoluna-cidade { font-size: 12px; padding-top: 4px; }
+.tabela-cidades td, .tabela-cidades th { padding-left: 6px; padding-right: 6px; }
+/* Entre 820 e 1.279 px, a barra e a vantagem saem (seguem na dica) para não haver rolagem lateral. */
+@media (min-width: 820px) and (max-width: 1279px) {
+  .tabela-cidades .coluna-opcional { display: none; }
+}
+.celula-barra-cidade { width: 16%; min-width: 80px; }
+.tabela-cidades th.celula-barra-cidade { text-align: left; }
+.celula-barra-cidade .barra-resumo-regiao { margin-top: 6px; }
+.mais-cidades { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.contagem-cidades { font-size: 13px; color: var(--tinta-2); }
+.botao-mais-cidades {
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 16px;
+  border: 1px solid var(--eixo);
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--tinta);
+  cursor: pointer;
+}
+.botao-mais-cidades:hover { background: var(--realce-fundo); }
+/* No celular, cada cidade vira uma ficha: rótulo à esquerda, valor e variação juntos à direita. */
+@media (max-width: 819px) {
+  .tabela-cidades td { justify-content: flex-end; align-items: baseline; gap: 8px; }
+  .tabela-cidades td::before { margin-right: auto; }
+  .tabela-cidades td:first-child { justify-content: flex-start; }
+  .tabela-cidades .celula-barra-cidade { width: auto; min-width: 0; padding: 4px 0 6px; }
+  .tabela-cidades .celula-barra-cidade::before { content: none; }
+  .tabela-cidades .celula-barra-cidade .barra-resumo-regiao { flex: 1 1 100%; margin-top: 0; }
+}
 /* Mapa em mosaico */
+/* Mapa do 2º turno: filtros e legenda numa coluna à esquerda, mapa à direita; destaques embaixo. */
+.corpo-mapa { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 16px; }
+.painel-mapa { width: 100%; max-width: 520px; margin: 0 auto; }
+.painel-mapa .mosaico { max-width: 520px; margin: 0; }
+.info-mapa { margin-top: 16px; }
+.info-mapa h4 { font-size: 17px; margin: 0 0 2px; }
+.info-mapa h4 .data-turno { font-weight: 400; color: var(--tinta-3); font-size: 14px; margin-left: 6px; }
+.info-mapa .sub-painel { color: var(--tinta-2); margin: 0 0 14px; }
+.info-mapa .instrucao-mapa { margin: 0; }
+.controles-mapa { flex-direction: column; gap: 14px; margin: 0; }
+.grupo-controles { display: flex; flex-direction: column; gap: 6px; }
+.grupo-controles .rotulo-controle { margin: 0; }
+.botoes-grupo { display: flex; flex-wrap: wrap; gap: 6px; }
+@media (min-width: 820px) {
+  .corpo-mapa { grid-template-columns: 280px minmax(0, 1fr); gap: 40px; align-items: start; }
+  .lateral-mapa { position: sticky; top: 16px; }
+  .botoes-grupo { flex-direction: column; align-items: stretch; }
+  .botoes-grupo button { text-align: left; }
+  .lateral-mapa .escala-legenda { margin-top: 20px; }
+  .lateral-mapa .info-mapa { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--grade); }
+}
+/* Aviso de uso do mapa: no tamanho do texto da página, para ser lido (pedido do Vinicius). */
+.instrucao-mapa {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--eixo);
+  border-radius: 10px;
+  background: var(--realce-fundo);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--tinta);
+}
+.instrucao-mapa svg { flex: none; width: 20px; height: 20px; color: var(--tinta); }
 .mosaico {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -536,15 +630,6 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
   border-top: 1px solid var(--grade);
 }
 .bloco-destaques h4 { font-size: 16px; margin: 0 0 10px; }
-.tabela-turno .linha-grupo td {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--tinta-3);
-  padding-top: 12px;
-  border-bottom: 1px solid var(--eixo);
-}
 .ladrilho {
   aspect-ratio: 1;
   border: 0;
@@ -582,6 +667,10 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 /* Nível "Regiões": quadrados da mesma região colados num bloco só, com um rótulo por região. */
 .mosaico-regioes { gap: 0; }
 .mosaico-regioes .ladrilho { border-radius: 0; }
+.mosaico-regioes .junta-baixo::after,
+.mosaico-regioes .junta-direita::before { content: ""; position: absolute; background: inherit; pointer-events: none; }
+.mosaico-regioes .junta-baixo::after { left: 3px; right: 3px; bottom: -1px; height: 1px; }
+.mosaico-regioes .junta-direita::before { top: 3px; bottom: 3px; right: -1px; width: 1px; }
 .rotulo-regiao-mapa {
   position: relative;
   z-index: 1;
@@ -599,6 +688,8 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 .linha-valor-regiao { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 6px; }
 .linha-valor-regiao .variacao-ladrilho { margin-top: 0; }
 .etiqueta-mapa { background: var(--superficie); color: var(--tinta); border-color: var(--superficie); }
+/* "Virou" sempre num selo vermelho (pedido do Vinicius): mapa, resumo por região e cidades. */
+.etiqueta.etiqueta-virou { background: var(--fundo-virou); color: var(--texto-virou); border-color: var(--fundo-virou); font-weight: 700; }
 .escala-legenda { max-width: 380px; margin-top: 12px; }
 .escala-legenda .gradiente { height: 10px; border-radius: 2px; }
 .escala-legenda .marcas {
@@ -643,17 +734,6 @@ th button {
   cursor: pointer;
 }
 th button:hover { color: var(--tinta); }
-
-/* Migração */
-.grupo-rotulo {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--tinta-3);
-  margin: 20px 0 10px;
-}
-.grupo-rotulo:first-of-type { margin-top: 0; }
 .filtro-linha {
   display: flex;
   align-items: center;
@@ -781,15 +861,6 @@ th button:hover { color: var(--tinta); }
   color: var(--tinta-3);
   border-bottom: 1px solid var(--grade);
 }
-
-.visualmente-oculto {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
 </style>
 </head>
 <body>
@@ -804,6 +875,13 @@ th button:hover { color: var(--tinta); }
     <p class="fonte-topo" id="fonte-topo"></p>
   </header>
 
+  <section id="resumo" aria-labelledby="titulo-resumo">
+    <h2 id="titulo-resumo">Resumo</h2>
+    <div class="grade-numeros" id="numeros-brasil"></div>
+    <h3 class="titulo-resumo-regioes">Por região</h3>
+    <div class="grade-regioes" id="cartoes-regioes"></div>
+  </section>
+
   <section id="resultado" aria-labelledby="titulo-resultado">
     <h2 id="titulo-resultado">Resultado nacional: 1º × 2º turno</h2>
     <div class="cartao cartao-comparativo">
@@ -812,6 +890,25 @@ th button:hover { color: var(--tinta); }
       <div class="paineis-turnos">
         <div class="painel-turno" id="painel-1t"></div>
         <div class="painel-turno" id="painel-2t"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="estados" aria-labelledby="titulo-estados">
+    <h2 id="titulo-estados">Regiões e estados</h2>
+    <div class="cartao cartao-comparativo">
+      <h3 class="titulo-cartao-grande" id="titulo-cartao-mapas"></h3>
+      <div class="corpo-mapa">
+        <div class="lateral-mapa">
+          <div class="controles controles-mapa" id="controles-mapa" role="group" aria-label="Opções do mapa"></div>
+          <div class="escala-legenda" id="escala-legenda"></div>
+          <div class="info-mapa" id="info-mapa"></div>
+        </div>
+        <div class="painel-turno painel-mapa" id="painel-estados-2t"></div>
+      </div>
+      <div class="bloco-destaques" id="bloco-destaques-uf">
+        <h4>O que chama atenção</h4>
+        <ul class="destaques-uf" id="destaques-uf"></ul>
       </div>
     </div>
   </section>
@@ -825,33 +922,6 @@ th button:hover { color: var(--tinta); }
         <div class="painel-turno" id="painel-ponte-destino"></div>
       </div>
     </div>
-  </section>
-
-  <section id="estados" aria-labelledby="titulo-estados">
-    <h2 id="titulo-estados">Regiões e estados</h2>
-    <div class="cartao cartao-comparativo">
-      <h3 class="titulo-cartao-grande" id="titulo-cartao-mapas"></h3>
-      <div class="controles controle-base" id="controle-base-estados" role="group" aria-label="Base dos percentuais"></div>
-      <div class="controles" id="controles-mapa" role="group" aria-label="Indicador dos mapas" style="margin:16px 0 4px"></div>
-      <div class="escala-legenda" id="escala-legenda"></div>
-      <ul class="legenda" id="legenda-mapas" style="margin:16px 0 0"></ul>
-      <div class="paineis-turnos">
-        <div class="painel-turno" id="painel-estados-1t"></div>
-        <div class="painel-turno" id="painel-estados-2t"></div>
-      </div>
-      <div class="bloco-destaques" id="bloco-destaques-uf">
-        <h4>O que chama atenção</h4>
-        <ul class="destaques-uf" id="destaques-uf"></ul>
-      </div>
-    </div>
-    <details class="tabela-detalhe cartao" id="detalhe-regioes" style="margin-top:16px">
-      <summary>Ver tabela completa por região (com avanço de Lula e vencedor)</summary>
-      <div class="tabela-rolagem" id="tabela-regioes"></div>
-    </details>
-    <details class="tabela-detalhe cartao" id="detalhe-ufs" style="margin-top:16px">
-      <summary>Ver tabela completa por estado (ordenável, com avanço de Lula)</summary>
-      <div class="tabela-rolagem" id="tabela-ufs"></div>
-    </details>
   </section>
 
   <section id="migracao" aria-labelledby="titulo-migracao">
@@ -904,12 +974,32 @@ th button:hover { color: var(--tinta); }
     </div>
   </section>
 
+  <section id="cidades" aria-labelledby="titulo-cidades">
+    <h2 id="titulo-cidades">Cidades</h2>
+    <div class="cartao">
+      <div class="filtros-cidades">
+        <label class="campo-filtro">
+          <span class="rotulo-controle">Estado</span>
+          <select id="filtro-uf-cidades"></select>
+        </label>
+        <label class="campo-filtro campo-busca">
+          <span class="rotulo-controle">Buscar cidade</span>
+          <input type="search" id="busca-cidade" placeholder="Digite o nome da cidade" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <p class="resumo-cidades" id="resumo-cidades"></p>
+      <div class="tabela-rolagem tabela-turno" id="tabela-cidades"></div>
+      <div class="mais-cidades" id="mais-cidades"></div>
+    </div>
+  </section>
+
   <footer class="rodape" id="rodape"></footer>
 </main>
 
 <div class="dica" id="dica" role="tooltip" aria-hidden="true"></div>
 
 <script src="dados.js?v=d8440162fc0c"></script>
+<script src="municipios.js?v=b9bfef419036"></script>
 <script>
 "use strict";
 
@@ -1028,22 +1118,6 @@ function formatarQuantidadeEleitores(valor) {
     return "0";
   }
   return "menos de mil";
-}
-
-const PALAVRAS_MINUSCULAS = ["de", "da", "do", "das", "dos", "e"];
-
-function formatarNomeProprio(nomeMaiusculo) {
-  // O TSE publica nomes de município em maiúsculas; na frase, vira "São Paulo".
-  const palavras = nomeMaiusculo.toLocaleLowerCase("pt-BR").split(" ");
-  const formatadas = [];
-  palavras.forEach(function (palavra, indice) {
-    if (indice > 0 && PALAVRAS_MINUSCULAS.indexOf(palavra) >= 0) {
-      formatadas.push(palavra);
-    } else {
-      formatadas.push(palavra.charAt(0).toLocaleUpperCase("pt-BR") + palavra.slice(1));
-    }
-  });
-  return formatadas.join(" ");
 }
 
 /* ---------- Cores ---------- */
@@ -1310,10 +1384,6 @@ function criarSvg(nomeElemento, atributos) {
   return elemento;
 }
 
-function larguraDoConteiner(conteiner) {
-  return Math.max(280, conteiner.clientWidth);
-}
-
 /* ---------- Textos de apoio ---------- */
 
 const NOMES_ORIGEM = {
@@ -1362,6 +1432,259 @@ const LIMITE_FRONTEIRA = 1e-6;
 const TOTAL_CELULAS_MIGRACAO = 32;
 let regiaoMigracaoAtual = REGIAO_BRASIL;
 let tipoRecorteAtual = "brasil";
+
+/* ---------- Resumo executivo: big numbers do Brasil e cartões por região ---------- */
+
+function criarTextoVariacao(texto) {
+  const variacao = document.createElement("span");
+  variacao.className = "variacao-resumo";
+  if (texto.indexOf("▼") === 0) {
+    variacao.classList.add("variacao-negativa");
+  }
+  variacao.textContent = texto;
+  return variacao;
+}
+
+function criarCartaoNumero(configuracao) {
+  // Big number: valor do 2º turno em destaque; embaixo, o 1º turno e a variação.
+  const cartao = document.createElement("div");
+  cartao.className = "cartao-numero";
+  cartao.style.borderTopColor = "var(" + configuracao.variavelCor + ")";
+
+  const rotulo = document.createElement("div");
+  rotulo.className = "rotulo-numero";
+  rotulo.textContent = configuracao.rotulo;
+  cartao.appendChild(rotulo);
+  const valor = document.createElement("div");
+  valor.className = "valor-numero";
+  valor.textContent = configuracao.valor;
+  cartao.appendChild(valor);
+  // Duas linhas fixas embaixo do percentual: o que ele mede e o número absoluto (cartões da mesma altura).
+  for (const textoComplemento of configuracao.complemento) {
+    const complemento = document.createElement("div");
+    complemento.className = "complemento-numero";
+    complemento.textContent = textoComplemento;
+    cartao.appendChild(complemento);
+  }
+
+  const comparacao = document.createElement("div");
+  comparacao.className = "comparacao-numero";
+  const linhaPrimeiro = document.createElement("div");
+  linhaPrimeiro.className = "linha-comparacao";
+  const rotuloPrimeiro = document.createElement("span");
+  rotuloPrimeiro.className = "rotulo-comparacao";
+  rotuloPrimeiro.textContent = "1º turno";
+  linhaPrimeiro.appendChild(rotuloPrimeiro);
+  const valorPrimeiro = document.createElement("span");
+  valorPrimeiro.textContent = configuracao.primeiroTurno;
+  linhaPrimeiro.appendChild(valorPrimeiro);
+  comparacao.appendChild(linhaPrimeiro);
+
+  const linhaVariacao = document.createElement("div");
+  linhaVariacao.className = "linha-comparacao";
+  const rotuloVariacao = document.createElement("span");
+  rotuloVariacao.className = "rotulo-comparacao";
+  rotuloVariacao.textContent = "Variação";
+  linhaVariacao.appendChild(rotuloVariacao);
+  const valoresVariacao = document.createElement("span");
+  configuracao.variacoes.forEach(function (textoVariacao, indice) {
+    if (indice > 0) {
+      valoresVariacao.appendChild(document.createTextNode(" · "));
+    }
+    valoresVariacao.appendChild(criarTextoVariacao(textoVariacao));
+  });
+  linhaVariacao.appendChild(valoresVariacao);
+  comparacao.appendChild(linhaVariacao);
+  cartao.appendChild(comparacao);
+
+  cartao.tabIndex = 0;
+  cartao.setAttribute("aria-label", configuracao.rotulo + ": " + configuracao.valor + " no 2º turno, " +
+    configuracao.primeiroTurno + " no 1º; variação " + configuracao.variacoes.join(", "));
+  ligarDica(cartao, function () {
+    return { titulo: configuracao.rotulo, tabela: configuracao.tabela, nota: configuracao.nota || null };
+  });
+  return cartao;
+}
+
+function linhaPercentualDica(rotulo, percentual1t, percentual2t) {
+  return { rotulo: rotulo, valores: [formatarPercentual(percentual1t, 2), formatarPercentual(percentual2t, 2), textoVariacaoPontos(percentual2t - percentual1t, 2)] };
+}
+
+function renderizarNumerosBrasil() {
+  const brasil = DADOS.brasil;
+  const flavio2t = 100 - brasil.pct_lula_2t;
+  const margem1t = brasil.votos_1t_13 - brasil.votos_1t_22;
+  const margem2t = brasil.votos_2t_13 - brasil.votos_2t_22;
+  const vantagemPontos1t = brasil.pct_lula_1t - brasil.pct_flavio_1t;
+  const vantagemPontos2t = brasil.pct_lula_2t - flavio2t;
+  const brancosNulos1t = brasil.brancos_1t + brasil.nulos_1t;
+  const brancosNulos2t = brasil.brancos_2t + brasil.nulos_2t;
+  const pctBrancosNulos1t = 100 * brancosNulos1t / brasil.comparecimento_1t;
+  const pctBrancosNulos2t = 100 * brancosNulos2t / brasil.comparecimento_2t;
+  const colunas = ["1º turno", "2º turno", "Diferença"];
+
+  const cartoes = [
+    {
+      rotulo: "Lula (PT)",
+      variavelCor: "--cor-lula",
+      valor: formatarPercentual(brasil.pct_lula_2t, 2),
+      complemento: ["dos votos válidos", formatarMilhoes(brasil.votos_2t_13, 2) + " de votos"],
+      primeiroTurno: formatarPercentual(brasil.pct_lula_1t, 2) + " · " + formatarMilhoes(brasil.votos_1t_13, 2),
+      variacoes: [textoVariacaoPontos(brasil.pct_lula_2t - brasil.pct_lula_1t, 2) + " pts", textoVariacaoMilhoes(brasil.votos_2t_13 - brasil.votos_1t_13)],
+      tabela: { colunas: colunas, colunaDestaque: 1, linhas: [
+        linhaContagemDica("Votos", lerCor("--cor-lula"), brasil.votos_1t_13, brasil.votos_2t_13),
+        linhaPercentualDica("% dos válidos", brasil.pct_lula_1t, brasil.pct_lula_2t),
+      ] },
+    },
+    {
+      rotulo: "Flávio Bolsonaro (PL)",
+      variavelCor: "--cor-flavio",
+      valor: formatarPercentual(flavio2t, 2),
+      complemento: ["dos votos válidos", formatarMilhoes(brasil.votos_2t_22, 2) + " de votos"],
+      primeiroTurno: formatarPercentual(brasil.pct_flavio_1t, 2) + " · " + formatarMilhoes(brasil.votos_1t_22, 2),
+      variacoes: [textoVariacaoPontos(flavio2t - brasil.pct_flavio_1t, 2) + " pts", textoVariacaoMilhoes(brasil.votos_2t_22 - brasil.votos_1t_22)],
+      tabela: { colunas: colunas, colunaDestaque: 1, linhas: [
+        linhaContagemDica("Votos", lerCor("--cor-flavio"), brasil.votos_1t_22, brasil.votos_2t_22),
+        linhaPercentualDica("% dos válidos", brasil.pct_flavio_1t, flavio2t),
+      ] },
+    },
+    {
+      rotulo: "Vantagem de Lula",
+      variavelCor: "--tinta",
+      // Uma casa decimal: com duas, 3,57 pareceria erro diante de 51,79% − 48,21% (arredondamento).
+      valor: formatarNumeroComSinal(vantagemPontos2t, 1) + " pts",
+      complemento: ["sobre Flávio, nos votos válidos", formatarMilhoesComSinal(margem2t, 2) + " de votos"],
+      primeiroTurno: (vantagemPontos1t < 0 ? "Flávio +" : "Lula +") + formatarNumero(Math.abs(vantagemPontos1t), 1) + " pts · " + formatarMilhoes(Math.abs(margem1t), 2),
+      variacoes: [textoVariacaoPontos(vantagemPontos2t - vantagemPontos1t, 1) + " pts", textoVariacaoMilhoes(margem2t - margem1t)],
+      tabela: { colunas: colunas, colunaDestaque: 1, linhas: [
+        { rotulo: "Lula − Flávio (votos)", valores: [formatarNumeroComSinal(margem1t, 0), formatarNumeroComSinal(margem2t, 0), textoVariacaoInteiro(margem2t - margem1t)] },
+        { rotulo: "Lula − Flávio (pontos)", valores: [formatarNumeroComSinal(brasil.pct_lula_1t - brasil.pct_flavio_1t, 2), formatarNumeroComSinal(brasil.pct_lula_2t - flavio2t, 2), textoVariacaoPontos((brasil.pct_lula_2t - flavio2t) - (brasil.pct_lula_1t - brasil.pct_flavio_1t), 2)] },
+      ] },
+      nota: "Pontos: diferença entre os percentuais dos votos válidos.",
+    },
+    {
+      rotulo: "Comparecimento",
+      variavelCor: "--comp-alta",
+      valor: formatarPercentual(brasil.comparecimento_pct_2t, 2),
+      complemento: ["dos eleitores aptos", formatarMilhoes(brasil.comparecimento_2t, 2) + " votaram"],
+      primeiroTurno: formatarPercentual(brasil.comparecimento_pct_1t, 2) + " · " + formatarMilhoes(brasil.comparecimento_1t, 2),
+      variacoes: [textoVariacaoPontos(brasil.comparecimento_pct_2t - brasil.comparecimento_pct_1t, 2) + " pts", textoVariacaoMilhoes(brasil.comparecimento_2t - brasil.comparecimento_1t)],
+      tabela: { colunas: colunas, colunaDestaque: 1, linhas: [
+        linhaContagemDica("Compareceram", null, brasil.comparecimento_1t, brasil.comparecimento_2t),
+        linhaContagemDica("Eleitores aptos", null, brasil.aptos_1t, brasil.aptos_2t),
+        linhaPercentualDica("% dos aptos", brasil.comparecimento_pct_1t, brasil.comparecimento_pct_2t),
+      ] },
+    },
+    {
+      rotulo: "Brancos e nulos",
+      variavelCor: "--cor-branco-nulo",
+      valor: formatarPercentual(pctBrancosNulos2t, 2),
+      complemento: ["de quem votou", formatarMilhoes(brancosNulos2t, 2) + " de votos"],
+      primeiroTurno: formatarPercentual(pctBrancosNulos1t, 2) + " · " + formatarMilhoes(brancosNulos1t, 2),
+      variacoes: [textoVariacaoPontos(pctBrancosNulos2t - pctBrancosNulos1t, 2) + " pts", textoVariacaoMilhoes(brancosNulos2t - brancosNulos1t)],
+      tabela: { colunas: colunas, colunaDestaque: 1, linhas: [
+        linhaContagemDica("Brancos", null, brasil.brancos_1t, brasil.brancos_2t),
+        linhaContagemDica("Nulos", null, brasil.nulos_1t, brasil.nulos_2t),
+        linhaContagemDica("Total", lerCor("--cor-branco-nulo"), brancosNulos1t, brancosNulos2t),
+        linhaPercentualDica("% de quem votou", pctBrancosNulos1t, pctBrancosNulos2t),
+      ] },
+    },
+  ];
+
+  const conteiner = document.getElementById("numeros-brasil");
+  conteiner.replaceChildren();
+  for (const configuracao of cartoes) {
+    conteiner.appendChild(criarCartaoNumero(configuracao));
+  }
+}
+
+function textoVariacaoEleitores(valor) {
+  // "▲ 470 mil" ou "▲ 2,96 mi": abaixo de 1 milhão, "mil" lê melhor que "0,47 mi".
+  return setaVariacao(valor, 500) + formatarQuantidadeEleitores(Math.abs(valor));
+}
+
+function criarNumeroRegiao(nome, variavelCor, percentual2t, percentual1t, vencedor, ganhoVotos) {
+  const bloco = document.createElement("div");
+  bloco.className = "numero-regiao";
+  const rotulo = document.createElement("div");
+  rotulo.className = "rotulo-numero-regiao";
+  const amostra = document.createElement("span");
+  amostra.className = "amostra amostra-quadrada";
+  amostra.style.background = "var(" + variavelCor + ")";
+  rotulo.appendChild(amostra);
+  rotulo.appendChild(document.createTextNode(nome));
+  bloco.appendChild(rotulo);
+  const percentual = document.createElement("div");
+  percentual.className = "percentual-regiao";
+  if (vencedor) {
+    percentual.classList.add("percentual-vencedor");
+  }
+  percentual.textContent = formatarPercentual(percentual2t, 2);
+  bloco.appendChild(percentual);
+  const variacaoPontos = criarTextoVariacao(textoVariacaoPontos(percentual2t - percentual1t, 2) + " pts");
+  variacaoPontos.classList.add("linha-variacao-regiao");
+  bloco.appendChild(variacaoPontos);
+  const variacaoVotos = criarTextoVariacao(textoVariacaoEleitores(ganhoVotos) + " votos");
+  variacaoVotos.classList.add("linha-variacao-regiao");
+  bloco.appendChild(variacaoVotos);
+  return bloco;
+}
+
+function criarCartaoRegiao(regiao) {
+  // Cartão por região: vencedor, % de Lula e de Flávio no 2º turno com a variação, barra e votos ganhos.
+  const cartao = document.createElement("div");
+  cartao.className = "cartao-regiao";
+  const flavio2t = 100 - regiao.pct_lula_2t;
+
+  const cabecalho = document.createElement("div");
+  cabecalho.className = "cabecalho-regiao";
+  const nome = document.createElement("span");
+  nome.className = "nome-regiao";
+  nome.textContent = regiao.nm_regiao;
+  cabecalho.appendChild(nome);
+  const etiqueta = document.createElement("span");
+  const regiaoVirou = regiao.vencedor_1t !== regiao.vencedor_2t;
+  etiqueta.className = regiaoVirou ? "etiqueta etiqueta-virou" : "etiqueta";
+  etiqueta.textContent = regiaoVirou ? "virou: " + regiao.vencedor_2t : regiao.vencedor_2t + " venceu";
+  cabecalho.appendChild(etiqueta);
+  cartao.appendChild(cabecalho);
+
+  const numeros = document.createElement("div");
+  numeros.className = "numeros-regiao";
+  numeros.appendChild(criarNumeroRegiao("Lula", "--cor-lula", regiao.pct_lula_2t, regiao.pct_lula_1t, regiao.pct_lula_2t > flavio2t, regiao.ganho_lula));
+  numeros.appendChild(criarNumeroRegiao("Flávio", "--cor-flavio", flavio2t, regiao.pct_flavio_1t, flavio2t > regiao.pct_lula_2t, regiao.ganho_flavio));
+  cartao.appendChild(numeros);
+
+  const barra = document.createElement("div");
+  barra.className = "barra-resumo-regiao";
+  barra.setAttribute("aria-hidden", "true");
+  const parteLula = document.createElement("span");
+  parteLula.style.width = regiao.pct_lula_2t + "%";
+  parteLula.style.background = "var(--cor-lula)";
+  barra.appendChild(parteLula);
+  const parteFlavio = document.createElement("span");
+  parteFlavio.style.width = flavio2t + "%";
+  parteFlavio.style.background = "var(--cor-flavio)";
+  barra.appendChild(parteFlavio);
+  cartao.appendChild(barra);
+
+  cartao.tabIndex = 0;
+  cartao.setAttribute("aria-label", regiao.nm_regiao + ", 2º turno: Lula " + formatarPercentual(regiao.pct_lula_2t, 2) +
+    ", Flávio " + formatarPercentual(flavio2t, 2));
+  ligarDica(cartao, function () { return montarDicaTurnos(regiao, regiao.nm_regiao, 2); });
+  return cartao;
+}
+
+function renderizarResumo() {
+  renderizarNumerosBrasil();
+  const conteiner = document.getElementById("cartoes-regioes");
+  conteiner.replaceChildren();
+  for (const regiao of DADOS.regioes) {
+    if (regiao.nm_regiao !== "Exterior") {
+      conteiner.appendChild(criarCartaoRegiao(regiao));
+    }
+  }
+}
 
 /* ---------- Cabeçalho e indicadores ---------- */
 
@@ -1808,71 +2131,6 @@ function renderizarPonte() {
 
 /* ---------- Regiões ---------- */
 
-function regioesOrdenadas() {
-  const lista = DADOS.regioes.slice();
-  const linhaBrasil = Object.assign({}, DADOS.brasil, { nm_regiao: "Brasil" });
-  lista.push(linhaBrasil);
-  return lista;
-}
-
-// Segmentos da barra de cada região: no 1º turno, os 10 eliminados ficam juntos em "Outros".
-function segmentosRegiao(regiao, turno) {
-  if (turno === 1) {
-    return [
-      { nome: "Lula", variavelCor: "--cor-lula", votos: regiao.votos_1t_13 },
-      { nome: "Flávio", variavelCor: "--cor-flavio", votos: regiao.votos_1t_22 },
-      { nome: "Outros 10 candidatos", variavelCor: "--cor-outros", votos: regiao.validos_1t - regiao.votos_1t_13 - regiao.votos_1t_22 },
-    ];
-  }
-  return [
-    { nome: "Lula", variavelCor: "--cor-lula", votos: regiao.votos_2t_13 },
-    { nome: "Flávio", variavelCor: "--cor-flavio", votos: regiao.votos_2t_22 },
-  ];
-}
-
-function criarBarraRegiao(regiao, turno, nomeExibido) {
-  // Serve a regiões e estados: o nome mostrado na dica vem de fora quando a linha é um estado.
-  const nome = nomeExibido || regiao.nm_regiao;
-  const validos = turno === 1 ? regiao.validos_1t : regiao.validos_2t;
-  const barra = document.createElement("div");
-  barra.className = "barra-empilhada";
-  for (const segmento of segmentosRegiao(regiao, turno)) {
-    const percentual = 100 * segmento.votos / validos;
-    const parte = {
-      valor: segmento.votos,
-      variavelCor: segmento.variavelCor,
-      rotuloInterno: null,
-      rotuloAcessivel: nome + ", " + segmento.nome + ": " + formatarPercentual(percentual, 1),
-    };
-    barra.appendChild(criarSegmento(parte, validos, function () {
-      const linhas = [
-        { valor: formatarPercentual(percentual, 2), rotulo: "dos válidos", cor: lerCor(segmento.variavelCor) },
-        { valor: formatarInteiro(segmento.votos), rotulo: "votos" },
-      ];
-      if (turno === 2 && segmento.nome === "Lula") {
-        linhas.push({ valor: textoVariacaoPontos(regiao.variacao_lula_pp) + " p.p.", rotulo: "em relação ao 1º turno" });
-      }
-      if (turno === 2 && segmento.nome === "Flávio") {
-        linhas.push({ valor: textoVariacaoPontos((100 - regiao.pct_lula_2t) - regiao.pct_flavio_1t) + " p.p.", rotulo: "em relação ao 1º turno" });
-      }
-      return { titulo: nome + " · " + segmento.nome + " · " + turno + "º turno", linhas: linhas };
-    }));
-  }
-  return barra;
-}
-
-function criarCelulaPercentualTurno(valorTurno, valor1t, turno, casas) {
-  // No 2º turno, o percentual leva embaixo a variação em relação ao 1º turno.
-  if (turno === 2) {
-    return criarCelulaComVariacao(
-      formatarPercentual(valorTurno, casas),
-      textoVariacaoPontos(valorTurno - valor1t),
-      "Variação em relação ao 1º turno (" + formatarPercentual(valor1t, casas) + "), em pontos percentuais"
-    );
-  }
-  return criarCelulaComEspacoReservado(formatarPercentual(valorTurno, casas));
-}
-
 /* ---------- Base dos percentuais: votos válidos × eleitorado ---------- */
 
 // Uma só configuração para os três cartões (resultado, regiões, estados): os números nunca
@@ -1882,7 +2140,7 @@ const BASES_PERCENTUAL = [
   { codigo: "validos", rotulo: "Votos válidos" },
   { codigo: "eleitorado", rotulo: "Todo o eleitorado" },
 ];
-const CONTROLES_BASE = ["controle-base-resultado", "controle-base-estados"];
+const CONTROLES_BASE = ["controle-base-resultado"];
 
 function ehBaseEleitorado() {
   return baseAtual === "eleitorado";
@@ -1924,7 +2182,6 @@ function renderizarControlesBase() {
           baseAtual = base.codigo;
           renderizarControlesBase();
           renderizarResultado();
-          renderizarPaineisEstados();
         });
       });
       conteiner.appendChild(botao);
@@ -1941,18 +2198,6 @@ function naoVotou(linha, turno) {
   return turno === 1 ? linha.aptos_1t - linha.comparecimento_1t : linha.aptos_2t - linha.comparecimento_2t;
 }
 
-function gruposEleitorado(linha) {
-  // Cinco grupos que somam 100% dos aptos em cada turno; no 2º turno, "outros" é zero.
-  const outros1t = linha.validos_1t - linha.votos_1t_13 - linha.votos_1t_22;
-  return [
-    { codigo: "lula", nome: "Lula", cabecalho: "Lula", titulo: "Lula", variavelCor: "--cor-lula", unidade: "votos", valor1t: linha.votos_1t_13, valor2t: linha.votos_2t_13 },
-    { codigo: "flavio", nome: "Flávio", cabecalho: "Flávio", titulo: "Flávio", variavelCor: "--cor-flavio", unidade: "votos", valor1t: linha.votos_1t_22, valor2t: linha.votos_2t_22 },
-    { codigo: "outros", nome: "Outros 10 candidatos", cabecalho: "Outros", titulo: "Outros 10 candidatos (só no 1º turno)", variavelCor: "--cor-outros", unidade: "votos", valor1t: outros1t, valor2t: 0 },
-    { codigo: "branco_nulo", nome: "Branco ou nulo", cabecalho: "Br./nulo", titulo: "Votos brancos e nulos", variavelCor: "--cor-branco-nulo", unidade: "votos", valor1t: linha.brancos_1t + linha.nulos_1t, valor2t: linha.brancos_2t + linha.nulos_2t },
-    { codigo: "abstencao", nome: "Não votou", cabecalho: "Abst.", titulo: "Abstenção: eleitores aptos que não votaram", variavelCor: "--cor-abstencao", unidade: "eleitores", valor1t: naoVotou(linha, 1), valor2t: naoVotou(linha, 2) },
-  ];
-}
-
 function textoVariacaoInteiro(valor) {
   return setaVariacao(valor, 0.5) + formatarInteiro(Math.round(Math.abs(valor)));
 }
@@ -1962,195 +2207,6 @@ function linhaContagemDica(rotulo, cor, valor1t, valor2t) {
   return { rotulo: rotulo, cor: cor, valores: [formatarInteiro(valor1t), formatarInteiro(valor2t), textoVariacaoInteiro(valor2t - valor1t)] };
 }
 
-function primeiraMaiuscula(texto) {
-  return texto.charAt(0).toUpperCase() + texto.slice(1);
-}
-
-function ligarDicaContagem(celula, titulo, unidade, valor1t, valor2t, turno, base) {
-  // Ao passar o mouse (ou focar) num percentual, mostra as quantidades por trás dele numa tabela
-  // 1º turno × 2º turno × diferença, com a base do percentual: votos podem subir enquanto o percentual cai.
-  celula.classList.add("numero-com-dica");
-  celula.tabIndex = 0;
-  ligarDica(celula, function () {
-    const percentual1t = 100 * valor1t / base.valor1t;
-    const percentual2t = 100 * valor2t / base.valor2t;
-    let nota = null;
-    const crescimentoValor = 100 * (valor2t / valor1t - 1);
-    const crescimentoBase = 100 * (base.valor2t / base.valor1t - 1);
-    if (valor2t > valor1t && percentual2t < percentual1t) {
-      nota = "Os " + unidade + " subiram " + formatarPercentual(crescimentoValor, 1) + ", mas os " + base.rotulo +
-        " subiram " + formatarPercentual(crescimentoBase, 1) + ": por isso o percentual caiu.";
-    } else if (valor2t < valor1t && percentual2t > percentual1t) {
-      nota = "Os " + unidade + " caíram " + formatarPercentual(-crescimentoValor, 1) + ", mas os " + base.rotulo +
-        " caíram mais (" + formatarPercentual(-crescimentoBase, 1) + "): por isso o percentual subiu.";
-    }
-    return {
-      titulo: titulo,
-      tabela: {
-        colunas: ["1º turno", "2º turno", "Diferença"],
-        colunaDestaque: turno - 1,
-        linhas: [
-          { rotulo: primeiraMaiuscula(unidade), valores: [formatarInteiro(valor1t), formatarInteiro(valor2t), textoVariacaoInteiro(valor2t - valor1t)] },
-          { rotulo: primeiraMaiuscula(base.rotulo), valores: [formatarInteiro(base.valor1t), formatarInteiro(base.valor2t), textoVariacaoInteiro(base.valor2t - base.valor1t)] },
-          { rotulo: "% dos " + base.rotulo, valores: [formatarPercentual(percentual1t, 2), formatarPercentual(percentual2t, 2), textoVariacaoPontos(percentual2t - percentual1t, 2)] },
-        ],
-      },
-      nota: nota,
-    };
-  });
-}
-
-function criarBarraEleitorado(linha, turno, nomeExibido) {
-  const aptos = aptosDoTurno(linha, turno);
-  const barra = document.createElement("div");
-  barra.className = "barra-empilhada";
-  for (const grupo of gruposEleitorado(linha)) {
-    const valor = turno === 1 ? grupo.valor1t : grupo.valor2t;
-    if (valor <= 0) {
-      continue;
-    }
-    const percentual = 100 * valor / aptos;
-    const parte = {
-      valor: valor,
-      variavelCor: grupo.variavelCor,
-      rotuloInterno: null,
-      rotuloAcessivel: nomeExibido + ", " + grupo.nome + ": " + formatarPercentual(percentual, 1) + " do eleitorado",
-    };
-    barra.appendChild(criarSegmento(parte, aptos, function () {
-      const linhasDica = [
-        { valor: formatarPercentual(percentual, 2), rotulo: "do eleitorado", cor: lerCor(grupo.variavelCor) },
-        { valor: formatarInteiro(valor), rotulo: grupo.unidade },
-      ];
-      if (turno === 2) {
-        const percentual1t = 100 * grupo.valor1t / linha.aptos_1t;
-        linhasDica.push({ valor: textoVariacaoPontos(percentual - percentual1t) + " p.p.", rotulo: "em relação ao 1º turno" });
-      }
-      return { titulo: nomeExibido + " · " + grupo.nome + " · " + turno + "º turno", linhas: linhasDica };
-    }));
-  }
-  return barra;
-}
-
-function criarCelulaGrupoEleitorado(linha, grupo, turno, nomeExibido) {
-  const percentual1t = 100 * grupo.valor1t / linha.aptos_1t;
-  const percentual2t = 100 * grupo.valor2t / linha.aptos_2t;
-  let celula;
-  if (turno === 2) {
-    const textoValor = grupo.codigo === "outros" ? "—" : formatarPercentual(percentual2t, 1);
-    celula = criarCelulaComVariacao(textoValor, textoVariacaoPontos(percentual2t - percentual1t, 1),
-      "Variação em relação ao 1º turno (" + formatarPercentual(percentual1t, 1) + " do eleitorado), em pontos percentuais");
-  } else {
-    celula = criarCelulaComEspacoReservado(formatarPercentual(percentual1t, 1));
-  }
-  ligarDicaContagem(celula, nomeExibido + " · " + grupo.titulo, grupo.unidade, grupo.valor1t, grupo.valor2t, turno,
-    { rotulo: "eleitores aptos", valor1t: linha.aptos_1t, valor2t: linha.aptos_2t });
-  return celula;
-}
-
-function criarCabecalhoEleitorado(tabela, rotuloPrimeiraColuna) {
-  const cabecalho = document.createElement("thead");
-  const linhaCabecalho = document.createElement("tr");
-  const colunas = [{ texto: rotuloPrimeiraColuna }, { texto: "Eleitorado", classe: "celula-barra" }];
-  for (const grupo of gruposEleitorado(DADOS.brasil)) {
-    colunas.push({ texto: grupo.cabecalho, titulo: grupo.titulo });
-  }
-  for (const coluna of colunas) {
-    const celulaCabecalho = document.createElement("th");
-    celulaCabecalho.scope = "col";
-    celulaCabecalho.textContent = coluna.texto;
-    if (coluna.classe) {
-      celulaCabecalho.className = coluna.classe;
-    }
-    if (coluna.titulo) {
-      celulaCabecalho.title = coluna.titulo;
-    }
-    linhaCabecalho.appendChild(celulaCabecalho);
-  }
-  cabecalho.appendChild(linhaCabecalho);
-  tabela.appendChild(cabecalho);
-}
-
-function criarLinhaEleitorado(linhaDados, turno, nomeExibido, ehTotal, etiquetaVirou) {
-  const linha = document.createElement("tr");
-  if (ehTotal) {
-    linha.className = "linha-total";
-  }
-  const celulaNome = document.createElement("td");
-  const envoltorio = document.createElement("span");
-  envoltorio.className = "celula-nome";
-  envoltorio.appendChild(document.createTextNode(nomeExibido));
-  if (etiquetaVirou) {
-    const etiqueta = document.createElement("span");
-    etiqueta.className = "etiqueta";
-    etiqueta.textContent = "virou";
-    envoltorio.appendChild(etiqueta);
-  }
-  celulaNome.appendChild(envoltorio);
-  linha.appendChild(celulaNome);
-
-  const celulaBarra = document.createElement("td");
-  celulaBarra.className = "celula-barra";
-  celulaBarra.appendChild(criarBarraEleitorado(linhaDados, turno, nomeExibido));
-  linha.appendChild(celulaBarra);
-
-  const celulasPorGrupo = {};
-  for (const grupo of gruposEleitorado(linhaDados)) {
-    const celula = criarCelulaGrupoEleitorado(linhaDados, grupo, turno, nomeExibido);
-    celulasPorGrupo[grupo.codigo] = celula;
-    linha.appendChild(celula);
-  }
-  const votosLula = turno === 1 ? linhaDados.votos_1t_13 : linhaDados.votos_2t_13;
-  const votosFlavio = turno === 1 ? linhaDados.votos_1t_22 : linhaDados.votos_2t_22;
-  if (votosLula > votosFlavio) {
-    celulasPorGrupo.lula.classList.add("valor-vencedor");
-  } else {
-    celulasPorGrupo.flavio.classList.add("valor-vencedor");
-  }
-  return linha;
-}
-
-
-function criarTabelaRegioesEleitorado(turno) {
-  const rolagem = document.createElement("div");
-  rolagem.className = "tabela-rolagem tabela-turno tabela-regioes modo-eleitorado";
-  const tabela = document.createElement("table");
-  criarCabecalhoEleitorado(tabela, "Região");
-  const corpo = document.createElement("tbody");
-  for (const regiao of regioesOrdenadas()) {
-    const ehTotal = regiao.nm_regiao === "Brasil";
-    corpo.appendChild(criarLinhaEleitorado(regiao, turno, ehTotal ? "Total" : regiao.nm_regiao, ehTotal, false));
-  }
-  tabela.appendChild(corpo);
-  rolagem.appendChild(tabela);
-  return rolagem;
-}
-
-function criarTabelaEstadosEleitorado(turno) {
-  const rolagem = document.createElement("div");
-  rolagem.className = "tabela-rolagem tabela-turno tabela-regioes tabela-estados modo-eleitorado";
-  const tabela = document.createElement("table");
-  criarCabecalhoEleitorado(tabela, "Estado");
-  const corpo = document.createElement("tbody");
-  const totalColunas = 2 + gruposEleitorado(DADOS.brasil).length;
-  for (const nomeRegiao of ORDEM_REGIOES_TABELA) {
-    corpo.appendChild(criarLinhaGrupo(nomeRegiao, totalColunas));
-    const ufsDaRegiao = DADOS.ufs.filter(function (uf) { return uf.nm_regiao === nomeRegiao; });
-    ufsDaRegiao.sort(function (ufA, ufB) { return ufA.nm_uf.localeCompare(ufB.nm_uf, "pt-BR"); });
-    for (const uf of ufsDaRegiao) {
-      const virou = turno === 2 && uf.vencedor_1t !== uf.vencedor_2t;
-      corpo.appendChild(criarLinhaEleitorado(uf, turno, uf.nm_uf, false, virou));
-    }
-  }
-  const exterior = buscarUf("ZZ");
-  if (exterior) {
-    corpo.appendChild(criarLinhaGrupo("Exterior", totalColunas));
-    corpo.appendChild(criarLinhaEleitorado(exterior, turno, "Exterior", false, false));
-  }
-  corpo.appendChild(criarLinhaEleitorado(DADOS.brasil, turno, "Total", true, false));
-  tabela.appendChild(corpo);
-  rolagem.appendChild(tabela);
-  return rolagem;
-}
 
 function renderizarPainelTurnoEleitorado(turno, idPainel) {
   const brasil = DADOS.brasil;
@@ -2284,91 +2340,6 @@ function renderizarPainelTurnoEleitorado(turno, idPainel) {
 }
 
 
-function criarTabelaRegioesNaBase(turno) {
-  // Tabela por região na base escolhida; serve também aos mapas no nível "Regiões".
-  if (ehBaseEleitorado()) {
-    return criarTabelaRegioesEleitorado(turno);
-  }
-  return criarTabelaRegioes(turno);
-}
-
-function criarTabelaRegioes(turno) {
-  const rolagem = document.createElement("div");
-  rolagem.className = "tabela-rolagem tabela-turno tabela-regioes";
-  const tabela = document.createElement("table");
-  const cabecalho = document.createElement("thead");
-  const linhaCabecalho = document.createElement("tr");
-  for (const textoColuna of ["Região", "Votos válidos", "Lula", "Flávio", "Compar."]) {
-    const celulaCabecalho = document.createElement("th");
-    celulaCabecalho.scope = "col";
-    celulaCabecalho.textContent = textoColuna;
-    if (textoColuna === "Votos válidos") {
-      celulaCabecalho.className = "celula-barra";
-    }
-    linhaCabecalho.appendChild(celulaCabecalho);
-  }
-  cabecalho.appendChild(linhaCabecalho);
-  tabela.appendChild(cabecalho);
-
-  const corpo = document.createElement("tbody");
-  for (const regiao of regioesOrdenadas()) {
-    const ehTotal = regiao.nm_regiao === "Brasil";
-    const linha = document.createElement("tr");
-    if (ehTotal) {
-      linha.className = "linha-total";
-    }
-    linha.appendChild(criarCelulaTexto(ehTotal ? "Total" : regiao.nm_regiao));
-
-    const celulaBarra = document.createElement("td");
-    celulaBarra.className = "celula-barra";
-    celulaBarra.appendChild(criarBarraRegiao(regiao, turno));
-    linha.appendChild(celulaBarra);
-
-    const pctLula = turno === 1 ? regiao.pct_lula_1t : regiao.pct_lula_2t;
-    const pctFlavio = turno === 1 ? regiao.pct_flavio_1t : 100 - regiao.pct_lula_2t;
-    // Duas casas: com uma, o Norte no 2º turno apareceria como 50,0% × 50,0%.
-    const celulaLula = criarCelulaPercentualTurno(pctLula, regiao.pct_lula_1t, turno, 2);
-    const celulaFlavio = criarCelulaPercentualTurno(pctFlavio, regiao.pct_flavio_1t, turno, 2);
-    // O vencedor da região no turno fica em negrito; comparar os dois painéis mostra as viradas.
-    if (pctLula > pctFlavio) {
-      celulaLula.classList.add("valor-vencedor");
-    } else {
-      celulaFlavio.classList.add("valor-vencedor");
-    }
-    // Ao passar o mouse, cada percentual mostra as quantidades de votos ou eleitores por trás dele.
-    const nomeRegiao = ehTotal ? "Total" : regiao.nm_regiao;
-    const baseValidos = { rotulo: "votos válidos", valor1t: regiao.validos_1t, valor2t: regiao.validos_2t };
-    ligarDicaContagem(celulaLula, nomeRegiao + " · Lula", "votos", regiao.votos_1t_13, regiao.votos_2t_13, turno, baseValidos);
-    ligarDicaContagem(celulaFlavio, nomeRegiao + " · Flávio", "votos", regiao.votos_1t_22, regiao.votos_2t_22, turno, baseValidos);
-    linha.appendChild(celulaLula);
-    linha.appendChild(celulaFlavio);
-
-    const comparecimento = turno === 1 ? regiao.comparecimento_pct_1t : regiao.comparecimento_pct_2t;
-    const celulaComparecimento = criarCelulaPercentualTurno(comparecimento, regiao.comparecimento_pct_1t, turno, 1);
-    ligarDicaContagem(celulaComparecimento, nomeRegiao + " · Comparecimento", "eleitores que votaram", regiao.comparecimento_1t, regiao.comparecimento_2t, turno,
-      { rotulo: "eleitores aptos", valor1t: regiao.aptos_1t, valor2t: regiao.aptos_2t });
-    linha.appendChild(celulaComparecimento);
-    corpo.appendChild(linha);
-  }
-  tabela.appendChild(corpo);
-  rolagem.appendChild(tabela);
-  return rolagem;
-}
-
-function preencherLegendaMapas() {
-  // Legenda das barras finas das tabelas embaixo dos mapas (regiões ou estados).
-  const itensLegenda = [
-    { variavelCor: "--cor-lula", rotulo: "Lula" },
-    { variavelCor: "--cor-flavio", rotulo: "Flávio" },
-    { variavelCor: "--cor-outros", rotulo: "Outros 10 candidatos (só no 1º turno)" },
-  ];
-  if (ehBaseEleitorado()) {
-    itensLegenda.push({ variavelCor: "--cor-branco-nulo", rotulo: "Branco ou nulo" });
-    itensLegenda.push({ variavelCor: "--cor-abstencao", rotulo: "Não votou (abstenção)" });
-  }
-  preencherLegenda(document.getElementById("legenda-mapas"), itensLegenda);
-}
-
 function criarTabela(colunas, linhas, idConteiner, ordenavel) {
   const conteiner = document.getElementById(idConteiner);
   conteiner.replaceChildren();
@@ -2435,25 +2406,6 @@ function criarTabela(colunas, linhas, idConteiner, ordenavel) {
   conteiner.appendChild(tabela);
 }
 
-function colunasIndicadores(nomePrimeiraColuna, chaveNome) {
-  return [
-    { titulo: nomePrimeiraColuna, formatar: function (linha) { return linha[chaveNome]; }, ordenar: function (linha) { return linha[chaveNome]; } },
-    { titulo: "Lula 1º t.", formatar: function (linha) { return formatarPercentual(linha.pct_lula_1t, 2); }, ordenar: function (linha) { return linha.pct_lula_1t; } },
-    { titulo: "Flávio 1º t.", formatar: function (linha) { return formatarPercentual(linha.pct_flavio_1t, 2); }, ordenar: function (linha) { return linha.pct_flavio_1t; } },
-    { titulo: "Outros 1º t.", formatar: function (linha) { return formatarPercentual(linha.pct_outros_1t, 2); }, ordenar: function (linha) { return linha.pct_outros_1t; } },
-    { titulo: "Lula 2º t.", formatar: function (linha) { return formatarPercentual(linha.pct_lula_2t, 2); }, ordenar: function (linha) { return linha.pct_lula_2t; } },
-    { titulo: "Flávio 2º t.", formatar: function (linha) { return formatarPercentual(100 - linha.pct_lula_2t, 2); }, ordenar: function (linha) { return 100 - linha.pct_lula_2t; } },
-    { titulo: "Avanço de Lula", formatar: function (linha) { return formatarPontos(linha.variacao_lula_pp, 2); }, ordenar: function (linha) { return linha.variacao_lula_pp; }, negativo: function (linha) { return linha.variacao_lula_pp < 0; } },
-    { titulo: "Compar. 1º t.", formatar: function (linha) { return formatarPercentual(linha.comparecimento_pct_1t, 2); }, ordenar: function (linha) { return linha.comparecimento_pct_1t; } },
-    { titulo: "Compar. 2º t.", formatar: function (linha) { return formatarPercentual(linha.comparecimento_pct_2t, 2); }, ordenar: function (linha) { return linha.comparecimento_pct_2t; } },
-    { titulo: "Vencedor", formatar: function (linha) { return linha.vencedor_1t === linha.vencedor_2t ? linha.vencedor_2t : linha.vencedor_1t + " → " + linha.vencedor_2t; }, ordenar: function (linha) { return linha.vencedor_2t; } },
-  ];
-}
-
-function renderizarRegioes() {
-  criarTabela(colunasIndicadores("Região", "nm_regiao"), regioesOrdenadas(), "tabela-regioes", false);
-}
-
 /* ---------- Estados: mapas em mosaico + tabelas, 1º × 2º turno ---------- */
 
 // Posição aproximada de cada UF numa grade de 6 colunas × 8 linhas (coluna, linha).
@@ -2467,8 +2419,6 @@ const POSICAO_UF = {
   SC: [2, 6],
   RS: [2, 7], ZZ: [5, 7],
 };
-
-const ORDEM_REGIOES_TABELA = ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"];
 
 function vantagemLula(uf, turno) {
   // Pontos de Lula menos Flávio nos válidos: comparável entre turnos, ao contrário do % de Lula,
@@ -2550,9 +2500,26 @@ function dadosDoLadrilho(uf) {
   return uf;
 }
 
+function criarGrupoControles(conteiner, textoRotulo) {
+  // Grupo de botões com rótulo em cima: empilhados na coluna lateral do mapa em telas largas.
+  const grupo = document.createElement("div");
+  grupo.className = "grupo-controles";
+  const rotulo = document.createElement("span");
+  rotulo.className = "rotulo-controle";
+  rotulo.textContent = textoRotulo;
+  grupo.appendChild(rotulo);
+  const botoes = document.createElement("div");
+  botoes.className = "botoes-grupo";
+  grupo.appendChild(botoes);
+  conteiner.appendChild(grupo);
+  return botoes;
+}
+
 function renderizarControlesMapa() {
   const conteiner = document.getElementById("controles-mapa");
   conteiner.replaceChildren();
+  const botoesIndicador = criarGrupoControles(conteiner, "Indicador");
+  const botoesNivel = criarGrupoControles(conteiner, "Mostrar por");
   for (const indicador of INDICADORES_MAPA) {
     const botao = document.createElement("button");
     botao.type = "button";
@@ -2568,13 +2535,9 @@ function renderizarControlesMapa() {
         renderizarPaineisEstados();
       });
     });
-    conteiner.appendChild(botao);
+    botoesIndicador.appendChild(botao);
   }
 
-  const rotuloNivel = document.createElement("span");
-  rotuloNivel.className = "rotulo-controle rotulo-controle-separado";
-  rotuloNivel.textContent = "Mostrar por:";
-  conteiner.appendChild(rotuloNivel);
   for (const nivel of NIVEIS_MAPA) {
     const botaoNivel = document.createElement("button");
     botaoNivel.type = "button";
@@ -2590,7 +2553,7 @@ function renderizarControlesMapa() {
         renderizarPaineisEstados();
       });
     });
-    conteiner.appendChild(botaoNivel);
+    botoesNivel.appendChild(botaoNivel);
   }
 }
 
@@ -2648,6 +2611,13 @@ function costurarLadrilhoNaRegiao(ladrilho, uf) {
     const regiaoVizinha = regiaoDaPosicao(posicao[0] + lado.dx, posicao[1] + lado.dy);
     ladoAberto[lado.nome] = regiaoVizinha === uf.nm_regiao;
     if (ladoAberto[lado.nome]) {
+      // Uma tira de 1 px na cor do quadrado cobre a linha clara que o arredondamento de pixels
+      // abre entre dois quadrados da mesma região (sem encostar nas frestas entre regiões).
+      if (lado.nome === "baixo") {
+        ladrilho.classList.add("junta-baixo");
+      } else if (lado.nome === "direita") {
+        ladrilho.classList.add("junta-direita");
+      }
       continue;
     }
     if (regiaoVizinha) {
@@ -2691,11 +2661,43 @@ function criarRotuloRegiao(regiao, turno, escala) {
   rotulo.appendChild(linhaValor);
   if (turno === 2 && regiao.vencedor_1t !== regiao.vencedor_2t) {
     const etiqueta = document.createElement("span");
-    etiqueta.className = "etiqueta etiqueta-mapa";
+    etiqueta.className = "etiqueta etiqueta-mapa etiqueta-virou";
     etiqueta.textContent = "virou";
     rotulo.appendChild(etiqueta);
   }
   return rotulo;
+}
+
+function montarDicaTurnos(fonte, nomeLugar, turnoDestaque) {
+  // Tabela 1º turno × 2º turno × diferença de uma região ou estado, com a coluna do turno em destaque.
+  const vantagem1t = vantagemLula(fonte, 1);
+  const vantagem2t = vantagemLula(fonte, 2);
+  const flavio2t = 100 - fonte.pct_lula_2t;
+  let nota = "Lula e Flávio em % dos votos válidos; vantagem e diferença em pontos.";
+  if (fonte.vencedor_1t !== fonte.vencedor_2t && fonte.vencedor_1t !== "Empate" && fonte.vencedor_2t !== "Empate") {
+    nota = "Virou: " + fonte.vencedor_1t + " venceu o 1º turno, " + fonte.vencedor_2t + " o 2º. " + nota;
+  }
+  return {
+    titulo: nomeLugar,
+    tabela: {
+      colunas: ["1º turno", "2º turno", "Diferença"],
+      colunaDestaque: turnoDestaque - 1,
+      linhas: [
+        { grupo: "Percentuais" },
+        { rotulo: "Lula", cor: lerCor("--cor-lula"), valores: [formatarPercentual(fonte.pct_lula_1t, 2), formatarPercentual(fonte.pct_lula_2t, 2), textoVariacaoPontos(fonte.pct_lula_2t - fonte.pct_lula_1t, 2)] },
+        { rotulo: "Flávio", cor: lerCor("--cor-flavio"), valores: [formatarPercentual(fonte.pct_flavio_1t, 2), formatarPercentual(flavio2t, 2), textoVariacaoPontos(flavio2t - fonte.pct_flavio_1t, 2)] },
+        { rotulo: "Vantagem de Lula", valores: [formatarNumeroComSinal(vantagem1t, 2), formatarNumeroComSinal(vantagem2t, 2), textoVariacaoPontos(vantagem2t - vantagem1t, 2)] },
+        { rotulo: "Comparecimento", valores: [formatarPercentual(fonte.comparecimento_pct_1t, 2), formatarPercentual(fonte.comparecimento_pct_2t, 2), textoVariacaoPontos(fonte.comparecimento_pct_2t - fonte.comparecimento_pct_1t, 2)] },
+        { grupo: "Em números" },
+        linhaContagemDica("Votos de Lula", lerCor("--cor-lula"), fonte.votos_1t_13, fonte.votos_2t_13),
+        linhaContagemDica("Votos de Flávio", lerCor("--cor-flavio"), fonte.votos_1t_22, fonte.votos_2t_22),
+        linhaContagemDica("Votos válidos", null, fonte.validos_1t, fonte.validos_2t),
+        linhaContagemDica("Compareceram", null, fonte.comparecimento_1t, fonte.comparecimento_2t),
+        linhaContagemDica("Eleitores aptos", null, fonte.aptos_1t, fonte.aptos_2t),
+      ],
+    },
+    nota: nota,
+  };
 }
 
 function criarMosaico(turno, escala) {
@@ -2742,37 +2744,7 @@ function criarMosaico(turno, escala) {
       }
     }
 
-    ligarDica(ladrilho, function () {
-      // Tabela 1º turno × 2º turno × diferença, com a coluna do turno do mapa em destaque.
-      const vantagem1t = vantagemLula(fonte, 1);
-      const vantagem2t = vantagemLula(fonte, 2);
-      const flavio2t = 100 - fonte.pct_lula_2t;
-      let nota = "Lula e Flávio em % dos votos válidos; vantagem e diferença em pontos.";
-      if (fonte.vencedor_1t !== fonte.vencedor_2t) {
-        nota = "Virou: " + fonte.vencedor_1t + " venceu o 1º turno, " + fonte.vencedor_2t + " o 2º. " + nota;
-      }
-      return {
-        titulo: nomeLadrilho,
-        tabela: {
-          colunas: ["1º turno", "2º turno", "Diferença"],
-          colunaDestaque: turno - 1,
-          linhas: [
-            { grupo: "Percentuais" },
-            { rotulo: "Lula", cor: lerCor("--cor-lula"), valores: [formatarPercentual(fonte.pct_lula_1t, 2), formatarPercentual(fonte.pct_lula_2t, 2), textoVariacaoPontos(fonte.pct_lula_2t - fonte.pct_lula_1t, 2)] },
-            { rotulo: "Flávio", cor: lerCor("--cor-flavio"), valores: [formatarPercentual(fonte.pct_flavio_1t, 2), formatarPercentual(flavio2t, 2), textoVariacaoPontos(flavio2t - fonte.pct_flavio_1t, 2)] },
-            { rotulo: "Vantagem de Lula", valores: [formatarNumeroComSinal(vantagem1t, 2), formatarNumeroComSinal(vantagem2t, 2), textoVariacaoPontos(vantagem2t - vantagem1t, 2)] },
-            { rotulo: "Comparecimento", valores: [formatarPercentual(fonte.comparecimento_pct_1t, 2), formatarPercentual(fonte.comparecimento_pct_2t, 2), textoVariacaoPontos(fonte.comparecimento_pct_2t - fonte.comparecimento_pct_1t, 2)] },
-            { grupo: "Em números" },
-            linhaContagemDica("Votos de Lula", lerCor("--cor-lula"), fonte.votos_1t_13, fonte.votos_2t_13),
-            linhaContagemDica("Votos de Flávio", lerCor("--cor-flavio"), fonte.votos_1t_22, fonte.votos_2t_22),
-            linhaContagemDica("Votos válidos", null, fonte.validos_1t, fonte.validos_2t),
-            linhaContagemDica("Compareceram", null, fonte.comparecimento_1t, fonte.comparecimento_2t),
-            linhaContagemDica("Eleitores aptos", null, fonte.aptos_1t, fonte.aptos_2t),
-          ],
-        },
-        nota: nota,
-      };
-    });
+    ligarDica(ladrilho, function () { return montarDicaTurnos(fonte, nomeLadrilho, turno); });
     mosaico.appendChild(ladrilho);
   }
 
@@ -2813,155 +2785,72 @@ function renderizarEscala(escala) {
 
 }
 
-function criarLinhaGrupo(textoGrupo, totalColunas) {
-  const linha = document.createElement("tr");
-  linha.className = "linha-grupo";
-  const celula = document.createElement("td");
-  celula.colSpan = totalColunas || 4;
-  celula.textContent = textoGrupo;
-  linha.appendChild(celula);
-  return linha;
-}
-
-function criarLinhaEstado(linhaDados, turno, nomeExibido, ehTotal) {
-  const linha = document.createElement("tr");
-  if (ehTotal) {
-    linha.className = "linha-total";
-  }
-  const celulaNome = document.createElement("td");
-  const envoltorio = document.createElement("span");
-  envoltorio.className = "celula-nome";
-  envoltorio.appendChild(document.createTextNode(nomeExibido));
-  if (turno === 2 && !ehTotal && linhaDados.vencedor_1t !== linhaDados.vencedor_2t) {
-    const etiqueta = document.createElement("span");
-    etiqueta.className = "etiqueta";
-    etiqueta.textContent = "virou";
-    envoltorio.appendChild(etiqueta);
-  }
-  celulaNome.appendChild(envoltorio);
-  linha.appendChild(celulaNome);
-
-  const celulaBarra = document.createElement("td");
-  celulaBarra.className = "celula-barra";
-  celulaBarra.appendChild(criarBarraRegiao(linhaDados, turno, nomeExibido));
-  linha.appendChild(celulaBarra);
-
-  const pctLula = turno === 1 ? linhaDados.pct_lula_1t : linhaDados.pct_lula_2t;
-  const pctFlavio = turno === 1 ? linhaDados.pct_flavio_1t : 100 - linhaDados.pct_lula_2t;
-  const celulaLula = criarCelulaPercentualTurno(pctLula, linhaDados.pct_lula_1t, turno, 2);
-  const celulaFlavio = criarCelulaPercentualTurno(pctFlavio, linhaDados.pct_flavio_1t, turno, 2);
-  const baseValidos = { rotulo: "votos válidos", valor1t: linhaDados.validos_1t, valor2t: linhaDados.validos_2t };
-  ligarDicaContagem(celulaLula, nomeExibido + " · Lula", "votos", linhaDados.votos_1t_13, linhaDados.votos_2t_13, turno, baseValidos);
-  ligarDicaContagem(celulaFlavio, nomeExibido + " · Flávio", "votos", linhaDados.votos_1t_22, linhaDados.votos_2t_22, turno, baseValidos);
-  if (pctLula > pctFlavio) {
-    celulaLula.classList.add("valor-vencedor");
-  } else {
-    celulaFlavio.classList.add("valor-vencedor");
-  }
-  // Sem coluna de comparecimento: ele está no mapa (botão) e na tabela completa; aqui a largura não comporta.
-  linha.appendChild(celulaLula);
-  linha.appendChild(celulaFlavio);
-  return linha;
-}
-
-function criarTabelaEstados(turno) {
-  if (ehBaseEleitorado()) {
-    return criarTabelaEstadosEleitorado(turno);
-  }
-  const rolagem = document.createElement("div");
-  rolagem.className = "tabela-rolagem tabela-turno tabela-regioes tabela-estados";
-  const tabela = document.createElement("table");
-  const cabecalho = document.createElement("thead");
-  const linhaCabecalho = document.createElement("tr");
-  for (const textoColuna of ["Estado", "Votos válidos", "Lula", "Flávio"]) {
-    const celulaCabecalho = document.createElement("th");
-    celulaCabecalho.scope = "col";
-    celulaCabecalho.textContent = textoColuna;
-    if (textoColuna === "Votos válidos") {
-      celulaCabecalho.className = "celula-barra";
-    }
-    linhaCabecalho.appendChild(celulaCabecalho);
-  }
-  cabecalho.appendChild(linhaCabecalho);
-  tabela.appendChild(cabecalho);
-
-  const corpo = document.createElement("tbody");
-  for (const nomeRegiao of ORDEM_REGIOES_TABELA) {
-    corpo.appendChild(criarLinhaGrupo(nomeRegiao));
-    const ufsDaRegiao = DADOS.ufs.filter(function (uf) { return uf.nm_regiao === nomeRegiao; });
-    ufsDaRegiao.sort(function (ufA, ufB) { return ufA.nm_uf.localeCompare(ufB.nm_uf, "pt-BR"); });
-    for (const uf of ufsDaRegiao) {
-      corpo.appendChild(criarLinhaEstado(uf, turno, uf.nm_uf, false));
+function contarVitoriasLula(linhas, campoVencedor) {
+  let vitorias = 0;
+  for (const linha of linhas) {
+    if (linha[campoVencedor] === "Lula") {
+      vitorias += 1;
     }
   }
-  const exterior = buscarUf("ZZ");
-  if (exterior) {
-    corpo.appendChild(criarLinhaGrupo("Exterior"));
-    corpo.appendChild(criarLinhaEstado(exterior, turno, "Exterior", false));
-  }
-  corpo.appendChild(criarLinhaEstado(DADOS.brasil, turno, "Total", true));
-  tabela.appendChild(corpo);
-  rolagem.appendChild(tabela);
-  return rolagem;
+  return vitorias;
 }
 
-function renderizarPainelEstados(turno, idPainel, escala) {
-  const painel = document.getElementById(idPainel);
+function renderizarMapaSegundoTurno(escala) {
+  // Um mapa só, o do 2º turno: cada quadrado traz a variação desde o 1º, e a dica traz os dois turnos.
+  // Título, placar de vitórias e aviso de uso ficam na coluna lateral, embaixo dos filtros.
+  const painel = document.getElementById("info-mapa");
   painel.replaceChildren();
 
   const titulo = document.createElement("h4");
-  titulo.textContent = turno + "º turno";
+  titulo.textContent = "2º turno";
   const data = document.createElement("span");
   data.className = "data-turno";
-  data.textContent = turno === 1 ? DADOS.meta.data_1t : DADOS.meta.data_2t;
+  data.textContent = DADOS.meta.data_2t;
   titulo.appendChild(data);
   painel.appendChild(titulo);
 
-  const ufsBrasil = DADOS.ufs.filter(function (uf) { return uf.sg_uf !== "ZZ"; });
-  let vitoriasLula = 0;
-  for (const uf of ufsBrasil) {
-    const venceu = turno === 1 ? uf.vencedor_1t : uf.vencedor_2t;
-    if (venceu === "Lula") {
-      vitoriasLula += 1;
-    }
+  // Placar de vitórias no 2º turno, com o do 1º entre parênteses (o mapa do 1º turno saiu).
+  let linhas = DADOS.ufs.filter(function (uf) { return uf.sg_uf !== "ZZ"; });
+  let unidade = "unidades da federação";
+  if (nivelMapaAtual === "regiao") {
+    linhas = DADOS.regioes.filter(function (regiao) { return regiao.nm_regiao !== "Exterior"; });
+    unidade = "das " + linhas.length + " regiões";
   }
+  const lula2t = contarVitoriasLula(linhas, "vencedor_2t");
+  const lula1t = contarVitoriasLula(linhas, "vencedor_1t");
   const subtitulo = document.createElement("p");
   subtitulo.className = "sub-painel";
-  subtitulo.textContent = "Lula venceu em " + vitoriasLula + " e Flávio em " + (ufsBrasil.length - vitoriasLula) + " unidades da federação";
-  if (nivelMapaAtual === "regiao") {
-    const regioesBrasil = DADOS.regioes.filter(function (regiao) { return regiao.nm_regiao !== "Exterior"; });
-    let regioesLula = 0;
-    for (const regiao of regioesBrasil) {
-      const venceuRegiao = turno === 1 ? regiao.vencedor_1t : regiao.vencedor_2t;
-      if (venceuRegiao === "Lula") {
-        regioesLula += 1;
-      }
-    }
-    subtitulo.textContent = "Lula venceu em " + regioesLula + " e Flávio em " + (regioesBrasil.length - regioesLula) + " das " + regioesBrasil.length + " regiões";
-  }
+  subtitulo.textContent = "Lula venceu em " + lula2t + " e Flávio em " + (linhas.length - lula2t) + " " + unidade +
+    " (no 1º turno: " + lula1t + " e " + (linhas.length - lula1t) + ")";
   painel.appendChild(subtitulo);
+  painel.appendChild(criarInstrucaoMapa(nivelMapaAtual === "regiao" ? "uma região" : "um estado"));
 
-  painel.appendChild(criarMosaico(turno, escala));
-  // No nível "Regiões", a tabela também é agregada por região: nada de estado por estado.
-  if (nivelMapaAtual === "regiao") {
-    painel.appendChild(criarTabelaRegioesNaBase(turno));
-  } else {
-    painel.appendChild(criarTabelaEstados(turno));
-  }
+  const painelMapa = document.getElementById("painel-estados-2t");
+  painelMapa.replaceChildren();
+  painelMapa.appendChild(criarMosaico(2, escala));
+}
+
+function criarInstrucaoMapa(alvo) {
+  // Sem esta instrução, quem abre a página não descobre que o mapa tem os detalhes na dica.
+  const instrucao = document.createElement("div");
+  instrucao.className = "instrucao-mapa";
+  const icone = criarSvg("svg", { viewBox: "0 0 16 16", width: 16, height: 16, "aria-hidden": "true" });
+  icone.appendChild(criarSvg("path", { d: "M3 1 L3 13 L6.2 10.2 L8.6 15 L10.6 14 L8.3 9.3 L12.4 9.3 Z", fill: "currentColor" }));
+  instrucao.appendChild(icone);
+  const textoInstrucao = document.createElement("span");
+  textoInstrucao.textContent = "Passe o mouse (ou toque) em " + alvo + " para ver os detalhes: 1º e 2º turno, em % e em números.";
+  instrucao.appendChild(textoInstrucao);
+  return instrucao;
 }
 
 function renderizarPaineisEstados() {
   const escala = indicadorMapaAtual.criarEscala();
   renderizarEscala(escala);
-  renderizarPainelEstados(1, "painel-estados-1t", escala);
-  renderizarPainelEstados(2, "painel-estados-2t", escala);
-  preencherLegendaMapas();
+  renderizarMapaSegundoTurno(escala);
   const porRegiao = nivelMapaAtual === "regiao";
-  document.getElementById("titulo-cartao-mapas").textContent = (porRegiao ? "Regiões" : "Estados") + ": 1º × 2º turno";
-  // Os destaques e a tabela completa acompanham o nível escolhido.
+  document.getElementById("titulo-cartao-mapas").textContent = (porRegiao ? "Regiões" : "Estados") + ": 2º turno e variação desde o 1º";
+  // Os destaques falam de estados; somem no nível "Regiões".
   document.getElementById("bloco-destaques-uf").hidden = porRegiao;
-  document.getElementById("detalhe-regioes").hidden = !porRegiao;
-  document.getElementById("detalhe-ufs").hidden = porRegiao;
 }
 
 function adicionarDestaque(lista, textoForte, textoResto) {
@@ -3025,8 +2914,6 @@ function renderizarEstados() {
   renderizarControlesMapa();
   renderizarPaineisEstados();
   renderizarDestaquesUf();
-  const ufsOrdenadas = DADOS.ufs.slice().sort(function (ufA, ufB) { return ufA.nm_uf.localeCompare(ufB.nm_uf, "pt-BR"); });
-  criarTabela(colunasIndicadores("Estado", "nm_uf"), ufsOrdenadas, "tabela-ufs", true);
 }
 
 /* ---------- Migração de votos ---------- */
@@ -3095,13 +2982,6 @@ function ehRecorteEstadual() {
   return tipoRecorteAtual === "uf";
 }
 
-// Preposição de cada estado na frase ("em São Paulo", "na Bahia", "no Acre").
-const PREPOSICAO_UF = {
-  AC: "no", AL: "em", AP: "no", AM: "no", BA: "na", CE: "no", DF: "no", ES: "no", GO: "em",
-  MA: "no", MT: "em", MS: "em", MG: "em", PA: "no", PB: "na", PR: "no", PE: "em", PI: "no",
-  RJ: "no", RN: "no", RS: "no", RO: "em", RR: "em", SC: "em", SP: "em", SE: "em", TO: "no",
-};
-
 function buscarUf(siglaUf) {
   for (const uf of DADOS.ufs) {
     if (uf.sg_uf === siglaUf) {
@@ -3109,22 +2989,6 @@ function buscarUf(siglaUf) {
     }
   }
   return null;
-}
-
-function nomeDoRecorte() {
-  if (ehRecorteEstadual()) {
-    const uf = buscarUf(regiaoMigracaoAtual);
-    return PREPOSICAO_UF[regiaoMigracaoAtual] + " " + uf.nm_uf;
-  }
-  return "no " + regiaoMigracaoAtual;
-}
-
-function nomeEspecificacao(especificacao) {
-  // No recorte regional, o modelo nacional único aplica à região o padrão do Brasil.
-  if (especificacao.codigo === "E2" && tipoRecorteAtual === "regiao") {
-    return "Padrão nacional (modelo único)";
-  }
-  return especificacao.nome;
 }
 
 function notaInstabilidade() {
@@ -4390,6 +4254,434 @@ function renderizarConclusao() {
   renderizarVirada();
 }
 
+/* ---------- Cidades: filtro por estado, busca por nome e lista ordenável ---------- */
+
+// Quantas cidades a lista mostra de cada vez (o Brasil inteiro tem 5.757 linhas):
+// 100 em tela larga; 25 no celular, onde cada cidade vira uma ficha alta.
+function cidadesPorPagina() {
+  return window.innerWidth < 820 ? 25 : 100;
+}
+let ufCidadesAtual = "";
+let buscaCidadesAtual = "";
+let limiteCidadesAtual = cidadesPorPagina();
+let ordenacaoCidadesAtual = { campo: "eleitores", crescente: false };
+let cidadesCarregadas = null;
+
+function normalizarBusca(texto) {
+  // Sem acento e em minúsculas: "sao paulo" encontra "São Paulo".
+  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+}
+
+function percentualOuNulo(parte, total) {
+  return total > 0 ? 100 * parte / total : null;
+}
+
+function vencedorEntreFinalistas(votosLula, votosFlavio) {
+  if (votosLula > votosFlavio) {
+    return "Lula";
+  }
+  if (votosFlavio > votosLula) {
+    return "Flávio";
+  }
+  return "Empate";
+}
+
+function carregarCidades() {
+  // Converte as linhas compactas de municipios.js em objetos com os mesmos campos das regiões e
+  // estados, para reaproveitar a dica (montarDicaTurnos) e a vantagem (vantagemLula).
+  if (cidadesCarregadas) {
+    return cidadesCarregadas;
+  }
+  const tabela = window.DADOS_MUNICIPIOS;
+  const indice = {};
+  tabela.campos.forEach(function (campo, posicao) { indice[campo] = posicao; });
+  cidadesCarregadas = tabela.linhas.map(function (linha) {
+    const cidade = {};
+    for (const campo of tabela.campos) {
+      cidade[campo] = linha[indice[campo]];
+    }
+    cidade.pct_lula_1t = percentualOuNulo(cidade.votos_1t_13, cidade.validos_1t);
+    cidade.pct_flavio_1t = percentualOuNulo(cidade.votos_1t_22, cidade.validos_1t);
+    cidade.pct_lula_2t = percentualOuNulo(cidade.votos_2t_13, cidade.validos_2t);
+    cidade.comparecimento_pct_1t = percentualOuNulo(cidade.comparecimento_1t, cidade.aptos_1t);
+    cidade.comparecimento_pct_2t = percentualOuNulo(cidade.comparecimento_2t, cidade.aptos_2t);
+    cidade.vencedor_1t = vencedorEntreFinalistas(cidade.votos_1t_13, cidade.votos_1t_22);
+    cidade.vencedor_2t = vencedorEntreFinalistas(cidade.votos_2t_13, cidade.votos_2t_22);
+    cidade.temVotos = cidade.validos_1t > 0 && cidade.validos_2t > 0;
+    cidade.chaveBusca = normalizarBusca(cidade.nome);
+    return cidade;
+  });
+  return cidadesCarregadas;
+}
+
+// Colunas da lista: como ordenar. Cidades sem votos válidos vão para o fim de qualquer ordenação.
+// "opcional" = some entre 820 e 1.279 px para a tabela caber sem rolagem lateral.
+function percentualFlavio2t(cidade) {
+  return cidade.temVotos ? 100 - cidade.pct_lula_2t : null;
+}
+
+function diferencaOuNula(valor2t, valor1t) {
+  return valor2t === null || valor1t === null ? null : valor2t - valor1t;
+}
+
+const COLUNAS_CIDADES = [
+  { campo: "nome", titulo: "Cidade", ordenar: function (cidade) { return cidade.chaveBusca; } },
+  { campo: "barra", titulo: "2º turno", ordenar: null, opcional: true },
+  { campo: "lula1", grupo: "Lula", titulo: "1º turno", ordenar: function (cidade) { return cidade.temVotos ? cidade.pct_lula_1t : null; } },
+  { campo: "lula2", grupo: "Lula", titulo: "2º turno", ordenar: function (cidade) { return cidade.temVotos ? cidade.pct_lula_2t : null; } },
+  { campo: "lulaVar", grupo: "Lula", titulo: "Variação", ordenar: function (cidade) { return cidade.temVotos ? cidade.pct_lula_2t - cidade.pct_lula_1t : null; } },
+  { campo: "flavio1", grupo: "Flávio", titulo: "1º turno", ordenar: function (cidade) { return cidade.temVotos ? cidade.pct_flavio_1t : null; } },
+  { campo: "flavio2", grupo: "Flávio", titulo: "2º turno", ordenar: percentualFlavio2t },
+  { campo: "flavioVar", grupo: "Flávio", titulo: "Variação", ordenar: function (cidade) { return cidade.temVotos ? percentualFlavio2t(cidade) - cidade.pct_flavio_1t : null; } },
+  { campo: "vantagem", titulo: "Vantagem de Lula", ordenar: function (cidade) { return cidade.temVotos ? vantagemLula(cidade, 2) : null; }, opcional: true },
+  { campo: "comparecimento", titulo: "Comparecimento", ordenar: function (cidade) { return cidade.comparecimento_pct_2t; } },
+  { campo: "eleitores", titulo: "Eleitores", ordenar: function (cidade) { return cidade.aptos_2t; } },
+  { campo: "habitantes", titulo: "Habitantes", ordenar: function (cidade) { return cidade.populacao; } },
+];
+
+function filtrarCidades() {
+  const termo = normalizarBusca(buscaCidadesAtual);
+  return carregarCidades().filter(function (cidade) {
+    if (ufCidadesAtual && cidade.uf !== ufCidadesAtual) {
+      return false;
+    }
+    return termo === "" || cidade.chaveBusca.indexOf(termo) >= 0;
+  });
+}
+
+function ordenarCidades(cidades) {
+  let coluna = COLUNAS_CIDADES[COLUNAS_CIDADES.length - 1];
+  for (const candidata of COLUNAS_CIDADES) {
+    if (candidata.campo === ordenacaoCidadesAtual.campo) {
+      coluna = candidata;
+    }
+  }
+  const sinal = ordenacaoCidadesAtual.crescente ? 1 : -1;
+  return cidades.slice().sort(function (cidadeA, cidadeB) {
+    const valorA = coluna.ordenar(cidadeA);
+    const valorB = coluna.ordenar(cidadeB);
+    if (valorA === null && valorB === null) {
+      return 0;
+    }
+    if (valorA === null) {
+      return 1;
+    }
+    if (valorB === null) {
+      return -1;
+    }
+    if (valorA < valorB) {
+      return -sinal;
+    }
+    if (valorA > valorB) {
+      return sinal;
+    }
+    return 0;
+  });
+}
+
+function criarCelulaCidade(cidade) {
+  const celula = document.createElement("td");
+  celula.dataset.rotulo = "Cidade";
+  const envoltorio = document.createElement("span");
+  envoltorio.className = "celula-nome";
+  envoltorio.appendChild(document.createTextNode(cidade.nome));
+  if (!ufCidadesAtual) {
+    const uf = document.createElement("span");
+    uf.className = "uf-cidade";
+    uf.textContent = cidade.uf === "ZZ" ? "Exterior" : cidade.uf;
+    envoltorio.appendChild(uf);
+  }
+  if (cidade.temVotos && cidade.vencedor_1t !== cidade.vencedor_2t && cidade.vencedor_2t !== "Empate") {
+    const etiqueta = document.createElement("span");
+    etiqueta.className = "etiqueta etiqueta-virou";
+    etiqueta.textContent = "virou";
+    envoltorio.appendChild(etiqueta);
+  }
+  celula.appendChild(envoltorio);
+  return celula;
+}
+
+function criarCelulaBarraCidade(cidade) {
+  const celula = document.createElement("td");
+  celula.dataset.rotulo = "2º turno";
+  celula.className = "celula-barra-cidade";
+  if (!cidade.temVotos) {
+    return celula;
+  }
+  const barra = document.createElement("div");
+  barra.className = "barra-resumo-regiao";
+  barra.setAttribute("aria-hidden", "true");
+  const parteLula = document.createElement("span");
+  parteLula.style.width = cidade.pct_lula_2t + "%";
+  parteLula.style.background = "var(--cor-lula)";
+  barra.appendChild(parteLula);
+  const parteFlavio = document.createElement("span");
+  parteFlavio.style.width = (100 - cidade.pct_lula_2t) + "%";
+  parteFlavio.style.background = "var(--cor-flavio)";
+  barra.appendChild(parteFlavio);
+  celula.appendChild(barra);
+  return celula;
+}
+
+function criarCelulaDuplaCidade(rotulo, textoPrincipal, textoSecundario, opcoes) {
+  // Célula com o percentual (ou pontos) em cima e o número de votos embaixo, menor.
+  const celula = document.createElement("td");
+  celula.dataset.rotulo = rotulo;
+  if (opcoes && opcoes.classe) {
+    celula.className = opcoes.classe;
+  }
+  if (textoPrincipal === null) {
+    celula.textContent = "—";
+    return celula;
+  }
+  const principal = document.createElement("span");
+  principal.className = "linha-principal-cidade";
+  principal.textContent = textoPrincipal;
+  if (textoPrincipal.indexOf("▼") === 0) {
+    principal.classList.add("variacao-negativa");
+  }
+  if (opcoes && opcoes.vencedor) {
+    principal.classList.add("valor-vencedor");
+  }
+  celula.appendChild(principal);
+  if (textoSecundario !== null) {
+    const secundaria = document.createElement("span");
+    secundaria.className = "linha-secundaria-cidade";
+    secundaria.textContent = textoSecundario;
+    if (opcoes && opcoes.votos) {
+      const sufixo = document.createElement("span");
+      sufixo.className = "sufixo-votos";
+      sufixo.textContent = " votos";
+      secundaria.appendChild(sufixo);
+    }
+    if (textoSecundario.indexOf("▼") === 0) {
+      secundaria.classList.add("variacao-negativa");
+    }
+    celula.appendChild(secundaria);
+  }
+  return celula;
+}
+
+function adicionarColunasCandidato(linha, cidade, nome, percentual1t, percentual2t, votos1t, votos2t, venceu1t, venceu2t) {
+  // Três colunas por candidato: 1º turno, 2º turno e variação, cada uma com % (ou pontos) e votos.
+  const temVotos = cidade.temVotos;
+  linha.appendChild(criarCelulaDuplaCidade(nome + " · 1º turno",
+    temVotos ? formatarPercentual(percentual1t, 1) : null, formatarInteiro(votos1t), { vencedor: venceu1t, votos: true }));
+  linha.appendChild(criarCelulaDuplaCidade(nome + " · 2º turno",
+    temVotos ? formatarPercentual(percentual2t, 1) : null, formatarInteiro(votos2t), { vencedor: venceu2t, votos: true }));
+  linha.appendChild(criarCelulaDuplaCidade(nome + " · variação",
+    temVotos ? textoVariacaoPontos(percentual2t - percentual1t, 1) + " pts" : null, textoVariacaoInteiro(votos2t - votos1t),
+    { classe: "celula-variacao-cidade", votos: true }));
+}
+
+function criarLinhaCidade(cidade) {
+  const linha = document.createElement("tr");
+  linha.appendChild(criarCelulaCidade(cidade));
+  const celulaBarra = criarCelulaBarraCidade(cidade);
+  celulaBarra.classList.add("coluna-opcional");
+  linha.appendChild(celulaBarra);
+
+  const flavio2t = percentualFlavio2t(cidade);
+  adicionarColunasCandidato(linha, cidade, "Lula", cidade.pct_lula_1t, cidade.pct_lula_2t, cidade.votos_1t_13, cidade.votos_2t_13,
+    cidade.vencedor_1t === "Lula", cidade.vencedor_2t === "Lula");
+  adicionarColunasCandidato(linha, cidade, "Flávio", cidade.pct_flavio_1t, flavio2t, cidade.votos_1t_22, cidade.votos_2t_22,
+    cidade.vencedor_1t === "Flávio", cidade.vencedor_2t === "Flávio");
+
+  const vantagem2t = cidade.temVotos ? vantagemLula(cidade, 2) : null;
+  const variacaoVantagem = cidade.temVotos ? vantagem2t - vantagemLula(cidade, 1) : null;
+  linha.appendChild(criarCelulaDuplaCidade("Vantagem de Lula",
+    vantagem2t === null ? null : formatarNumeroComSinal(vantagem2t, 1) + " pts",
+    variacaoVantagem === null ? null : textoVariacaoPontos(variacaoVantagem, 1) + " pts",
+    { classe: "coluna-opcional" }));
+
+  const variacaoComparecimento = diferencaOuNula(cidade.comparecimento_pct_2t, cidade.comparecimento_pct_1t);
+  linha.appendChild(criarCelulaDuplaCidade("Comparecimento",
+    cidade.comparecimento_pct_2t === null ? null : formatarPercentual(cidade.comparecimento_pct_2t, 1),
+    variacaoComparecimento === null ? null : textoVariacaoPontos(variacaoComparecimento, 1) + " pts"));
+
+  const celulaEleitores = criarCelulaTexto(formatarInteiro(cidade.aptos_2t));
+  celulaEleitores.dataset.rotulo = "Eleitores";
+  linha.appendChild(celulaEleitores);
+  // Estimativa 2026 do IBGE; as cidades do exterior não têm.
+  const celulaHabitantes = criarCelulaTexto(cidade.populacao === null ? "—" : formatarInteiro(cidade.populacao));
+  celulaHabitantes.dataset.rotulo = "Habitantes (IBGE 2026)";
+  linha.appendChild(celulaHabitantes);
+  // Sem dica ao passar o mouse: a linha já traz todos os números (pedido do Vinicius).
+  return linha;
+}
+
+function criarBotaoOrdenacao(coluna) {
+  const botao = document.createElement("button");
+  botao.type = "button";
+  let seta = "";
+  if (ordenacaoCidadesAtual.campo === coluna.campo) {
+    seta = ordenacaoCidadesAtual.crescente ? " ↑" : " ↓";
+  }
+  botao.textContent = coluna.titulo + seta;
+  botao.addEventListener("click", function () {
+    if (ordenacaoCidadesAtual.campo === coluna.campo) {
+      ordenacaoCidadesAtual = { campo: coluna.campo, crescente: !ordenacaoCidadesAtual.crescente };
+    } else {
+      // Nome começa de A a Z; números começam do maior.
+      ordenacaoCidadesAtual = { campo: coluna.campo, crescente: coluna.campo === "nome" };
+    }
+    limiteCidadesAtual = cidadesPorPagina();
+    renderizarListaCidades();
+  });
+  return botao;
+}
+
+function criarCabecalhoCidades(tabela) {
+  // Dois níveis: "Lula" e "Flávio" em cima, com 1º turno, 2º turno e variação embaixo.
+  const cabecalho = document.createElement("thead");
+  const linhaGrupos = document.createElement("tr");
+  const linhaColunas = document.createElement("tr");
+  let grupoAberto = null;
+  for (const coluna of COLUNAS_CIDADES) {
+    const celula = document.createElement("th");
+    celula.scope = "col";
+    const classes = [];
+    if (coluna.opcional) {
+      classes.push("coluna-opcional");
+    }
+    if (coluna.campo === "barra") {
+      classes.push("celula-barra-cidade");
+    }
+    if (ordenacaoCidadesAtual.campo === coluna.campo) {
+      celula.setAttribute("aria-sort", ordenacaoCidadesAtual.crescente ? "ascending" : "descending");
+    }
+    if (coluna.ordenar) {
+      celula.appendChild(criarBotaoOrdenacao(coluna));
+    } else {
+      celula.textContent = coluna.titulo;
+    }
+
+    if (!coluna.grupo) {
+      celula.rowSpan = 2;
+      celula.className = classes.join(" ");
+      linhaGrupos.appendChild(celula);
+      grupoAberto = null;
+      continue;
+    }
+    if (!grupoAberto || grupoAberto.dataset.grupo !== coluna.grupo) {
+      grupoAberto = document.createElement("th");
+      grupoAberto.scope = "colgroup";
+      grupoAberto.colSpan = 1;
+      grupoAberto.dataset.grupo = coluna.grupo;
+      grupoAberto.className = "grupo-coluna-cidade";
+      grupoAberto.textContent = coluna.grupo + " · % e votos";
+      linhaGrupos.appendChild(grupoAberto);
+    } else {
+      grupoAberto.colSpan += 1;
+    }
+    classes.push("subcoluna-cidade");
+    celula.className = classes.join(" ");
+    linhaColunas.appendChild(celula);
+  }
+  cabecalho.appendChild(linhaGrupos);
+  cabecalho.appendChild(linhaColunas);
+  tabela.appendChild(cabecalho);
+}
+
+function textoResumoCidades(cidadesDoFiltro) {
+  // Placar de vitórias no recorte (estado ou Brasil), sem considerar a busca.
+  const comVotos = cidadesDoFiltro.filter(function (cidade) { return cidade.temVotos; });
+  let lula2t = 0;
+  let flavio2t = 0;
+  let lula1t = 0;
+  let flavio1t = 0;
+  for (const cidade of comVotos) {
+    lula2t += cidade.vencedor_2t === "Lula" ? 1 : 0;
+    flavio2t += cidade.vencedor_2t === "Flávio" ? 1 : 0;
+    lula1t += cidade.vencedor_1t === "Lula" ? 1 : 0;
+    flavio1t += cidade.vencedor_1t === "Flávio" ? 1 : 0;
+  }
+  const onde = ufCidadesAtual ? (ufCidadesAtual === "ZZ" ? "cidades do exterior" : "cidades de " + buscarUf(ufCidadesAtual).nm_uf) : "cidades do Brasil e do exterior";
+  return "Lula venceu em " + formatarInteiro(lula2t) + " e Flávio em " + formatarInteiro(flavio2t) + " das " +
+    formatarInteiro(comVotos.length) + " " + onde + " com votos (no 1º turno: " + formatarInteiro(lula1t) + " e " + formatarInteiro(flavio1t) + ").";
+}
+
+function renderizarListaCidades() {
+  const doFiltroUf = carregarCidades().filter(function (cidade) { return !ufCidadesAtual || cidade.uf === ufCidadesAtual; });
+  document.getElementById("resumo-cidades").textContent = textoResumoCidades(doFiltroUf);
+
+  const encontradas = ordenarCidades(filtrarCidades());
+  const visiveis = encontradas.slice(0, limiteCidadesAtual);
+  const conteiner = document.getElementById("tabela-cidades");
+  conteiner.replaceChildren();
+  if (encontradas.length === 0) {
+    const vazio = document.createElement("p");
+    vazio.className = "sub-painel";
+    vazio.textContent = "Nenhuma cidade encontrada para “" + buscaCidadesAtual + "”.";
+    conteiner.appendChild(vazio);
+  } else {
+    const tabela = document.createElement("table");
+    tabela.className = "tabela-fichas tabela-cidades";
+    criarCabecalhoCidades(tabela);
+    const corpo = document.createElement("tbody");
+    for (const cidade of visiveis) {
+      corpo.appendChild(criarLinhaCidade(cidade));
+    }
+    tabela.appendChild(corpo);
+    conteiner.appendChild(tabela);
+  }
+
+  const rodape = document.getElementById("mais-cidades");
+  rodape.replaceChildren();
+  const contagem = document.createElement("span");
+  contagem.className = "contagem-cidades";
+  contagem.textContent = "Mostrando " + formatarInteiro(visiveis.length) + " de " + formatarInteiro(encontradas.length) + " cidades";
+  rodape.appendChild(contagem);
+  if (visiveis.length < encontradas.length) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "botao-mais-cidades";
+    botao.textContent = "Mostrar mais " + formatarInteiro(Math.min(cidadesPorPagina(), encontradas.length - visiveis.length));
+    botao.addEventListener("click", function () {
+      limiteCidadesAtual += cidadesPorPagina();
+      renderizarListaCidades();
+    });
+    rodape.appendChild(botao);
+  }
+}
+
+let temporizadorBuscaCidades = null;
+
+function renderizarCidades() {
+  if (!window.DADOS_MUNICIPIOS) {
+    return;
+  }
+  const seletor = document.getElementById("filtro-uf-cidades");
+  if (seletor.options.length === 0) {
+    const todas = document.createElement("option");
+    todas.value = "";
+    todas.textContent = "Todos os estados";
+    seletor.appendChild(todas);
+    const ufsOrdenadas = DADOS.ufs.slice().sort(function (ufA, ufB) { return ufA.nm_uf.localeCompare(ufB.nm_uf, "pt-BR"); });
+    for (const uf of ufsOrdenadas) {
+      const opcao = document.createElement("option");
+      opcao.value = uf.sg_uf;
+      opcao.textContent = uf.sg_uf === "ZZ" ? "Exterior" : uf.nm_uf;
+      seletor.appendChild(opcao);
+    }
+    seletor.addEventListener("change", function () {
+      ufCidadesAtual = seletor.value;
+      limiteCidadesAtual = cidadesPorPagina();
+      renderizarListaCidades();
+    });
+    const campoBusca = document.getElementById("busca-cidade");
+    campoBusca.addEventListener("input", function () {
+      window.clearTimeout(temporizadorBuscaCidades);
+      temporizadorBuscaCidades = window.setTimeout(function () {
+        buscaCidadesAtual = campoBusca.value;
+        limiteCidadesAtual = cidadesPorPagina();
+        renderizarListaCidades();
+      }, 120);
+    });
+  }
+  renderizarListaCidades();
+}
+
 /* ---------- Metodologia ---------- */
 
 function renderizarRodape() {
@@ -4441,13 +4733,14 @@ let temaAtual = lerTemaSalvo();
 
 function renderizarTudo() {
   renderizarCabecalho();
+  renderizarResumo();
   renderizarControlesBase();
   renderizarResultado();
   renderizarPonte();
-  renderizarRegioes();
   renderizarEstados();
   renderizarMigracao();
   renderizarConclusao();
+  renderizarCidades();
   renderizarRodape();
 }
 

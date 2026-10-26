@@ -47,11 +47,31 @@ CAMINHO_BASE_MUNICIPIOS = (
     RAIZ_PROJETO / "dados" / "processados" / "presidente_municipio_turnos.parquet"
 )
 CAMINHO_SAIDA = RAIZ_PROJETO / "docs" / "dados.js"
+CAMINHO_SAIDA_MUNICIPIOS = RAIZ_PROJETO / "docs" / "municipios.js"
+# População estimada 2026 do IBGE por município (gerada e conferida em 2026-10-26_populacao_ibge/).
+CAMINHO_POPULACAO = RAIZ_PROJETO / "dados" / "processados" / "populacao_municipios_ibge.csv"
 CAMINHO_HTML = RAIZ_PROJETO / "docs" / "index.html"
 
-# Tag que carrega os dados no HTML, com ou sem versão (`dados.js?v=<hash>`).
-PADRAO_TAG_DADOS = re.compile(r'<script src="dados\.js(?:\?v=[0-9a-f]+)?"></script>')
+# Tamanho da versão gravada nas tags de script (`dados.js?v=<hash>`).
 TAMANHO_VERSAO = 12
+
+# Cidades: arquivo à parte (`window.DADOS_MUNICIPIOS`), em formato de colunas + linhas
+# para ficar enxuto (~5,8 mil linhas). Os campos numéricos têm de somar as âncoras nacionais.
+NOME_VARIAVEL_MUNICIPIOS = "DADOS_MUNICIPIOS"
+CAMPOS_NUMERICOS_MUNICIPIO = [
+    "aptos_1t",
+    "aptos_2t",
+    "comparecimento_1t",
+    "comparecimento_2t",
+    "validos_1t",
+    "validos_2t",
+    "votos_1t_13",
+    "votos_1t_22",
+    "votos_2t_13",
+    "votos_2t_22",
+]
+# Palavras que ficam em minúscula no nome da cidade (exceto no começo): "Colônia do Gurguéia".
+CONECTIVOS_NOME = {"de", "da", "do", "das", "dos", "e", "del", "di", "du"}
 
 COLUNA_VOTOS_CAIADO_1T = "votos_1t_55"
 PREFIXO_VOTOS_1T = "votos_1t_"
@@ -853,48 +873,165 @@ def gravar_dados_js(dados_html: dict[str, object], caminho_saida: pathlib.Path) 
     LOGGER.info("Gravado %s (%d bytes).", caminho_saida, len(conteudo_js.encode("utf-8")))
 
 
-def versionar_dados_no_html(
-    caminho_dados: pathlib.Path,
+def versionar_script_no_html(
+    caminho_script: pathlib.Path,
     caminho_html: pathlib.Path,
 ) -> str:
-    """Grava no HTML a versão do `dados.js`, derivada do conteúdo do arquivo.
+    """Grava no HTML a versão de um script de dados, derivada do conteúdo do arquivo.
 
     O GitHub Pages manda o navegador guardar os arquivos por 10 minutos.
     Sem versão, quem já tinha visitado a página recebia o HTML novo com o
     `dados.js` antigo, e a página quebrava no meio (aconteceu em 26/10/2026).
-    Com `dados.js?v=<hash do conteúdo>`, qualquer mudança nos dados muda o
+    Com `<arquivo>.js?v=<hash do conteúdo>`, qualquer mudança nos dados muda o
     endereço e força o download da versão nova; sem mudança, o cache segue
-    valendo.
+    valendo. Vale para `dados.js` e `municipios.js`.
 
     Args:
-        caminho_dados: O `dados.js` recém-gravado.
-        caminho_html: O `index.html` que carrega os dados.
+        caminho_script: O `.js` recém-gravado.
+        caminho_html: O `index.html` que carrega o script.
 
     Returns:
         A versão gravada (primeiros caracteres do SHA-256 do conteúdo).
 
     Raises:
         FileNotFoundError: Se o HTML não existir.
-        ValueError: Se o HTML não tiver exatamente uma tag de `dados.js`.
+        ValueError: Se o HTML não tiver exatamente uma tag do script.
     """
     if not caminho_html.exists():
         raise FileNotFoundError(f"HTML não encontrado: {caminho_html}")
 
-    conteudo_dados = caminho_dados.read_bytes()
-    versao = hashlib.sha256(conteudo_dados).hexdigest()[:TAMANHO_VERSAO]
+    nome_script = caminho_script.name
+    padrao_tag = re.compile(
+        r'<script src="' + re.escape(nome_script) + r'(?:\?v=[0-9a-f]+)?"></script>'
+    )
+    conteudo_script = caminho_script.read_bytes()
+    versao = hashlib.sha256(conteudo_script).hexdigest()[:TAMANHO_VERSAO]
 
     html = caminho_html.read_text(encoding="utf-8")
-    quantidade_tags = len(PADRAO_TAG_DADOS.findall(html))
+    quantidade_tags = len(padrao_tag.findall(html))
     if quantidade_tags != 1:
         raise ValueError(
-            f"Esperada 1 tag de dados.js em {caminho_html}, achadas {quantidade_tags}."
+            f"Esperada 1 tag de {nome_script} em {caminho_html}, achadas {quantidade_tags}."
         )
 
-    tag_versionada = f'<script src="dados.js?v={versao}"></script>'
-    html_versionado = PADRAO_TAG_DADOS.sub(tag_versionada, html)
+    tag_versionada = f'<script src="{nome_script}?v={versao}"></script>'
+    html_versionado = padrao_tag.sub(tag_versionada, html)
     caminho_html.write_text(html_versionado, encoding="utf-8")
-    LOGGER.info("Versão do dados.js gravada no HTML: %s.", versao)
+    LOGGER.info("Versão do %s gravada no HTML: %s.", nome_script, versao)
     return versao
+
+
+def formatar_nome_municipio(nome_maiusculo: str) -> str:
+    """Passa o nome da cidade do TSE (maiúsculas) para a grafia usual.
+
+    Exemplos: "COLÔNIA DO GURGUÉIA" → "Colônia do Gurguéia";
+    "SANTA BÁRBARA D'OESTE" → "Santa Bárbara d'Oeste"; "EMBU-GUAÇU" → "Embu-Guaçu".
+
+    Args:
+        nome_maiusculo: Nome como vem na base (maiúsculas, com acento).
+
+    Returns:
+        Nome com iniciais maiúsculas e conectivos em minúscula.
+    """
+    palavras_formatadas: list[str] = []
+    for indice_palavra, palavra in enumerate(nome_maiusculo.split()):
+        partes_hifen: list[str] = []
+        for parte in palavra.split("-"):
+            parte_minuscula = parte.lower()
+            if parte_minuscula.startswith("d'") and len(parte_minuscula) > 2:
+                parte_formatada = "d'" + parte_minuscula[2:].capitalize()
+            elif parte_minuscula in CONECTIVOS_NOME and indice_palavra > 0:
+                parte_formatada = parte_minuscula
+            else:
+                parte_formatada = parte_minuscula.capitalize()
+            partes_hifen.append(parte_formatada)
+        palavras_formatadas.append("-".join(partes_hifen))
+    return " ".join(palavras_formatadas)
+
+
+def montar_municipios(
+    caminho_base: pathlib.Path,
+    indicadores_brasil: pd.DataFrame,
+    caminho_populacao: pathlib.Path,
+) -> dict[str, object]:
+    """Monta a tabela de cidades (1º e 2º turno) para a seção "Cidades" do HTML.
+
+    Cada linha: UF, nome, os campos de `CAMPOS_NUMERICOS_MUNICIPIO` e a população
+    estimada do IBGE (`None` nas cidades do exterior). A soma de cada campo
+    eleitoral nas 5.757 linhas (5.571 municípios + 186 cidades do exterior) tem
+    de bater exatamente com o total nacional; todo município brasileiro tem de
+    ter população, e a soma delas tem de bater com a do arquivo do IBGE.
+
+    Args:
+        caminho_base: Parquet da base por município.
+        indicadores_brasil: Uma linha, Brasil com exterior.
+        caminho_populacao: CSV `cd_municipio_ibge;populacao` já conferido.
+
+    Returns:
+        Dicionário com `campos` (nomes das colunas) e `linhas` (listas de valores).
+
+    Raises:
+        FileNotFoundError: Se o parquet ou o CSV de população não existirem.
+        ValueError: Se algum total não bater ou faltar população em algum município.
+    """
+    if not caminho_base.exists():
+        raise FileNotFoundError(f"Base por município não encontrada: {caminho_base}")
+    populacao = ler_csv_obrigatorio(caminho_populacao)
+    populacao["cd_municipio_ibge"] = populacao["cd_municipio_ibge"].astype(str)
+
+    colunas_lidas = ["sg_uf", "nm_municipio", "cd_municipio_ibge", "fl_exterior"] + CAMPOS_NUMERICOS_MUNICIPIO
+    base_municipios = pd.read_parquet(caminho_base, columns=colunas_lidas)
+    base_municipios = base_municipios.merge(populacao, on="cd_municipio_ibge", how="left")
+    linha_brasil = indicadores_brasil.iloc[0]
+
+    mascara_brasil = ~base_municipios["fl_exterior"]
+    sem_populacao = int(base_municipios.loc[mascara_brasil, "populacao"].isna().sum())
+    soma_populacao = int(base_municipios.loc[mascara_brasil, "populacao"].sum())
+    total_populacao = int(populacao["populacao"].sum())
+    if sem_populacao or soma_populacao != total_populacao:
+        raise ValueError(
+            f"População não fecha: {sem_populacao} municípios sem valor; "
+            f"soma {soma_populacao} ≠ total do IBGE {total_populacao}."
+        )
+
+    for campo in CAMPOS_NUMERICOS_MUNICIPIO:
+        soma_municipios = int(base_municipios[campo].sum())
+        total_nacional = int(linha_brasil[campo])
+        if soma_municipios != total_nacional:
+            raise ValueError(
+                f"Cidades não fecham com o Brasil em {campo}: {soma_municipios} ≠ {total_nacional}."
+            )
+
+    linhas: list[list[object]] = []
+    for _, linha_municipio in base_municipios.iterrows():
+        registro: list[object] = [
+            linha_municipio["sg_uf"],
+            formatar_nome_municipio(linha_municipio["nm_municipio"]),
+        ]
+        for campo in CAMPOS_NUMERICOS_MUNICIPIO:
+            registro.append(int(linha_municipio[campo]))
+        registro.append(inteiro_ou_nulo(linha_municipio["populacao"]))
+        linhas.append(registro)
+
+    LOGGER.info(
+        "Cidades montadas: %d linhas, totais conferidos com o Brasil; população %d (IBGE).",
+        len(linhas),
+        soma_populacao,
+    )
+    return {"campos": ["uf", "nome"] + CAMPOS_NUMERICOS_MUNICIPIO + ["populacao"], "linhas": linhas}
+
+
+def gravar_municipios_js(municipios: dict[str, object], caminho_saida: pathlib.Path) -> None:
+    """Grava a tabela de cidades como variável global JavaScript (arquivo à parte).
+
+    Args:
+        municipios: Saída de `montar_municipios`.
+        caminho_saida: Caminho do `municipios.js`.
+    """
+    conteudo_json = json.dumps(municipios, ensure_ascii=False, separators=(",", ":"))
+    conteudo_js = f"window.{NOME_VARIAVEL_MUNICIPIOS} = {conteudo_json};\n"
+    caminho_saida.write_text(conteudo_js, encoding="utf-8")
+    LOGGER.info("Gravado %s (%d bytes).", caminho_saida, len(conteudo_js.encode("utf-8")))
 
 
 def gerar_dados_html() -> None:
@@ -943,7 +1080,11 @@ def gerar_dados_html() -> None:
     }
 
     gravar_dados_js(dados_html, CAMINHO_SAIDA)
-    versionar_dados_no_html(CAMINHO_SAIDA, CAMINHO_HTML)
+    versionar_script_no_html(CAMINHO_SAIDA, CAMINHO_HTML)
+
+    municipios = montar_municipios(CAMINHO_BASE_MUNICIPIOS, indicadores_brasil, CAMINHO_POPULACAO)
+    gravar_municipios_js(municipios, CAMINHO_SAIDA_MUNICIPIOS)
+    versionar_script_no_html(CAMINHO_SAIDA_MUNICIPIOS, CAMINHO_HTML)
 
 
 if __name__ == "__main__":
