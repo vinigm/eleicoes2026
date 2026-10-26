@@ -105,9 +105,16 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - Escolhida a **cascata** em vez de um Sankey: o Sankey mostra fluxos, mas não mostra perdas nem fecha num saldo.
   - Cartão 1, Lula × Flávio na mesma escala: eliminados (Cury, Renan, Caiado, outros 7), quem anulou ou não votou, perdas e ajustes → ganho oficial.
     - Cada linha mostra o modelo principal e, embaixo, o menor e o maior valor entre os 3 modelos.
+  - Cartão do meio, pedido do Vinicius: Sankey "de que região veio quem anulou ou não votou e foi para Lula".
+    - Testou a hipótese "quase tudo veio do Nordeste", que não se confirmou: Sudeste 42% (40–47% entre modelos), Nordeste 31% (29–32%). O Sudeste lidera nos 3 modelos.
+    - A taxa é maior no Nordeste: 84% de quem anulou lá foi para Lula, contra 57% no Sudeste. Mas o Sudeste tem mais eleitores.
+    - A frase compara só as duas maiores fontes. O Norte (99,6%, IC 77–100%) é instável demais para entrar no texto.
   - Cartão 2, a virada (Lula − Flávio): de −2,22 mi no 1º turno a +4,43 mi no 2º.
+    - Rótulos reescritos em 26/10/2026, pedido do Vinicius: "Lula +4,43 mi" era lido como ganho de votos.
+    - Agora as pontas dizem "Lula à frente por 4,43 mi", com o placar embaixo, e os passos dizem "puxou 0,78 mi para Lula". O eixo diz "← Flávio à frente · Lula à frente →".
     - 6,09 mi vieram de quem anulou ou não votou.
     - Os eliminados deram só +0,78 mi líquido a Lula (−0,06 a +0,87 entre modelos).
+  - As cascatas se adaptam à própria largura (container query), não à da tela. Em 1.024 px, os painéis pela metade ficavam com barras de ~50 px.
   - Identidade: ganho oficial = Σ entradas − perdas + ajuste do modelo + saldo do exterior. O gerador confere em inteiros, nos 6 casos (2 finalistas × 3 modelos).
   - O gerador também confere o ajuste contra real − previsto (tolerância de 6 votos), para ele não virar uma sobra que fecha a conta à força.
   - **Certificação independente (26/10/2026):** reprovou a 1ª versão.

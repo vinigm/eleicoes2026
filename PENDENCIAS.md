@@ -70,3 +70,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Mapas de estados com seletor "Mostrar por: Estados | Regiões".
   - ✅ Conclusão "de onde vieram os votos a mais de Lula" (cascata + virada); certificação independente achou e corrigiu a troca direta Flávio → Lula (E3).
   - ✅ Regiões e estados fundidos (Regiões padrão), ▲▼ nos mapas, dicas na ordem 1º/2º/diferença, legenda dos mapas sem texto.
+  - ✅ Virada com rótulos "à frente por" / "puxou"; Sankey por região de quem anulou ou não votou → Lula (Sudeste 42%, Nordeste 31%).

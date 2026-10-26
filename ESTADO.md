@@ -34,6 +34,7 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
   - Conclusão no fim: cascata "de onde vieram os votos a mais" (Lula × Flávio) e a virada.
     - Fato: o ganho de cada finalista e a virada, de −2,22 mi a +4,43 mi.
     - Estimativa: a divisão por origem. 6,09 mi da virada vieram de quem anulou ou não votou; os eliminados deram +0,78 mi líquido a Lula (−0,06 a +0,87 entre os modelos).
+    - Estimativa por região: quem anulou ou não votou e foi para Lula veio 42% do Sudeste e 31% do Nordeste. O Sudeste lidera nos 3 modelos; a taxa é maior no Nordeste (84% × 57%).
   - Sem rolagem lateral em 1.440 a 390 px (medido).
   - **No ar em https://vinigm.github.io/eleicoes2026/** (GitHub Pages, branch `main`, pasta `/docs`, desde 26/10/2026).
   - Atualizar a página = regenerar `docs/`, fazer commit e push; o Pages republica sozinho.

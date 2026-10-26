@@ -558,7 +558,8 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 }
 
 /* Conclusão: cascata do ganho de cada finalista e da virada (barras na mesma escala). */
-.cascata { margin-top: 4px; }
+/* A cascata se adapta à própria largura (painel pela metade ou cartão inteiro), não à da tela. */
+.cascata { margin-top: 4px; container-type: inline-size; }
 .linha-cascata {
   display: grid;
   grid-template-columns: minmax(130px, 230px) minmax(0, 1fr) 118px;
@@ -594,7 +595,15 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 .eixo-cascata { padding-top: 2px; }
 .marcas-cascata { position: relative; height: 16px; font-size: 12px; color: var(--tinta-3); }
 .marcas-cascata span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
-@media (max-width: 560px) {
+.cascata-virada .linha-cascata { grid-template-columns: minmax(130px, 230px) minmax(0, 1fr) 220px; }
+.lados-cascata { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; font-weight: 600; color: var(--tinta-2); }
+.lados-linha-cascata { padding-top: 0; }
+@container (max-width: 560px) {
+  .marcas-cascata .marca-secundaria { display: none; }
+  .cascata-virada .linha-cascata { grid-template-columns: minmax(0, 1fr) 124px; }
+  .cascata-virada .valor-cascata strong, .cascata-virada .valor-cascata .faixa-cascata { white-space: normal; }
+  .lados-linha-cascata .nome-cascata { display: none; }
+  .lados-cascata { font-size: 11px; }
   .linha-cascata { grid-template-columns: minmax(0, 1fr) 100px; gap: 4px 10px; }
   .nome-cascata { grid-column: 1 / -1; }
   .eixo-cascata .nome-cascata { display: none; }
@@ -758,6 +767,8 @@ th button:hover { color: var(--tinta); }
 .sankey-ligacao { cursor: default; transition: fill-opacity 80ms; }
 .sankey-ligacao:hover, .sankey-ligacao:focus-visible { fill-opacity: 0.8; }
 .sankey-ligacao:focus-visible { outline: none; stroke: var(--tinta); stroke-width: 1.5; }
+.sankey-no { cursor: default; }
+.sankey-no:focus-visible { outline: none; stroke: var(--tinta); stroke-width: 1.5; }
 .sankey-rotulo-nome { font-size: 13px; font-weight: 600; }
 .sankey-rotulo-valor { font-size: 12px; }
 @media (max-width: 560px) {
@@ -959,6 +970,16 @@ th button:hover { color: var(--tinta); }
         <div class="painel-turno" id="painel-cascata-lula"></div>
         <div class="painel-turno" id="painel-cascata-flavio"></div>
       </div>
+    </div>
+    <div class="cartao cartao-comparativo">
+      <h3 class="titulo-cartao-grande" id="titulo-sankey-regioes"></h3>
+      <p class="sub-cartao-grande" id="sub-sankey-regioes"></p>
+      <ul class="legenda" id="legenda-sankey-regioes" style="margin:16px 0 8px"></ul>
+      <div class="grafico-svg" id="grafico-sankey-regioes"></div>
+      <details class="tabela-detalhe">
+        <summary>Ver tabela por região (com a taxa e a faixa entre os 3 modelos)</summary>
+        <div class="tabela-rolagem" id="tabela-sankey-regioes"></div>
+      </details>
     </div>
     <div class="cartao cartao-comparativo">
       <h3 class="titulo-cartao-grande" id="titulo-virada"></h3>
@@ -4146,6 +4167,10 @@ function criarEixoCascata(marcas, posicao, formatarMarca) {
     const rotulo = document.createElement("span");
     rotulo.style.left = posicao(marca.valor) + "%";
     rotulo.textContent = formatarMarca(marca.valor);
+    // Em cascata estreita, só os milhões pares ficam rotulados (a grade continua de 1 em 1).
+    if (Math.abs(Math.round(marca.valor / 1e6)) % 2 === 1) {
+      rotulo.className = "marca-secundaria";
+    }
     rotulos.appendChild(rotulo);
   }
   eixo.appendChild(rotulos);
@@ -4318,11 +4343,67 @@ function passosVirada(codigoModelo) {
   ];
 }
 
-function textoVantagemFinalista(valor) {
-  if (Math.abs(valor) < 500) {
+// O gráfico da virada mede a diferença de votos (Lula − Flávio), não o ganho de cada um:
+// os rótulos dizem "à frente por" nas pontas e "puxou ... para" nos passos.
+function textoPlacarPonta(margem) {
+  if (Math.abs(margem) < 500) {
     return "empate";
   }
-  return (valor > 0 ? "Lula +" : "Flávio +") + formatarQuantidadeEleitores(Math.abs(valor));
+  const lider = margem > 0 ? "Lula" : "Flávio";
+  return lider + " à frente por " + formatarMilhoes(Math.abs(margem), 2);
+}
+
+function textoPlacarVotos(votosLula, votosFlavio) {
+  // Placar do turno, com quem liderou primeiro: "Lula 64,26 × Flávio 59,83 mi".
+  const lula = "Lula " + formatarNumero(votosLula / 1e6, 2);
+  const flavio = "Flávio " + formatarNumero(votosFlavio / 1e6, 2);
+  if (votosLula >= votosFlavio) {
+    return lula + " × " + flavio + " mi";
+  }
+  return flavio + " × " + lula + " mi";
+}
+
+function textoPuxou(valor) {
+  if (Math.abs(valor) < 500) {
+    return "não mexeu na diferença";
+  }
+  const lado = valor > 0 ? "Lula" : "Flávio";
+  return "puxou " + formatarMilhoes(Math.abs(valor), 2) + " para " + lado;
+}
+
+function formatarFaixaDiferenca(faixa) {
+  // Faixa entre os modelos em mi, com sinal: + puxa para Lula, − para Flávio.
+  function formatarPonta(valor) {
+    let sinal = "";
+    if (valor > 0) {
+      sinal = "+";
+    } else if (valor < 0) {
+      sinal = "−";
+    }
+    return sinal + formatarNumero(Math.abs(valor) / 1e6, 2);
+  }
+  return "modelos: " + formatarPonta(faixa.minimo) + " a " + formatarPonta(faixa.maximo) + " mi";
+}
+
+function criarLadosCascata() {
+  // Linha embaixo do eixo que diz o que é cada lado da diferença.
+  const linha = document.createElement("div");
+  linha.className = "linha-cascata lados-linha-cascata";
+  linha.setAttribute("aria-hidden", "true");
+  const vazioEsquerda = document.createElement("div");
+  vazioEsquerda.className = "nome-cascata";
+  linha.appendChild(vazioEsquerda);
+  const lados = document.createElement("div");
+  lados.className = "lados-cascata";
+  const ladoFlavio = document.createElement("span");
+  ladoFlavio.textContent = "← Flávio à frente";
+  lados.appendChild(ladoFlavio);
+  const ladoLula = document.createElement("span");
+  ladoLula.textContent = "Lula à frente →";
+  lados.appendChild(ladoLula);
+  linha.appendChild(lados);
+  linha.appendChild(document.createElement("div"));
+  return linha;
 }
 
 function renderizarVirada() {
@@ -4343,10 +4424,12 @@ function renderizarVirada() {
   const passoNaoEscolheu = passos[1].valor + passos[2].valor;
   document.getElementById("titulo-virada").textContent =
     "A virada: Lula saiu de " + formatarMilhoes(Math.abs(margem1t), 2) + " atrás para " + formatarMilhoes(margem2t, 2) + " à frente";
+  const ladoEliminados = passos[0].valor > 0 ? "Lula" : "Flávio";
   document.getElementById("sub-virada").textContent =
-    "Dos " + formatarMilhoes(margem2t - margem1t, 2) + " de virada, " + formatarMilhoes(passoNaoEscolheu, 2) +
-    " vieram de quem anulou ou não votou no 1º turno; os eleitores dos eliminados se dividiram quase ao meio (" +
-    textoVantagemFinalista(passos[0].valor) + ").";
+    "Diferença de votos entre Lula e Flávio, do 1º para o 2º turno. Dos " + formatarMilhoes(margem2t - margem1t, 2) +
+    " de virada, " + formatarMilhoes(passoNaoEscolheu, 2) + " vieram de quem anulou ou não votou no 1º turno; " +
+    "os eleitores dos eliminados se dividiram quase ao meio e puxaram só " +
+    formatarMilhoes(Math.abs(passos[0].valor), 2) + " para " + ladoEliminados + ".";
 
   let minimo = Math.min(0, margem1t, margem2t);
   let maximo = Math.max(0, margem1t, margem2t);
@@ -4379,8 +4462,8 @@ function renderizarVirada() {
     inicio: 0,
     fim: margem1t,
     corBarra: corDoLado(margem1t),
-    textoValor: textoVantagemFinalista(margem1t),
-    textoFaixa: "contagem oficial",
+    textoValor: textoPlacarPonta(margem1t),
+    textoFaixa: textoPlacarVotos(brasil.votos_1t_13, brasil.votos_1t_22),
     montarDica: function () {
       return {
         titulo: "1º turno",
@@ -4404,13 +4487,13 @@ function renderizarVirada() {
       inicio: inicio,
       fim: inicio + passo.valor,
       corBarra: corDoLado(passo.valor),
-      textoValor: textoVantagemFinalista(passo.valor),
-      textoFaixa: formatarFaixaSaldo(faixa),
+      textoValor: textoPuxou(passo.valor),
+      textoFaixa: formatarFaixaDiferenca(faixa),
       montarDica: function () {
         return {
-          titulo: passo.nome + " · Lula − Flávio",
+          titulo: passo.nome + " · quanto mexeu na diferença",
           linhas: linhasDicaModelos(function (codigoModelo) { return passosVirada(codigoModelo)[indicePasso].valor; }, "--tinta-2"),
-          nota: "Positivo: a favor de Lula. Negativo: a favor de Flávio. Estimativa estatística.",
+          nota: "Votos que o grupo deu a Lula menos os que deu a Flávio: positivo puxa para Lula, negativo para Flávio. Estimativa estatística.",
         };
       },
     }));
@@ -4425,8 +4508,8 @@ function renderizarVirada() {
     inicio: 0,
     fim: margem2t,
     corBarra: corDoLado(margem2t),
-    textoValor: textoVantagemFinalista(margem2t),
-    textoFaixa: "contagem oficial",
+    textoValor: textoPlacarPonta(margem2t),
+    textoFaixa: textoPlacarVotos(brasil.votos_2t_13, brasil.votos_2t_22),
     montarDica: function () {
       return {
         titulo: "2º turno",
@@ -4439,7 +4522,244 @@ function renderizarVirada() {
     },
   }));
   cascata.appendChild(criarEixoCascata(marcas, posicao, formatarMarcaMilhoes));
+  cascata.appendChild(criarLadosCascata());
   conteiner.appendChild(cascata);
+}
+
+// De que região veio quem anulou ou não votou no 1º turno e foi para Lula no 2º.
+// Usa a mesma estimativa por região que soma o total nacional do modelo principal.
+const ORIGENS_SANKEY_REGIOES = [
+  { codigo: "branco_nulo", nome: "Votou branco ou nulo", nomeCurto: "Branco/nulo", acao: "anulou", variavelCor: "--cor-branco-nulo" },
+  { codigo: "abstencao", nome: "Não votou", nomeCurto: "Não votou", acao: "não votou", variavelCor: "--cor-abstencao" },
+];
+const REGIOES_SANKEY = ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"];
+// Faixas cinzas precisam de mais opacidade que as coloridas para não sumirem no fundo claro.
+const OPACIDADE_LIGACAO_CINZA = 0.6;
+const NOTA_VIES_BRANCO_NULO = " Possível viés comum aos 3 modelos: brancos e nulos se concentram onde Lula é forte.";
+
+function entradasLulaPorRegiao(codigoModelo) {
+  const porRegiao = {};
+  for (const nomeRegiao of REGIOES_SANKEY) {
+    const transferencias = buscarTransferencias(codigoModelo, nomeRegiao);
+    const registro = { total: 0, porOrigem: {} };
+    for (const origem of ORIGENS_SANKEY_REGIOES) {
+      const fluxo = transferencias[origem.codigo].lula;
+      registro.porOrigem[origem.codigo] = fluxo;
+      registro.total += fluxo.votos;
+    }
+    porRegiao[nomeRegiao] = registro;
+  }
+  return porRegiao;
+}
+
+function totalEntradasLula(porRegiao) {
+  let total = 0;
+  for (const nomeRegiao of REGIOES_SANKEY) {
+    total += porRegiao[nomeRegiao].total;
+  }
+  return total;
+}
+
+function regiaoComMaior(calcularValor) {
+  let melhor = REGIOES_SANKEY[0];
+  for (const nomeRegiao of REGIOES_SANKEY) {
+    if (calcularValor(nomeRegiao) > calcularValor(melhor)) {
+      melhor = nomeRegiao;
+    }
+  }
+  return melhor;
+}
+
+function centrosRotulosSemSobrepor(nos, distanciaMinima, limiteInferior) {
+  // Rótulos de duas linhas centrados nos nós; nós finos e vizinhos empurram o rótulo de baixo
+  // para não sobrepor, e o conjunto sobe se passar do fim do desenho.
+  const centros = nos.map(function (no) { return (no.y0 + no.y1) / 2; });
+  for (let indice = 1; indice < centros.length; indice += 1) {
+    centros[indice] = Math.max(centros[indice], centros[indice - 1] + distanciaMinima);
+  }
+  for (let indice = centros.length - 1; indice >= 0; indice -= 1) {
+    const limite = indice === centros.length - 1 ? limiteInferior : centros[indice + 1] - distanciaMinima;
+    centros[indice] = Math.min(centros[indice], limite);
+  }
+  return centros;
+}
+
+function textosSankeyRegioes(porModelo, ordemRegioes) {
+  // Título e subtítulo com a resposta: quem lidera, se lidera em todos os modelos, e onde a taxa é maior.
+  const principal = porModelo[MODELO_PRINCIPAL_CONCLUSAO];
+  const totalPrincipal = totalEntradasLula(principal);
+  const primeira = ordemRegioes[0];
+  const segunda = ordemRegioes[1];
+  function percentualDe(nomeRegiao) {
+    return formatarPercentual(100 * principal[nomeRegiao].total / totalPrincipal, 0);
+  }
+  const titulo = "Quem anulou ou não votou e foi para Lula: " + percentualDe(primeira) + " vieram do " + primeira +
+    ", " + percentualDe(segunda) + " do " + segunda;
+
+  let lideraEmTodos = true;
+  for (const especificacao of ESPECIFICACOES_REGIONAIS) {
+    const porRegiao = porModelo[especificacao.codigo];
+    const lider = regiaoComMaior(function (nomeRegiao) { return porRegiao[nomeRegiao].total; });
+    if (lider !== primeira) {
+      lideraEmTodos = false;
+    }
+  }
+  // Compara a taxa das duas maiores fontes (a dúvida natural é se a 2ª "rende" mais por eleitor);
+  // a taxa de regiões pequenas e instáveis, como o Norte, fica fora da frase.
+  const taxaPrimeira = principal[primeira].porOrigem.branco_nulo.beta;
+  const taxaSegunda = principal[segunda].porOrigem.branco_nulo.beta;
+  const segundaRendeMais = taxaSegunda > taxaPrimeira;
+  const primeiraTemMaisEleitores = buscarRegiaoPorNome(primeira).aptos_1t > buscarRegiaoPorNome(segunda).aptos_1t;
+  let subtitulo = "A região da frente muda conforme o modelo.";
+  if (lideraEmTodos) {
+    subtitulo = "O " + primeira + " fica na frente nos 3 modelos" +
+      (segundaRendeMais && primeiraTemMaisEleitores ? ", porque tem mais eleitores." : ".");
+  }
+  if (segundaRendeMais) {
+    subtitulo += " No " + segunda + ", a taxa é maior: " + formatarPercentual(100 * taxaSegunda, 0) +
+      " de quem anulou lá foi para Lula, contra " + formatarPercentual(100 * taxaPrimeira, 0) + " no " + primeira + ".";
+  }
+  subtitulo += " Por região, a estimativa indica direção, não medida.";
+  return { titulo: titulo, subtitulo: subtitulo };
+}
+
+function renderizarSankeyRegioes() {
+  const porModelo = {};
+  for (const especificacao of ESPECIFICACOES_REGIONAIS) {
+    porModelo[especificacao.codigo] = entradasLulaPorRegiao(especificacao.codigo);
+  }
+  const principal = porModelo[MODELO_PRINCIPAL_CONCLUSAO];
+  const totalPrincipal = totalEntradasLula(principal);
+  // Regiões da maior para a menor contribuição: a resposta fica no topo.
+  const ordemRegioes = REGIOES_SANKEY.slice().sort(function (regiaoA, regiaoB) {
+    return principal[regiaoB].total - principal[regiaoA].total;
+  });
+
+  const textos = textosSankeyRegioes(porModelo, ordemRegioes);
+  document.getElementById("titulo-sankey-regioes").textContent = textos.titulo;
+  document.getElementById("sub-sankey-regioes").textContent = textos.subtitulo;
+  const itensLegenda = ORIGENS_SANKEY_REGIOES.map(function (origem) {
+    return { variavelCor: origem.variavelCor, rotulo: origem.nome + " no 1º turno" };
+  });
+  itensLegenda.push({ variavelCor: "--cor-lula", rotulo: "Lula no 2º turno, por região" });
+  preencherLegenda(document.getElementById("legenda-sankey-regioes"), itensLegenda);
+
+  const conteiner = document.getElementById("grafico-sankey-regioes");
+  conteiner.replaceChildren();
+  const largura = Math.max(200, conteiner.clientWidth);
+  const estreito = largura < 560;
+  const larguraRotulos = estreito ? 76 : 168;
+  const altura = estreito ? 320 : 360;
+  const margemTopo = 6;
+  const margemBase = 26;
+
+  const valoresOrigem = ORIGENS_SANKEY_REGIOES.map(function (origem) {
+    let soma = 0;
+    for (const nomeRegiao of REGIOES_SANKEY) {
+      soma += principal[nomeRegiao].porOrigem[origem.codigo].votos;
+    }
+    return soma;
+  });
+  const valoresDestino = ordemRegioes.map(function (nomeRegiao) { return principal[nomeRegiao].total; });
+  const espacosVerticais = ESPACO_ENTRE_NOS_SANKEY * (Math.max(ORIGENS_SANKEY_REGIOES.length, ordemRegioes.length) - 1);
+  const escala = (altura - margemTopo - margemBase - espacosVerticais) / totalPrincipal;
+  const alturaUtil = altura - margemTopo - margemBase - espacosVerticais;
+  const nosOrigem = posicionarNos(valoresOrigem, alturaUtil, escala, margemTopo);
+  const nosDestino = posicionarNos(valoresDestino, alturaUtil, escala, margemTopo);
+  const xOrigem = larguraRotulos;
+  const xDestino = largura - larguraRotulos - LARGURA_NO_SANKEY;
+  const svg = criarSvg("svg", { width: largura, height: altura, role: "img", "aria-label": "Diagrama de Sankey: de que região veio quem anulou ou não votou no 1º turno e foi para Lula no 2º" });
+
+  const deslocamentoDestino = nosDestino.map(function (no) { return no.y0; });
+  ORIGENS_SANKEY_REGIOES.forEach(function (origem, indiceOrigem) {
+    let deslocamentoOrigem = nosOrigem[indiceOrigem].y0;
+    ordemRegioes.forEach(function (nomeRegiao, indiceDestino) {
+      const fluxo = principal[nomeRegiao].porOrigem[origem.codigo];
+      if (fluxo.votos <= 0) {
+        return;
+      }
+      const espessura = fluxo.votos * escala;
+      const origemY0 = deslocamentoOrigem;
+      const destinoY0 = deslocamentoDestino[indiceDestino];
+      deslocamentoOrigem += espessura;
+      deslocamentoDestino[indiceDestino] += espessura;
+
+      const faixa = criarSvg("path", {
+        d: caminhoFaixa(xOrigem + LARGURA_NO_SANKEY, xDestino, origemY0, origemY0 + espessura, destinoY0, destinoY0 + espessura),
+        fill: lerCor(origem.variavelCor),
+        "fill-opacity": OPACIDADE_LIGACAO_CINZA,
+        class: "sankey-ligacao",
+        tabindex: 0,
+      });
+      faixa.setAttribute("aria-label", nomeRegiao + ", " + origem.nome.toLowerCase() + " para Lula: " + formatarQuantidadeEleitores(fluxo.votos));
+      ligarDica(faixa, function () {
+        const faixaVotos = faixaConclusao(function (codigoModelo) { return porModelo[codigoModelo][nomeRegiao].porOrigem[origem.codigo].votos; });
+        let nota = "Estimativa regional instável (" + nomeRegiao + "): indica direção, não medida.";
+        if (estaNaFronteira(fluxo.beta)) {
+          nota += " Valor no limite de 0% ou 100%: sinal de que o modelo foi forçado ao extremo.";
+        }
+        if (origem.codigo === "branco_nulo") {
+          nota += NOTA_VIES_BRANCO_NULO;
+        }
+        return {
+          titulo: nomeRegiao + ": " + origem.nome.toLowerCase() + " → Lula",
+          linhas: [
+            { valor: formatarPercentual(100 * fluxo.beta, 1), rotulo: "de quem " + origem.acao + " na região", cor: lerCor("--cor-lula") },
+            { valor: formatarQuantidadeEleitores(fluxo.votos), rotulo: "eleitores estimados" },
+            { valor: formatarQuantidadeEleitores(faixaVotos.minimo) + " a " + formatarQuantidadeEleitores(faixaVotos.maximo), rotulo: "entre os 3 modelos" },
+          ],
+          nota: nota,
+        };
+      });
+      svg.appendChild(faixa);
+    });
+  });
+
+  ORIGENS_SANKEY_REGIOES.forEach(function (origem, indiceOrigem) {
+    const no = nosOrigem[indiceOrigem];
+    svg.appendChild(criarSvg("rect", { x: xOrigem, y: no.y0, width: LARGURA_NO_SANKEY, height: no.y1 - no.y0, rx: 2, fill: lerCor(origem.variavelCor) }));
+    adicionarRotuloNo(svg, xOrigem - 8, no, "end", estreito ? origem.nomeCurto : origem.nome, formatarQuantidadeEleitores(valoresOrigem[indiceOrigem]));
+  });
+  const centrosRotulos = centrosRotulosSemSobrepor(nosDestino, 34, altura - 18);
+  ordemRegioes.forEach(function (nomeRegiao, indiceDestino) {
+    const no = nosDestino[indiceDestino];
+    const retangulo = criarSvg("rect", { x: xDestino, y: no.y0, width: LARGURA_NO_SANKEY, height: no.y1 - no.y0, rx: 2, fill: lerCor("--cor-lula"), tabindex: 0, class: "sankey-no" });
+    const fatia = 100 * valoresDestino[indiceDestino] / totalPrincipal;
+    retangulo.setAttribute("aria-label", nomeRegiao + ": " + formatarQuantidadeEleitores(valoresDestino[indiceDestino]) + ", " + formatarPercentual(fatia, 0));
+    ligarDica(retangulo, function () {
+      const linhasDica = linhasDicaModelos(function (codigoModelo) { return porModelo[codigoModelo][nomeRegiao].total; }, "--cor-lula");
+      const faixaFatia = faixaConclusao(function (codigoModelo) {
+        return porModelo[codigoModelo][nomeRegiao].total / totalEntradasLula(porModelo[codigoModelo]);
+      });
+      linhasDica.push({ valor: formatarFaixaPercentual(faixaFatia), rotulo: "do total, entre os 3 modelos" });
+      return { titulo: nomeRegiao + " → Lula", linhas: linhasDica, nota: "Estimativa estatística, não contagem." };
+    });
+    svg.appendChild(retangulo);
+    const valorDestino = estreito
+      ? formatarPercentual(fatia, 0)
+      : formatarQuantidadeEleitores(valoresDestino[indiceDestino]) + " · " + formatarPercentual(fatia, 0);
+    const posicaoRotulo = { y0: centrosRotulos[indiceDestino], y1: centrosRotulos[indiceDestino] };
+    adicionarRotuloNo(svg, xDestino + LARGURA_NO_SANKEY + 8, posicaoRotulo, "start", nomeRegiao, valorDestino);
+  });
+  conteiner.appendChild(svg);
+
+  const linhasTabela = ordemRegioes.map(function (nomeRegiao) {
+    return {
+      nome: nomeRegiao,
+      brancoNulo: principal[nomeRegiao].porOrigem.branco_nulo,
+      abstencao: principal[nomeRegiao].porOrigem.abstencao,
+      total: principal[nomeRegiao].total,
+      faixa: faixaConclusao(function (codigoModelo) { return porModelo[codigoModelo][nomeRegiao].total; }),
+    };
+  });
+  criarTabela([
+    { titulo: "Região", formatar: function (linha) { return linha.nome; } },
+    { titulo: "Anulou no 1º → Lula (taxa)", formatar: function (linha) { return formatarQuantidadeEleitores(linha.brancoNulo.votos) + " (" + formatarPercentual(100 * linha.brancoNulo.beta, 0) + ")"; } },
+    { titulo: "Não votou no 1º → Lula (taxa)", formatar: function (linha) { return formatarQuantidadeEleitores(linha.abstencao.votos) + " (" + formatarPercentual(100 * linha.abstencao.beta, 0) + ")"; } },
+    { titulo: "Total", formatar: function (linha) { return formatarQuantidadeEleitores(linha.total); } },
+    { titulo: "% do total", formatar: function (linha) { return formatarPercentual(100 * linha.total / totalPrincipal, 0); } },
+    { titulo: "Entre os 3 modelos", formatar: function (linha) { return formatarQuantidadeEleitores(linha.faixa.minimo) + " – " + formatarQuantidadeEleitores(linha.faixa.maximo); } },
+  ], linhasTabela, "tabela-sankey-regioes", false);
 }
 
 function renderizarConclusao() {
@@ -4449,6 +4769,7 @@ function renderizarConclusao() {
   const teto = Math.ceil(maiorAcumuladoCascata() / 1e6) * 1e6;
   renderizarPainelCascata(FINALISTAS_CONCLUSAO[0], "painel-cascata-lula", teto);
   renderizarPainelCascata(FINALISTAS_CONCLUSAO[1], "painel-cascata-flavio", teto);
+  renderizarSankeyRegioes();
   renderizarVirada();
 }
 
@@ -4542,6 +4863,7 @@ window.addEventListener("resize", function () {
   window.clearTimeout(temporizadorRedimensionar);
   temporizadorRedimensionar = window.setTimeout(function () {
     renderizarMigracao();
+    renderizarSankeyRegioes();
   }, 150);
 });
 </script>
