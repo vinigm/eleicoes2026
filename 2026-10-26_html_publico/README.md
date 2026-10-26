@@ -139,14 +139,19 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - **Dispersão "índices sociais × voto":** 6 painéis (Brasil e as 5 regiões); cada ponto é uma cidade.
     - Os pontos são cinza e o fundo tem duas faixas: azul-claro acima de 50% ("Flávio venceu") e vermelho-claro abaixo ("Lula venceu").
       - Antes, a cor do ponto era o vencedor e só repetia a altura. Parecia um padrão sem ser (dúvida do Vinicius em 26/10/2026).
-      - A legenda explica o eixo vertical (divisão dos votos do 2º turno) e as faixas.
     - Índice no eixo x: alfabetização (Censo 2022) ou PIB per capita (2023, escala log). Fonte: `2026-10-26_indicadores_ibge/`.
-    - Ao lado do nome de cada painel, a pedido do Vinicius, há dois cards com o resultado oficial do 2º turno: Lula x% e Flávio y%, com 2 casas (o Norte deu 50,01 × 49,99). O Brasil inclui o exterior, como no resumo do topo.
+    - Ao lado do nome de cada painel, a pedido do Vinicius, há dois cards com o resultado oficial do 2º turno: Lula x% e Flávio y%, com 2 casas (o Norte deu 50,01 × 49,99). O Brasil inclui o exterior, como no resumo do topo. Os cards são discretos (número de 14 px, sem borda, só o fundo claro do candidato) para não competir com o gráfico.
+    - **Filtro de faixa** (pedido do Vinicius, 26/10/2026), ao lado do índice, com a contagem do Brasil em cada botão:
+      - alfabetização: 60–70% · 70–80% · 80–90% · 90–100%;
+      - PIB per capita: < R$ 10 mil · 10–30 mil · 30–100 mil · 100–300 mil · ≥ R$ 300 mil (os cortes das marcas do eixo);
+      - faixas fechadas embaixo e abertas em cima (70,00% entra em 70–80%);
+      - com uma faixa escolhida, o resto do gráfico fica cinza, e os cards e o resumo de cada painel passam a ser os das cidades da faixa: votos somados, contagem de cidades e vitórias de cada um;
+      - nessa visão o Brasil não inclui o exterior (não tem índice do IBGE); trocar de índice volta para "Todas";
+      - conferido por recálculo independente a partir dos CSVs de `dados/processados/` (APROVADO, 26/10/2026).
     - A legenda e o parágrafo do cartão saíram a pedido do Vinicius. O aviso "acesso a estudo e renda, não inteligência; relação entre cidades, não entre eleitores" segue em `2026-10-26_indicadores_ibge/README.md`.
     - Cada painel mostra o r de Pearson (cada cidade pesa igual; o PIB entra em log10).
       - A reta de tendência saiu a pedido do Vinicius ("não gostei").
       - O eixo vertical é simétrico ("só Lula", "Lula 75%", "empate", "Flávio 75%", "só Flávio") para não sugerir que mais alto vale mais.
-    - O texto do cartão avisa: os índices medem acesso a estudo e renda, não inteligência; e a relação entre cidades não diz como votou cada eleitor.
     - **Fato:** dentro de todas as regiões, cidades com mais alfabetização e mais PIB per capita deram mais votos a Flávio.
       - Alfabetização: r de +0,20 (Norte) a +0,65 (Sudeste).
       - PIB: r de +0,30 (Sul) a +0,54 (Norte).
@@ -165,6 +170,7 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - Ao lado da busca, um card mostra só Lula x% e Flávio y% no 2º turno, a pedido do Vinicius. A conta soma as cidades do recorte: Brasil, estado, cidades encontradas ou a cidade.
     - Conferido em 26/10/2026: Brasil 51,79/48,21; MG 50,43/49,57; exterior 53,86/46,14; Belo Horizonte 49,20/50,80.
   - Embaixo do card, os botões "Todas · N", "Lula ganhou · N" e "Flávio ganhou · N" filtram a lista pelo vencedor do 2º turno, a pedido do Vinicius.
+  - O botão "Virou · N" mostra só as cidades em que o vencedor entre os dois finalistas mudou do 1º para o 2º turno (mesma regra do selo vermelho; empate no 2º não conta). Brasil e exterior: 225, sendo 220 para Lula (MG 76) e 5 para Flávio (4 no exterior, 1 em GO), conferido de forma independente.
     - As contagens seguem o recorte (estado e busca); o card de % não muda com esse filtro.
     - "Todas" inclui as 42 cidades sem voto válido e 1 empate, por isso Lula + Flávio dá menos que o total.
     - Conferido: Brasil 2.963 × 2.751; MG 528 × 325.

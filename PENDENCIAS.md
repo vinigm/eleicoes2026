@@ -88,4 +88,5 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Mapa de calor tamanho × voto e dispersão alfabetização/PIB × voto por região (IBGE; conferência independente aprovada).
   - ✅ Dispersão com pontos neutros e faixas "Flávio venceu / Lula venceu"; filtros de cidades em painel destacado e maiores.
   - ✅ Dispersão sem reta de tendência e com eixo simétrico (só Lula … empate … só Flávio).
-  - ✅ Dispersão: cards Lula × Flávio por painel; legenda e texto do cartão retirados.
+  - ✅ Dispersão: cards Lula × Flávio por painel (depois reduzidos e discretos); legenda e texto do cartão retirados.
+  - ✅ Dispersão: filtro de faixa do índice (resto em cinza; cards = votos das cidades da faixa). Cidades: filtro "Virou" (225). Recálculo independente APROVADO.

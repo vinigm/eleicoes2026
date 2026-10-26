@@ -30,7 +30,7 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
 - **HTML público (no ar)** — `docs/index.html` + `docs/dados.js`, gerado por `2026-10-26_html_publico/`.
   - Verificado no Chrome headless: desktop, celular e modo escuro, sem erro no console.
   - Layout (26/10/2026): cartões "1º × 2º turno" lado a lado com variação ▲▼, botão votos válidos ↔ todo o eleitorado, Sankey com filtro Brasil/região/estado. A página não tem mais seção de metodologia (fica no repositório).
-  - Perfil das cidades: mapa de calor "região/estado × faixa de habitantes" e dispersão "alfabetização ou PIB per capita × voto" por região (`2026-10-26_indicadores_ibge/`). Estatística conferida de forma independente.
+  - Perfil das cidades: mapa de calor "região/estado × faixa de habitantes" e dispersão "alfabetização ou PIB per capita × voto" por região (`2026-10-26_indicadores_ibge/`), com filtro de faixa do índice que recalcula o resultado de cada região. Estatística conferida de forma independente.
   - Seção "Cidades" no fim: filtro por estado, busca sem acento e lista ordenável das 5.757 cidades, com 1º e 2º turno em % e votos e os habitantes (IBGE 2026). Fonte: `docs/municipios.js`; somas conferidas com o Brasil e com o IBGE.
   - Resumo executivo no topo: 5 big numbers do Brasil (1º turno, 2º turno e variação) e 5 cartões por região.
   - Regiões e estados num cartão só (Regiões é o padrão): só o mapa do 2º turno com ▲▼; os dois turnos e os números absolutos ficam na dica.

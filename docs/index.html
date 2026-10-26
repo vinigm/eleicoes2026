@@ -46,6 +46,7 @@
   --cabecalho-flavio: #d9e6f8;
   --titulo-lula: #a8282a;
   --titulo-flavio: #184f95;
+  --fundo-fora-faixa: #d6d5cf;
   --seq-comp-inicio: #ece9fb;
   --seq-comp-fim: #3b2e9a;
   --status-serio: #ec835a;
@@ -92,6 +93,7 @@
   --cabecalho-flavio: #22314a;
   --titulo-lula: #ef8a88;
   --titulo-flavio: #7fb0ef;
+  --fundo-fora-faixa: #0d0d0d;
     --seq-comp-inicio: #2a2640;
     --seq-comp-fim: #b3abf3;
     --status-serio: #ec835a;
@@ -138,6 +140,7 @@
   --cabecalho-flavio: #22314a;
   --titulo-lula: #ef8a88;
   --titulo-flavio: #7fb0ef;
+  --fundo-fora-faixa: #0d0d0d;
   --seq-comp-inicio: #2a2640;
   --seq-comp-fim: #b3abf3;
   --status-serio: #ec835a;
@@ -708,20 +711,25 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 .grade-dispersao { display: grid; gap: 20px; margin-top: 12px; }
 .painel-dispersao h4 { font-size: 17px; margin: 0; }
 .cabecalho-dispersao { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
-.cartoes-resultado-painel { display: flex; gap: 6px; }
+/* Cards do resultado de cada painel: discretos (pedido do Vinicius), só o fundo claro do candidato. */
+.cartoes-resultado-painel { display: flex; gap: 4px; }
 .cartao-resultado-painel {
   display: flex;
   align-items: baseline;
-  gap: 6px;
-  padding: 3px 10px;
-  border: 1px solid;
-  border-radius: 8px;
+  gap: 4px;
+  padding: 1px 7px;
+  border-radius: 6px;
 }
-.cartao-resultado-painel strong { font-size: 18px; font-weight: 750; font-variant-numeric: tabular-nums; }
-.nome-resultado-painel { font-size: 12px; font-weight: 600; }
-.cartao-resultado-lula { background: var(--fundo-lula); border-color: var(--cor-lula); color: var(--titulo-lula); }
-.cartao-resultado-flavio { background: var(--fundo-flavio); border-color: var(--cor-flavio); color: var(--titulo-flavio); }
+.cartao-resultado-painel strong { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.nome-resultado-painel { font-size: 11px; font-weight: 600; }
+.cartao-resultado-lula { background: var(--fundo-lula); color: var(--titulo-lula); }
+.cartao-resultado-flavio { background: var(--fundo-flavio); color: var(--titulo-flavio); }
 .resumo-dispersao { font-size: 12.5px; line-height: 1.5; color: var(--tinta-2); margin: 2px 0 6px; min-height: 3em; }
+.resumo-dispersao strong { color: var(--tinta); }
+/* Dois grupos na mesma linha (Índice e Faixa); na tela estreita a Faixa desce inteira. */
+#controles-dispersao { column-gap: 22px; row-gap: 10px; }
+.grupo-controles-dispersao { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.grupo-controles-dispersao button { display: inline-flex; align-items: center; gap: 6px; }
 #controles-calor, #controles-dispersao { align-items: center; }
 #controles-calor .rotulo-controle, #controles-dispersao .rotulo-controle { margin-right: 4px; }
 .marca-dispersao { font-size: 11px; fill: var(--tinta-3); }
@@ -4609,6 +4617,11 @@ function ordenarCidades(cidades) {
   });
 }
 
+function cidadeVirou(cidade) {
+  // O vencedor entre os dois finalistas mudou do 1º para o 2º turno (empate no 2º não conta).
+  return cidade.temVotos && cidade.vencedor_1t !== cidade.vencedor_2t && cidade.vencedor_2t !== "Empate";
+}
+
 function criarCelulaCidade(cidade) {
   const celula = document.createElement("td");
   celula.dataset.rotulo = "Cidade";
@@ -4621,7 +4634,7 @@ function criarCelulaCidade(cidade) {
     uf.textContent = cidade.uf === "ZZ" ? "Exterior" : cidade.uf;
     envoltorio.appendChild(uf);
   }
-  if (cidade.temVotos && cidade.vencedor_1t !== cidade.vencedor_2t && cidade.vencedor_2t !== "Empate") {
+  if (cidadeVirou(cidade)) {
     const etiqueta = document.createElement("span");
     etiqueta.className = "etiqueta etiqueta-virou";
     etiqueta.textContent = "virou";
@@ -4903,10 +4916,14 @@ function renderizarSelecaoCidades(encontradas) {
 }
 
 function renderizarFiltroVencedor(recorte) {
-  // Botões "Todas", "Lula ganhou" e "Flávio ganhou", cada um com a contagem de cidades do recorte.
+  // Botões "Todas", "Lula ganhou", "Flávio ganhou" e "Virou", cada um com a contagem de cidades do recorte.
   let vitoriasLula = 0;
   let vitoriasFlavio = 0;
+  let viradas = 0;
   for (const cidade of recorte) {
+    if (cidadeVirou(cidade)) {
+      viradas += 1;
+    }
     if (cidade.temVotos && cidade.vencedor_2t === "Lula") {
       vitoriasLula += 1;
     } else if (cidade.temVotos && cidade.vencedor_2t === "Flávio") {
@@ -4917,6 +4934,7 @@ function renderizarFiltroVencedor(recorte) {
     { valor: "", rotulo: "Todas", contagem: recorte.length, variavelCor: null },
     { valor: "Lula", rotulo: "Lula ganhou", contagem: vitoriasLula, variavelCor: "--cor-lula" },
     { valor: "Flávio", rotulo: "Flávio ganhou", contagem: vitoriasFlavio, variavelCor: "--cor-flavio" },
+    { valor: "virou", rotulo: "Virou", contagem: viradas, variavelCor: "--fundo-virou" },
   ];
   const conteiner = document.getElementById("filtro-vencedor");
   conteiner.replaceChildren();
@@ -5008,6 +5026,17 @@ function renderizarDestaquesCidades(extremos) {
   }
 }
 
+function passaFiltroVencedor(cidade) {
+  // "" = todas; "virou" = vencedor mudou entre os turnos; senão, o vencedor do 2º turno.
+  if (!vencedorCidadesAtual) {
+    return true;
+  }
+  if (vencedorCidadesAtual === "virou") {
+    return cidadeVirou(cidade);
+  }
+  return cidade.temVotos && cidade.vencedor_2t === vencedorCidadesAtual;
+}
+
 function renderizarListaCidades() {
   const faixaAtual = buscarFaixaHabitantes(faixaHabitantesAtual);
   const doFiltroUf = carregarCidades().filter(function (cidade) {
@@ -5022,9 +5051,7 @@ function renderizarListaCidades() {
   renderizarFiltroVencedor(recorte);
   const extremos = cidadesExtremas(recorte);
   renderizarDestaquesCidades(extremos);
-  let encontradas = ordenarCidades(recorte.filter(function (cidade) {
-    return !vencedorCidadesAtual || (cidade.temVotos && cidade.vencedor_2t === vencedorCidadesAtual);
-  }));
+  let encontradas = ordenarCidades(recorte.filter(passaFiltroVencedor));
   if (destaqueCidadesAtual) {
     const destacada = extremos[destaqueCidadesAtual];
     encontradas = destacada ? [destacada] : [];
@@ -5035,7 +5062,9 @@ function renderizarListaCidades() {
   if (encontradas.length === 0) {
     const vazio = document.createElement("p");
     vazio.className = "sub-painel";
-    vazio.textContent = "Nenhuma cidade encontrada para “" + buscaCidadesAtual + "”.";
+    // Sem busca, o vazio vem dos filtros (ex.: "Virou" num estado sem virada).
+    vazio.textContent = buscaCidadesAtual.trim() === "" ? "Nenhuma cidade neste recorte." :
+      "Nenhuma cidade encontrada para “" + buscaCidadesAtual + "”.";
     conteiner.appendChild(vazio);
   } else {
     const tabela = document.createElement("table");
@@ -5326,6 +5355,14 @@ const INDICADORES_DISPERSAO = [
     marcas: [60, 70, 80, 90, 100],
     formatarMarca: function (valor) { return formatarNumero(valor, 0) + "%"; },
     formatarValor: function (valor) { return formatarPercentual(valor, 1); },
+    // Faixas do filtro: fechadas embaixo e abertas em cima (70% exato entra em 70–80%). As pontas
+    // não têm limite: nenhuma cidade fica abaixo de 60% (a menor tem 63,19%), mas o filtro não depende disso.
+    faixas: [
+      { codigo: "60-70", rotulo: "60–70%", descricao: "com alfabetização de 60% a 70%", minimo: null, maximo: 70 },
+      { codigo: "70-80", rotulo: "70–80%", descricao: "com alfabetização de 70% a 80%", minimo: 70, maximo: 80 },
+      { codigo: "80-90", rotulo: "80–90%", descricao: "com alfabetização de 80% a 90%", minimo: 80, maximo: 90 },
+      { codigo: "90-100", rotulo: "90–100%", descricao: "com alfabetização de 90% a 100%", minimo: 90, maximo: null },
+    ],
   },
   {
     codigo: "pib",
@@ -5335,18 +5372,55 @@ const INDICADORES_DISPERSAO = [
     escalaLog: true,
     dominio: [5000, 700000],
     marcas: [10000, 30000, 100000, 300000],
-    formatarMarca: function (valor) { return "R$ " + formatarNumero(valor / 1000, 0) + " mil"; },
+    // Na tela estreita, sem "R$": "R$ 100 mil" e "R$ 300 mil" se encostavam no eixo.
+    formatarMarca: function (valor, curta) { return (curta ? "" : "R$ ") + formatarNumero(valor / 1000, 0) + " mil"; },
     formatarValor: function (valor) { return "R$ " + formatarInteiro(valor); },
+    // Os mesmos cortes das marcas do eixo, em reais do PIB per capita (não em log).
+    faixas: [
+      { codigo: "ate-10", rotulo: "< R$ 10 mil", descricao: "com PIB per capita de menos de R$ 10 mil", minimo: null, maximo: 10000 },
+      { codigo: "10-30", rotulo: "R$ 10–30 mil", descricao: "com PIB per capita de R$ 10 mil a R$ 30 mil", minimo: 10000, maximo: 30000 },
+      { codigo: "30-100", rotulo: "R$ 30–100 mil", descricao: "com PIB per capita de R$ 30 mil a R$ 100 mil", minimo: 30000, maximo: 100000 },
+      { codigo: "100-300", rotulo: "R$ 100–300 mil", descricao: "com PIB per capita de R$ 100 mil a R$ 300 mil", minimo: 100000, maximo: 300000 },
+      { codigo: "300-mais", rotulo: "≥ R$ 300 mil", descricao: "com PIB per capita de R$ 300 mil ou mais", minimo: 300000, maximo: null },
+    ],
   },
 ];
 let indicadorDispersaoAtual = INDICADORES_DISPERSAO[0];
+// Faixa do índice em destaque (null = todas); volta a null quando o índice muda.
+let faixaDispersaoAtual = null;
+
+function escalarIndice(valor, indicador) {
+  return indicador.escalaLog ? Math.log10(valor) : valor;
+}
 
 function valorXDispersao(cidade, indicador) {
   const valor = cidade[indicador.campo];
   if (valor === null || valor === undefined) {
     return null;
   }
-  return indicador.escalaLog ? Math.log10(valor) : valor;
+  return escalarIndice(valor, indicador);
+}
+
+function cidadeNaFaixaDispersao(cidade, indicador, faixa) {
+  // Compara o valor original do índice: os limites das faixas estão em % ou em reais, não em log.
+  const valor = cidade[indicador.campo];
+  if (valor === null || valor === undefined) {
+    return false;
+  }
+  if (faixa.minimo !== null && valor < faixa.minimo) {
+    return false;
+  }
+  if (faixa.maximo !== null && valor >= faixa.maximo) {
+    return false;
+  }
+  return true;
+}
+
+function cidadesDaDispersao(cidades, indicador) {
+  // As cidades que viram ponto: com o índice do IBGE e com votos válidos nos dois turnos.
+  return cidades.filter(function (cidade) {
+    return valorXDispersao(cidade, indicador) !== null && cidade.temVotos;
+  });
 }
 
 function calcularRegressao(pontos) {
@@ -5400,13 +5474,20 @@ function descreverCorrelacao(regressao, indicador) {
   return "relação " + forca + ": mais " + indicador.rotuloCurto + ", " + sentido;
 }
 
+function criarGrupoControlesDispersao(textoRotulo) {
+  const grupo = document.createElement("div");
+  grupo.className = "grupo-controles-dispersao";
+  const rotulo = document.createElement("span");
+  rotulo.className = "rotulo-controle";
+  rotulo.textContent = textoRotulo;
+  grupo.appendChild(rotulo);
+  return grupo;
+}
+
 function renderizarControlesDispersao() {
   const conteiner = document.getElementById("controles-dispersao");
   conteiner.replaceChildren();
-  const rotulo = document.createElement("span");
-  rotulo.className = "rotulo-controle";
-  rotulo.textContent = "Índice:";
-  conteiner.appendChild(rotulo);
+  const grupoIndice = criarGrupoControlesDispersao("Índice:");
   for (const indicador of INDICADORES_DISPERSAO) {
     const botao = document.createElement("button");
     botao.type = "button";
@@ -5418,21 +5499,60 @@ function renderizarControlesDispersao() {
         return document.querySelector("#controles-dispersao [data-indicador-dispersao='" + indicador.codigo + "']");
       }, function () {
         indicadorDispersaoAtual = indicador;
+        faixaDispersaoAtual = null;
         renderizarControlesDispersao();
         renderizarDispersao();
       });
     });
-    conteiner.appendChild(botao);
+    grupoIndice.appendChild(botao);
   }
+  conteiner.appendChild(grupoIndice);
+
+  // Faixas do índice atual, cada uma com quantas cidades do Brasil caem nela.
+  const grupoFaixa = criarGrupoControlesDispersao("Faixa:");
+  const cidades = cidadesDaDispersao(cidadesBrasileirasComPopulacao(), indicadorDispersaoAtual);
+  const opcoes = [{ codigo: "", rotulo: "Todas", faixa: null, contagem: cidades.length }];
+  for (const faixa of indicadorDispersaoAtual.faixas) {
+    let contagem = 0;
+    for (const cidade of cidades) {
+      if (cidadeNaFaixaDispersao(cidade, indicadorDispersaoAtual, faixa)) {
+        contagem += 1;
+      }
+    }
+    opcoes.push({ codigo: faixa.codigo, rotulo: faixa.rotulo, faixa: faixa, contagem: contagem });
+  }
+  for (const opcao of opcoes) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.dataset.faixaDispersao = opcao.codigo;
+    botao.setAttribute("aria-pressed", opcao.faixa === faixaDispersaoAtual ? "true" : "false");
+    botao.appendChild(document.createTextNode(opcao.rotulo + " "));
+    const contagem = document.createElement("span");
+    contagem.className = "contagem-vencedor";
+    contagem.textContent = formatarInteiro(opcao.contagem);
+    botao.appendChild(contagem);
+    botao.addEventListener("click", function () {
+      executarSemPular(function () {
+        return document.querySelector("#controles-dispersao [data-faixa-dispersao='" + opcao.codigo + "']");
+      }, function () {
+        faixaDispersaoAtual = opcao.faixa;
+        renderizarControlesDispersao();
+        renderizarDispersao();
+      });
+    });
+    grupoFaixa.appendChild(botao);
+  }
+  conteiner.appendChild(grupoFaixa);
 }
 
 function criarCartoesResultadoPainel(pctLula) {
-  // Big numbers do 2º turno ao lado do nome do painel: Lula x% e Flávio y% (resultado oficial).
+  // Big numbers do 2º turno ao lado do nome do painel: Lula x% e Flávio y% (resultado oficial,
+  // ou o das cidades da faixa escolhida). Sem votos (faixa vazia), mostra "—".
   const cartoes = document.createElement("div");
   cartoes.className = "cartoes-resultado-painel";
   const candidatos = [
     { nome: "Lula", classe: "cartao-resultado-lula", percentual: pctLula },
-    { nome: "Flávio", classe: "cartao-resultado-flavio", percentual: 100 - pctLula },
+    { nome: "Flávio", classe: "cartao-resultado-flavio", percentual: pctLula === null ? null : 100 - pctLula },
   ];
   for (const candidato of candidatos) {
     const cartao = document.createElement("div");
@@ -5443,36 +5563,70 @@ function criarCartoesResultadoPainel(pctLula) {
     cartao.appendChild(nome);
     const valor = document.createElement("strong");
     // Duas casas: com uma, o Norte (50,01% × 49,99%) apareceria como empate.
-    valor.textContent = formatarPercentual(candidato.percentual, 2);
+    valor.textContent = candidato.percentual === null ? "—" : formatarPercentual(candidato.percentual, 2);
     cartao.appendChild(valor);
     cartoes.appendChild(cartao);
   }
   return cartoes;
 }
 
-function criarPainelDispersao(nomePainel, cidades, indicador, largura, pctLulaPainel) {
+function preencherResumoFaixa(resumo, faixa, naFaixa) {
+  // "1.579 cidades com alfabetização de 80% a 90% · Lula venceu em X, Flávio em Y".
+  if (naFaixa.length === 0) {
+    resumo.textContent = "Nenhuma cidade " + faixa.descricao + ".";
+    return;
+  }
+  let vitoriasLula = 0;
+  let vitoriasFlavio = 0;
+  for (const cidade of naFaixa) {
+    if (cidade.vencedor_2t === "Lula") {
+      vitoriasLula += 1;
+    } else if (cidade.vencedor_2t === "Flávio") {
+      vitoriasFlavio += 1;
+    }
+  }
+  const contagem = document.createElement("strong");
+  contagem.textContent = formatarInteiro(naFaixa.length) + (naFaixa.length === 1 ? " cidade" : " cidades");
+  resumo.appendChild(contagem);
+  resumo.appendChild(document.createTextNode(" " + faixa.descricao + " · Lula venceu em " + formatarInteiro(vitoriasLula) +
+    ", Flávio em " + formatarInteiro(vitoriasFlavio) + " · nos cards, os votos somados delas"));
+}
+
+function criarPainelDispersao(nomePainel, cidades, indicador, faixa, largura, pctLulaPainel) {
+  // Com uma faixa escolhida, os cards e o resumo passam a ser os das cidades da faixa, e o
+  // resto do gráfico fica apagado em cinza. A correlação continua medida com todas as cidades.
   const painel = document.createElement("div");
   painel.className = "painel-dispersao";
   const pontos = [];
-  for (const cidade of cidades) {
-    const x = valorXDispersao(cidade, indicador);
-    if (x === null || !cidade.temVotos) {
-      continue;
-    }
-    pontos.push({ x: x, y: 100 - cidade.pct_lula_2t, cidade: cidade });
+  for (const cidade of cidadesDaDispersao(cidades, indicador)) {
+    pontos.push({
+      x: valorXDispersao(cidade, indicador),
+      y: 100 - cidade.pct_lula_2t,
+      cidade: cidade,
+      naFaixa: faixa === null || cidadeNaFaixaDispersao(cidade, indicador, faixa),
+    });
   }
   const regressao = calcularRegressao(pontos);
+  const pontosNaFaixa = pontos.filter(function (ponto) { return ponto.naFaixa; });
+  const cidadesNaFaixa = pontosNaFaixa.map(function (ponto) { return ponto.cidade; });
+  let pctLulaCartoes = pctLulaPainel;
+  if (faixa) {
+    const soma = somarGrupoCidades(cidadesNaFaixa);
+    pctLulaCartoes = soma.pctFlavio === null ? null : 100 - soma.pctFlavio;
+  }
 
   const cabecalho = document.createElement("div");
   cabecalho.className = "cabecalho-dispersao";
   const titulo = document.createElement("h4");
   titulo.textContent = nomePainel;
   cabecalho.appendChild(titulo);
-  cabecalho.appendChild(criarCartoesResultadoPainel(pctLulaPainel));
+  cabecalho.appendChild(criarCartoesResultadoPainel(pctLulaCartoes));
   painel.appendChild(cabecalho);
   const resumo = document.createElement("p");
   resumo.className = "resumo-dispersao";
-  if (regressao) {
+  if (faixa) {
+    preencherResumoFaixa(resumo, faixa, cidadesNaFaixa);
+  } else if (regressao) {
     resumo.textContent = "r = " + formatarNumeroComSinal(regressao.r, 2) + " · " + descreverCorrelacao(regressao, indicador) +
       " · " + formatarInteiro(regressao.quantidade) + " cidades";
   } else {
@@ -5501,6 +5655,23 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura, pctLulaPa
     fill: lerCor("--fundo-flavio") }));
   svg.appendChild(criarSvg("rect", { x: margem.esquerda, y: posicaoY(50), width: larguraUtil, height: posicaoY(0) - posicaoY(50),
     fill: lerCor("--fundo-lula") }));
+  // Faixa escolhida: o que fica fora dela é coberto de cinza; só a faixa mantém as cores.
+  const bordasFaixa = [];
+  if (faixa) {
+    const inicioPlot = margem.esquerda;
+    const fimPlot = margem.esquerda + larguraUtil;
+    const inicioFaixa = faixa.minimo === null ? inicioPlot : posicaoX(escalarIndice(faixa.minimo, indicador));
+    const fimFaixa = faixa.maximo === null ? fimPlot : posicaoX(escalarIndice(faixa.maximo, indicador));
+    const corApagada = lerCor("--fundo-fora-faixa");
+    if (inicioFaixa > inicioPlot) {
+      svg.appendChild(criarSvg("rect", { x: inicioPlot, y: margem.topo, width: inicioFaixa - inicioPlot, height: alturaUtil, fill: corApagada }));
+      bordasFaixa.push(inicioFaixa);
+    }
+    if (fimFaixa < fimPlot) {
+      svg.appendChild(criarSvg("rect", { x: fimFaixa, y: margem.topo, width: fimPlot - fimFaixa, height: alturaUtil, fill: corApagada }));
+      bordasFaixa.push(fimFaixa);
+    }
+  }
   const rotuloFlavio = criarSvg("text", { x: margem.esquerda + 6, y: posicaoY(100) + 13, class: "faixa-dispersao" });
   rotuloFlavio.style.fill = lerCor("--titulo-flavio");
   rotuloFlavio.textContent = "Flávio venceu";
@@ -5529,29 +5700,38 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura, pctLulaPa
     const x = posicaoX(indicador.escalaLog ? Math.log10(marca) : marca);
     svg.appendChild(criarSvg("line", { x1: x, x2: x, y1: margem.topo, y2: altura - margem.base, stroke: lerCor("--grade"), "stroke-width": 1 }));
     const rotuloX = criarSvg("text", { x: x, y: altura - 8, "text-anchor": "middle", class: "marca-dispersao" });
-    rotuloX.textContent = indicador.formatarMarca(marca);
+    rotuloX.textContent = indicador.formatarMarca(marca, larguraUtil < 320);
     svg.appendChild(rotuloX);
   }
+  for (const xBorda of bordasFaixa) {
+    svg.appendChild(criarSvg("line", { x1: xBorda, x2: xBorda, y1: margem.topo, y2: altura - margem.base, stroke: lerCor("--eixo"), "stroke-width": 1.5 }));
+  }
 
-  // Pontos neutros: a posição já diz quem venceu (acima ou abaixo da linha de 50%).
+  // Pontos neutros: a posição já diz quem venceu (acima ou abaixo da linha de 50%). Com faixa,
+  // os de fora quase somem e os de dentro escurecem; os de dentro são desenhados por cima.
   const corLula = lerCor("--cor-lula");
   const corFlavio = lerCor("--cor-flavio");
   const corPonto = lerCor("--tinta-2");
+  const opacidadeDentro = faixa ? 0.6 : 0.4;
   for (const ponto of pontos) {
-    svg.appendChild(criarSvg("circle", { cx: posicaoX(ponto.x), cy: posicaoY(ponto.y), r: 2,
-      fill: corPonto, "fill-opacity": 0.4 }));
+    if (!ponto.naFaixa) {
+      svg.appendChild(criarSvg("circle", { cx: posicaoX(ponto.x), cy: posicaoY(ponto.y), r: 2, fill: corPonto, "fill-opacity": 0.07 }));
+    }
+  }
+  for (const ponto of pontosNaFaixa) {
+    svg.appendChild(criarSvg("circle", { cx: posicaoX(ponto.x), cy: posicaoY(ponto.y), r: 2, fill: corPonto, "fill-opacity": opacidadeDentro }));
   }
   svg.appendChild(rotuloFlavio);
   svg.appendChild(rotuloLula);
 
-  // Dica: cidade mais próxima do ponteiro (um único ouvinte por painel).
+  // Dica: cidade mais próxima do ponteiro (um único ouvinte por painel); com faixa, só as de dentro.
   svg.addEventListener("pointermove", function (evento) {
     const caixa = svg.getBoundingClientRect();
     const xPonteiro = evento.clientX - caixa.left;
     const yPonteiro = evento.clientY - caixa.top;
     let maisProximo = null;
     let menorDistancia = 64;
-    for (const ponto of pontos) {
+    for (const ponto of pontosNaFaixa) {
       const dx = posicaoX(ponto.x) - xPonteiro;
       const dy = posicaoY(ponto.y) - yPonteiro;
       const distancia = dx * dx + dy * dy;
@@ -5609,7 +5789,8 @@ function renderizarDispersao() {
     });
   }
   for (const definicao of paineis) {
-    const resultado = criarPainelDispersao(definicao.nome, definicao.cidades, indicadorDispersaoAtual, larguraPainel, definicao.pctLula);
+    const resultado = criarPainelDispersao(definicao.nome, definicao.cidades, indicadorDispersaoAtual, faixaDispersaoAtual,
+      larguraPainel, definicao.pctLula);
     regressoesDispersao[definicao.nome] = resultado.regressao;
     conteiner.appendChild(resultado.painel);
   }
