@@ -31,6 +31,9 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 - **Mapa:** divergente azul ↔ vermelho centrado em 50% (vencedor); avanço de Lula em rampa sequencial; comparecimento divergente laranja ↔ violeta, para não confundir com as cores dos partidos.
 - **Toda frase com número é gerada a partir de `dados.js`** (nada digitado à mão), para não divergir quando os dados forem regenerados.
 - Modo claro/escuro (automático + botão); tabela equivalente para cada gráfico; dica no mouse e no foco do teclado.
+- **Mapas por estado ou por região (26/10/2026, pedido do Vinicius):** botões "Mostrar por: Estados | Regiões" ao lado do indicador.
+  - Em "Regiões", cada quadrado ganha a cor e o número da sua região (o mapa vira um mapa de regiões); o contorno marca a região que virou (Norte).
+  - O subtítulo conta as vitórias por região. As tabelas abaixo continuam por estado.
 - **Versão do `dados.js` no HTML (26/10/2026):** o gerador grava `dados.js?v=<SHA-256 do conteúdo>` no `index.html`.
   - Por quê: o GitHub Pages manda o navegador guardar os arquivos por 10 minutos (`max-age=600`). Depois de um envio, quem já tinha aberto a página recebeu o HTML novo com o `dados.js` antigo, e a página parou no 1º turno do resultado.
   - Reproduzido localmente: dava `Cannot read properties of undefined (reading '13')`.

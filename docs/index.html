@@ -226,6 +226,8 @@ h2 {
 }
 .modo-eleitorado td, .modo-eleitorado th { padding-left: 6px; padding-right: 6px; }
 .rotulo-controle { font-size: 13px; font-weight: 600; color: var(--tinta-2); margin-right: 4px; }
+.rotulo-controle-separado { margin-left: 18px; align-self: center; }
+#controles-mapa { align-items: center; }
 /* Número com dica de quantidade absoluta: realce leve ao passar o mouse. */
 .numero-com-dica { cursor: help; border-radius: 4px; }
 .numero-com-dica:hover, .numero-com-dica:focus-visible { background: var(--realce-fundo); outline: none; }
@@ -2444,6 +2446,30 @@ const INDICADORES_MAPA = [
 
 let indicadorMapaAtual = INDICADORES_MAPA[0];
 
+// Nível dos mapas: cada quadrado com o número do próprio estado ou da sua região.
+const NIVEIS_MAPA = [
+  { codigo: "uf", rotulo: "Estados" },
+  { codigo: "regiao", rotulo: "Regiões" },
+];
+let nivelMapaAtual = "uf";
+
+function buscarRegiaoPorNome(nomeRegiao) {
+  for (const regiao of DADOS.regioes) {
+    if (regiao.nm_regiao === nomeRegiao) {
+      return regiao;
+    }
+  }
+  return null;
+}
+
+function dadosDoLadrilho(uf) {
+  // No nível "Regiões", o quadrado de cada estado mostra os números da sua região.
+  if (nivelMapaAtual === "regiao") {
+    return buscarRegiaoPorNome(uf.nm_regiao) || uf;
+  }
+  return uf;
+}
+
 function renderizarControlesMapa() {
   const conteiner = document.getElementById("controles-mapa");
   conteiner.replaceChildren();
@@ -2464,6 +2490,28 @@ function renderizarControlesMapa() {
     });
     conteiner.appendChild(botao);
   }
+
+  const rotuloNivel = document.createElement("span");
+  rotuloNivel.className = "rotulo-controle rotulo-controle-separado";
+  rotuloNivel.textContent = "Mostrar por:";
+  conteiner.appendChild(rotuloNivel);
+  for (const nivel of NIVEIS_MAPA) {
+    const botaoNivel = document.createElement("button");
+    botaoNivel.type = "button";
+    botaoNivel.textContent = nivel.rotulo;
+    botaoNivel.setAttribute("aria-pressed", nivel.codigo === nivelMapaAtual ? "true" : "false");
+    botaoNivel.dataset.nivel = nivel.codigo;
+    botaoNivel.addEventListener("click", function () {
+      executarSemPular(function () {
+        return document.querySelector("#controles-mapa [data-nivel='" + nivel.codigo + "']");
+      }, function () {
+        nivelMapaAtual = nivel.codigo;
+        renderizarControlesMapa();
+        renderizarPaineisEstados();
+      });
+    });
+    conteiner.appendChild(botaoNivel);
+  }
 }
 
 function criarMosaico(turno, escala) {
@@ -2471,20 +2519,22 @@ function criarMosaico(turno, escala) {
   mosaico.className = "mosaico";
   for (const uf of DADOS.ufs) {
     const posicao = POSICAO_UF[uf.sg_uf];
-    const valor = indicadorMapaAtual.valor(uf, turno);
+    const fonte = dadosDoLadrilho(uf);
+    const valor = indicadorMapaAtual.valor(fonte, turno);
     const corFundo = escala(valor);
+    const nomeLadrilho = nivelMapaAtual === "regiao" ? fonte.nm_regiao + " (" + (uf.sg_uf === "ZZ" ? "exterior" : uf.sg_uf) + ")" : uf.nm_uf;
 
     const ladrilho = document.createElement("button");
     ladrilho.type = "button";
     ladrilho.className = "ladrilho";
-    if (uf.vencedor_1t !== uf.vencedor_2t) {
+    if (fonte.vencedor_1t !== fonte.vencedor_2t) {
       ladrilho.classList.add("destaque");
     }
     ladrilho.style.gridColumn = String(posicao[0] + 1);
     ladrilho.style.gridRow = String(posicao[1] + 1);
     ladrilho.style.background = corFundo;
     ladrilho.style.color = corDeTextoSobre(corFundo);
-    ladrilho.setAttribute("aria-label", uf.nm_uf + ", " + turno + "º turno: " + indicadorMapaAtual.rotulo + " " + indicadorMapaAtual.formatarDica(valor));
+    ladrilho.setAttribute("aria-label", nomeLadrilho + ", " + turno + "º turno: " + indicadorMapaAtual.rotulo + " " + indicadorMapaAtual.formatarDica(valor));
 
     const sigla = document.createElement("span");
     sigla.className = "sigla";
@@ -2496,19 +2546,19 @@ function criarMosaico(turno, escala) {
     ladrilho.appendChild(numero);
 
     ligarDica(ladrilho, function () {
-      const pctLula = turno === 1 ? uf.pct_lula_1t : uf.pct_lula_2t;
-      const pctFlavio = turno === 1 ? uf.pct_flavio_1t : 100 - uf.pct_lula_2t;
-      const comparecimento = turno === 1 ? uf.comparecimento_pct_1t : uf.comparecimento_pct_2t;
+      const pctLula = turno === 1 ? fonte.pct_lula_1t : fonte.pct_lula_2t;
+      const pctFlavio = turno === 1 ? fonte.pct_flavio_1t : 100 - fonte.pct_lula_2t;
+      const comparecimento = turno === 1 ? fonte.comparecimento_pct_1t : fonte.comparecimento_pct_2t;
       let notaVirada = null;
-      if (uf.vencedor_1t !== uf.vencedor_2t) {
-        notaVirada = "Virou: " + uf.vencedor_1t + " venceu o 1º turno, " + uf.vencedor_2t + " o 2º.";
+      if (fonte.vencedor_1t !== fonte.vencedor_2t) {
+        notaVirada = "Virou: " + fonte.vencedor_1t + " venceu o 1º turno, " + fonte.vencedor_2t + " o 2º.";
       }
       return {
-        titulo: uf.nm_uf + " · " + turno + "º turno",
+        titulo: nomeLadrilho + " · " + turno + "º turno",
         linhas: [
           { valor: formatarPercentual(pctLula, 2), rotulo: "Lula", cor: lerCor("--cor-lula") },
           { valor: formatarPercentual(pctFlavio, 2), rotulo: "Flávio", cor: lerCor("--cor-flavio") },
-          { valor: formatarPontos(vantagemLula(uf, turno), 2), rotulo: "vantagem de Lula" },
+          { valor: formatarPontos(vantagemLula(fonte, turno), 2), rotulo: "vantagem de Lula" },
           { valor: formatarPercentual(comparecimento, 2), rotulo: "comparecimento" },
         ],
         nota: notaVirada,
@@ -2551,7 +2601,9 @@ function renderizarEscala(escala) {
 
   const notaContorno = document.createElement("div");
   notaContorno.className = "titulo-escala gradiente-contorno";
-  notaContorno.textContent = "Contorno: estado em que o vencedor mudou entre os turnos.";
+  notaContorno.textContent = nivelMapaAtual === "regiao"
+    ? "Contorno: região em que o vencedor mudou entre os turnos. Cada quadrado mostra o número da sua região."
+    : "Contorno: estado em que o vencedor mudou entre os turnos.";
   conteiner.appendChild(notaContorno);
 }
 
@@ -2672,6 +2724,17 @@ function renderizarPainelEstados(turno, idPainel, escala) {
   const subtitulo = document.createElement("p");
   subtitulo.className = "sub-painel";
   subtitulo.textContent = "Lula venceu em " + vitoriasLula + " e Flávio em " + (ufsBrasil.length - vitoriasLula) + " unidades da federação";
+  if (nivelMapaAtual === "regiao") {
+    const regioesBrasil = DADOS.regioes.filter(function (regiao) { return regiao.nm_regiao !== "Exterior"; });
+    let regioesLula = 0;
+    for (const regiao of regioesBrasil) {
+      const venceuRegiao = turno === 1 ? regiao.vencedor_1t : regiao.vencedor_2t;
+      if (venceuRegiao === "Lula") {
+        regioesLula += 1;
+      }
+    }
+    subtitulo.textContent = "Lula venceu em " + regioesLula + " e Flávio em " + (regioesBrasil.length - regioesLula) + " das " + regioesBrasil.length + " regiões";
+  }
   painel.appendChild(subtitulo);
 
   painel.appendChild(criarMosaico(turno, escala));
