@@ -1,0 +1,16 @@
+# Dados abertos do TSE (1,1 GB; um arquivo passa do limite de 100 MB do GitHub)
+*.zip
+
+# Cache bruto do JSON de divulgação do TSE (regenerável pelo script de coleta)
+dados/json_tse/
+
+# Logs de execução
+*.log
+
+# Python e sistema
+__pycache__/
+*.pyc
+.DS_Store
+
+# Configuração local do Claude Code (servidor de pré-visualização)
+.claude/

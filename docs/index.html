@@ -1,0 +1,2424 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presidente 2026: 1º × 2º turno</title>
+<meta name="description" content="Como o voto para presidente mudou do 1º para o 2º turno das eleições de 2026, por região e estado, e para onde foram os eleitores dos candidatos eliminados. Dados do TSE.">
+<style>
+:root {
+  color-scheme: light;
+  --plano: #f9f9f7;
+  --superficie: #fcfcfb;
+  --tinta: #0b0b0b;
+  --tinta-2: #52514e;
+  --tinta-3: #6b6a65;
+  --grade: #e1e0d9;
+  --eixo: #c3c2b7;
+  --borda: rgba(11, 11, 11, 0.10);
+  --realce-fundo: #f0efec;
+  --cor-lula: #e34948;
+  --cor-lula-1t: #f2a3a1;
+  --cor-flavio: #2a78d6;
+  --cor-branco-nulo: #6f6e69;
+  --cor-abstencao: #b4b2a9;
+  --ponte-1: #4f4e4a;
+  --ponte-2: #898781;
+  --ponte-3: #c3c2b7;
+  --div-azul: #184f95;
+  --div-meio: #f0efec;
+  --div-vermelho: #a8282a;
+  --seq-inicio: #fbe0dd;
+  --seq-fim: #a8282a;
+  --comp-queda: #c4501f;
+  --comp-alta: #4a3aa7;
+  --contorno-destaque: #0b0b0b;
+  --status-serio: #ec835a;
+  --fundo-alerta: #fdf1ec;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --plano: #0d0d0d;
+    --superficie: #1a1a19;
+    --tinta: #f0efec;
+    --tinta-2: #c3c2b7;
+    --tinta-3: #a3a29b;
+    --grade: #2c2c2a;
+    --eixo: #383835;
+    --borda: rgba(255, 255, 255, 0.10);
+    --realce-fundo: #262624;
+    --cor-lula: #e66767;
+    --cor-lula-1t: #8a4140;
+    --cor-flavio: #3987e5;
+    --cor-branco-nulo: #9a9891;
+    --cor-abstencao: #5f5e5a;
+    --ponte-1: #c3c2b7;
+    --ponte-2: #898781;
+    --ponte-3: #52514e;
+    --div-azul: #5598e7;
+    --div-meio: #383835;
+    --div-vermelho: #e66767;
+    --seq-inicio: #3a2423;
+    --seq-fim: #ef8a88;
+    --comp-queda: #d95926;
+    --comp-alta: #9085e9;
+    --contorno-destaque: #f0efec;
+    --status-serio: #ec835a;
+    --fundo-alerta: #2e211c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plano: #0d0d0d;
+  --superficie: #1a1a19;
+  --tinta: #f0efec;
+  --tinta-2: #c3c2b7;
+  --tinta-3: #a3a29b;
+  --grade: #2c2c2a;
+  --eixo: #383835;
+  --borda: rgba(255, 255, 255, 0.10);
+  --realce-fundo: #262624;
+  --cor-lula: #e66767;
+  --cor-lula-1t: #8a4140;
+  --cor-flavio: #3987e5;
+  --cor-branco-nulo: #9a9891;
+  --cor-abstencao: #5f5e5a;
+  --ponte-1: #c3c2b7;
+  --ponte-2: #898781;
+  --ponte-3: #52514e;
+  --div-azul: #5598e7;
+  --div-meio: #383835;
+  --div-vermelho: #e66767;
+  --seq-inicio: #3a2423;
+  --seq-fim: #ef8a88;
+  --comp-queda: #d95926;
+  --comp-alta: #9085e9;
+  --contorno-destaque: #f0efec;
+  --status-serio: #ec835a;
+  --fundo-alerta: #2e211c;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--plano);
+  color: var(--tinta);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.pagina {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+a { color: inherit; text-underline-offset: 2px; }
+
+/* Cabeçalho */
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.sobretitulo {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
+  margin: 0 0 8px;
+}
+h1 {
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.15;
+  margin: 0 0 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.abertura {
+  font-size: 18px;
+  color: var(--tinta-2);
+  max-width: 720px;
+  margin: 0 0 8px;
+}
+.fonte-topo {
+  font-size: 13px;
+  color: var(--tinta-3);
+  margin: 0;
+}
+.botao-tema {
+  flex: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--tinta-2);
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.botao-tema:hover { color: var(--tinta); }
+
+/* Seções e cartões */
+section { margin-top: 48px; }
+h2 {
+  font-size: 24px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  letter-spacing: -0.005em;
+}
+.sub {
+  color: var(--tinta-2);
+  margin: 0 0 20px;
+  max-width: 720px;
+}
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 20px;
+}
+.cartao + .cartao { margin-top: 16px; }
+.cartao h3 {
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+.cartao .nota-cartao {
+  font-size: 14px;
+  color: var(--tinta-2);
+  margin: 0 0 16px;
+}
+.duas-colunas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 820px) {
+  .duas-colunas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .duas-colunas .cartao + .cartao { margin-top: 0; }
+}
+
+/* Indicadores */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+.indicador {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 16px;
+}
+.indicador .rotulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--tinta-2);
+  margin: 0;
+}
+.indicador .valor {
+  font-size: 34px;
+  font-weight: 650;
+  line-height: 1.15;
+  margin: 6px 0 4px;
+}
+.indicador .delta {
+  font-size: 14px;
+  color: var(--tinta-2);
+  margin: 0;
+}
+.amostra {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+.amostra-quadrada { border-radius: 2px; }
+.amostra-linha {
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  flex: none;
+}
+
+/* Barras empilhadas em HTML */
+.barra-empilhada {
+  display: flex;
+  gap: 2px;
+  height: 24px;
+  width: 100%;
+}
+.segmento {
+  height: 100%;
+  min-width: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
+  outline-offset: 2px;
+}
+.segmento:first-child { border-radius: 4px 0 0 4px; }
+.segmento:last-child { border-radius: 0 4px 4px 0; }
+.segmento:only-child { border-radius: 4px; }
+.segmento:hover, .segmento:focus-visible { filter: brightness(1.08) saturate(1.05); }
+.linha-barra {
+  display: grid;
+  grid-template-columns: minmax(120px, 210px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.linha-barra .nome-barra {
+  font-size: 14px;
+  line-height: 1.3;
+}
+.linha-barra .nome-barra small {
+  display: block;
+  color: var(--tinta-3);
+  font-size: 12px;
+}
+@media (max-width: 560px) {
+  .linha-barra { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 13px;
+  color: var(--tinta-2);
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+.legenda li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legenda strong { color: var(--tinta); font-weight: 600; }
+
+/* Ponte de votos */
+.ponte-bloco + .ponte-bloco { margin-top: 20px; }
+.ponte-titulo {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+/* SVG */
+svg { display: block; overflow: visible; }
+svg text { fill: var(--tinta-2); font-family: inherit; }
+.grafico-svg { width: 100%; }
+
+/* Controles segmentados */
+.controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+.controles button {
+  font: inherit;
+  font-size: 14px;
+  color: var(--tinta-2);
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+.controles button:hover { color: var(--tinta); background: var(--realce-fundo); }
+.controles button[aria-pressed="true"] {
+  color: var(--superficie);
+  background: var(--tinta);
+  border-color: var(--tinta);
+}
+
+/* Mapa em mosaico */
+.mapa-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+@media (min-width: 820px) {
+  .mapa-area { grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); }
+}
+.mosaico {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(8, auto);
+  gap: 4px;
+  max-width: 380px;
+}
+.ladrilho {
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: default;
+  line-height: 1.1;
+  position: relative;
+}
+.ladrilho .sigla { font-size: 13px; font-weight: 700; }
+.ladrilho .numero { font-size: 11px; font-weight: 500; }
+.ladrilho.destaque { box-shadow: 0 0 0 2px var(--superficie), 0 0 0 4px var(--contorno-destaque); }
+.ladrilho:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+.escala-legenda { max-width: 380px; margin-top: 12px; }
+.escala-legenda .gradiente { height: 10px; border-radius: 2px; }
+.escala-legenda .marcas {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--tinta-3);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.escala-legenda .titulo-escala {
+  font-size: 12px;
+  color: var(--tinta-2);
+  margin-bottom: 6px;
+}
+.destaques-uf { margin: 0; padding-left: 18px; }
+.destaques-uf li { margin-bottom: 10px; }
+
+/* Tabelas */
+details.tabela-detalhe { margin-top: 16px; }
+details.tabela-detalhe summary {
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--tinta-2);
+}
+.tabela-rolagem { overflow-x: auto; margin-top: 12px; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+th, td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--grade);
+  text-align: right;
+  white-space: nowrap;
+}
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 600; color: var(--tinta-2); }
+th button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+th button:hover { color: var(--tinta); }
+
+/* Migração */
+.grupo-rotulo {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+  margin: 20px 0 10px;
+}
+.grupo-rotulo:first-of-type { margin-top: 0; }
+.aviso {
+  border-left: 3px solid var(--tinta-2);
+  background: var(--realce-fundo);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--tinta-2);
+}
+.aviso strong { color: var(--tinta); }
+.aviso ul { margin: 6px 0 0; padding-left: 18px; }
+.frase-resumo { font-size: 17px; margin: 0 0 12px; max-width: 760px; }
+.aviso-forte {
+  border: 1px solid var(--status-serio);
+  border-left-width: 6px;
+  background: var(--fundo-alerta);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: var(--tinta);
+}
+.aviso-forte .aviso-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: var(--tinta);
+}
+.aviso-forte .icone-alerta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--status-serio);
+  color: #0b0b0b;
+  font-size: 13px;
+  font-weight: 800;
+  flex: none;
+}
+.aviso-forte ul { margin: 6px 0 0; padding-left: 18px; color: var(--tinta-2); }
+.aviso-forte p { margin: 0; color: var(--tinta-2); }
+
+/* Metodologia */
+.metodo h3 { font-size: 16px; margin: 24px 0 6px; }
+.metodo h3:first-child { margin-top: 0; }
+.metodo p, .metodo li { color: var(--tinta-2); font-size: 15px; }
+.metodo ul { padding-left: 18px; }
+.rodape {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--grade);
+  font-size: 13px;
+  color: var(--tinta-3);
+}
+
+/* Tooltip */
+.dica {
+  position: fixed;
+  z-index: 10;
+  pointer-events: none;
+  background: var(--superficie);
+  color: var(--tinta);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 10px 12px;
+  font-size: 13px;
+  max-width: 280px;
+  opacity: 0;
+  transition: opacity 80ms;
+}
+.dica.visivel { opacity: 1; }
+.dica .dica-titulo { font-weight: 600; margin-bottom: 6px; }
+.dica .dica-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+}
+.dica .dica-valor { font-weight: 650; }
+.dica .dica-rotulo { color: var(--tinta-2); }
+.dica .dica-nota { color: var(--tinta-3); margin-top: 6px; font-size: 12px; }
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+<main class="pagina">
+
+  <header>
+    <div class="topo">
+      <p class="sobretitulo">Eleições 2026 · Presidente</p>
+      <button class="botao-tema" id="botao-tema" type="button" aria-label="Alternar tema">Tema: automático</button>
+    </div>
+    <h1>Do 1º ao 2º turno: como o voto para presidente mudou em 2026</h1>
+    <p class="abertura" id="abertura"></p>
+    <p class="fonte-topo" id="fonte-topo"></p>
+  </header>
+
+  <section id="resultado" aria-labelledby="titulo-resultado">
+    <h2 id="titulo-resultado" class="visualmente-oculto">Resultado</h2>
+    <div class="indicadores" id="indicadores"></div>
+  </section>
+
+  <section id="ponte" aria-labelledby="titulo-ponte">
+    <h2 id="titulo-ponte">De onde vieram os votos a mais do 2º turno</h2>
+    <p class="sub" id="sub-ponte"></p>
+    <div class="cartao">
+      <div class="ponte-bloco">
+        <p class="ponte-titulo">Origem do saldo</p>
+        <div class="barra-empilhada" id="ponte-origem"></div>
+        <ul class="legenda" id="legenda-ponte-origem" style="margin-top:10px"></ul>
+      </div>
+      <div class="ponte-bloco">
+        <p class="ponte-titulo">Destino do saldo</p>
+        <div class="barra-empilhada" id="ponte-destino"></div>
+        <ul class="legenda" id="legenda-ponte-destino" style="margin-top:10px"></ul>
+      </div>
+      <p class="nota-cartao" style="margin:8px 0 0">Contabilidade de saldo: mostra quanto ficou em disputa e quem ficou com o saldo. Quem votou em quem é estimado mais abaixo, na seção sobre a migração de votos.</p>
+    </div>
+  </section>
+
+  <section id="regioes" aria-labelledby="titulo-regioes">
+    <h2 id="titulo-regioes">Regiões</h2>
+    <p class="sub" id="sub-regioes"></p>
+    <div class="duas-colunas">
+      <figure class="cartao" style="margin:0">
+        <h3>Lula nos votos válidos</h3>
+        <p class="nota-cartao">Do 1º turno (círculo vazado) ao 2º turno (círculo cheio). A linha vertical marca 50%.</p>
+        <ul class="legenda">
+          <li><span class="amostra" style="background:var(--superficie);box-shadow:inset 0 0 0 2px var(--cor-lula)"></span>1º turno</li>
+          <li><span class="amostra" style="background:var(--cor-lula)"></span>2º turno</li>
+        </ul>
+        <div class="grafico-svg" id="grafico-halteres"></div>
+      </figure>
+      <figure class="cartao" style="margin:0">
+        <h3>Comparecimento: variação entre turnos</h3>
+        <p class="nota-cartao">Em pontos percentuais do eleitorado apto. À direita do zero, mais gente votou no 2º turno.</p>
+        <ul class="legenda">
+          <li><span class="amostra amostra-quadrada" style="background:var(--comp-alta)"></span>Subiu</li>
+          <li><span class="amostra amostra-quadrada" style="background:var(--comp-queda)"></span>Caiu</li>
+        </ul>
+        <div class="grafico-svg" id="grafico-comparecimento"></div>
+      </figure>
+    </div>
+    <details class="tabela-detalhe cartao" style="margin-top:16px">
+      <summary>Ver tabela por região</summary>
+      <div class="tabela-rolagem" id="tabela-regioes"></div>
+    </details>
+  </section>
+
+  <section id="estados" aria-labelledby="titulo-estados">
+    <h2 id="titulo-estados">Estados</h2>
+    <p class="sub">Escolha o indicador. Cada quadrado é um estado, posicionado de forma aproximada no mapa do Brasil.</p>
+    <div class="controles" id="controles-mapa" role="group" aria-label="Indicador do mapa"></div>
+    <div class="cartao">
+      <div class="mapa-area">
+        <div>
+          <div class="mosaico" id="mosaico"></div>
+          <div class="escala-legenda" id="escala-legenda"></div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px">O que chama atenção</h3>
+          <ul class="destaques-uf" id="destaques-uf"></ul>
+        </div>
+      </div>
+      <details class="tabela-detalhe">
+        <summary>Ver tabela completa por estado</summary>
+        <div class="tabela-rolagem" id="tabela-ufs"></div>
+      </details>
+    </div>
+  </section>
+
+  <section id="migracao" aria-labelledby="titulo-migracao">
+    <h2 id="titulo-migracao">Para onde foram os eleitores de cada candidato</h2>
+    <p class="sub">Estimativa estatística. O voto é secreto: o que se observa são os totais de cada município nos dois turnos, e o modelo deduz o comportamento de cada grupo de eleitores a partir das diferenças entre os 5.571 municípios brasileiros.</p>
+    <div class="aviso" style="margin-bottom:16px">
+      <strong>Como ler esta seção</strong>
+      <ul>
+        <li>É uma estimativa, não uma contagem de votos.</li>
+        <li>O modelo supõe que, dentro de cada região, um grupo de eleitores se comporta do mesmo jeito em todos os municípios. Quando isso não é verdade, surge um erro que as faixas de incerteza não mostram.</li>
+        <li>Para medir esse risco, o cálculo foi refeito com três modelos diferentes. Destacamos o que se mantém nos três; o que muda de um modelo para outro aparece marcado como frágil.</li>
+      </ul>
+    </div>
+    <div class="controles" id="controles-migracao" role="group" aria-label="Recorte da estimativa"></div>
+    <div class="aviso-forte" id="aviso-regional" role="alert" hidden></div>
+    <p class="frase-resumo" id="frase-migracao"></p>
+    <div class="cartao">
+      <h3>De onde veio o crescimento de cada candidato</h3>
+      <p class="nota-cartao" id="nota-entradas"></p>
+      <ul class="legenda" id="legenda-entradas"></ul>
+      <div id="barras-entradas"></div>
+      <details class="tabela-detalhe">
+        <summary>Ver tabela (com a faixa entre os três modelos)</summary>
+        <div class="tabela-rolagem" id="tabela-entradas"></div>
+      </details>
+    </div>
+    <div class="cartao">
+      <h3>O que cada grupo do 1º turno fez no 2º</h3>
+      <p class="nota-cartao">Cada barra divide 100% dos eleitores de um grupo do 1º turno pelo que fizeram no 2º turno. Modelo principal; os intervalos aparecem ao passar o mouse e na tabela.</p>
+      <ul class="legenda" id="legenda-migracao"></ul>
+      <div id="barras-migracao"></div>
+    </div>
+    <div class="cartao">
+      <h3>Quanto a estimativa muda conforme o modelo</h3>
+      <p class="nota-cartao">Fração dos eleitores que foi para Lula e para Flávio no 2º turno. Ponto cheio: modelo principal. Traço: intervalo de 95% do modelo principal (1.000 reamostragens de municípios). Círculos vazados: os dois modelos alternativos. Quando os círculos caem longe do ponto, a estimativa é frágil.</p>
+      <ul class="legenda">
+        <li><span class="amostra" style="background:var(--cor-lula)"></span>Foi para Lula</li>
+        <li><span class="amostra" style="background:var(--cor-flavio)"></span>Foi para Flávio</li>
+        <li><span class="amostra" style="background:var(--superficie);box-shadow:inset 0 0 0 2px var(--tinta-2)"></span>Modelos alternativos</li>
+      </ul>
+      <div class="grafico-svg" id="grafico-incerteza"></div>
+      <details class="tabela-detalhe">
+        <summary>Ver tabela da estimativa (modelo principal, com intervalos)</summary>
+        <div class="tabela-rolagem" id="tabela-migracao"></div>
+      </details>
+    </div>
+  </section>
+
+  <section id="metodologia" class="metodo" aria-labelledby="titulo-metodologia">
+    <h2 id="titulo-metodologia">Metodologia, fontes e limites</h2>
+    <div class="cartao" id="texto-metodologia"></div>
+  </section>
+
+  <footer class="rodape" id="rodape"></footer>
+</main>
+
+<div class="dica" id="dica" role="tooltip" aria-hidden="true"></div>
+
+<script src="dados.js"></script>
+<script>
+"use strict";
+
+const DADOS = window.DADOS_ELEICAO;
+
+/* ---------- Formatação (pt-BR) ---------- */
+
+function formatarNumero(valor, casas) {
+  return valor.toLocaleString("pt-BR", {
+    minimumFractionDigits: casas,
+    maximumFractionDigits: casas,
+  });
+}
+
+function formatarPercentual(valor, casas) {
+  return formatarNumero(valor, casas) + "%";
+}
+
+function formatarPontos(valor, casas) {
+  let sinal = "";
+  if (valor > 0) {
+    sinal = "+";
+  } else if (valor < 0) {
+    sinal = "−";
+  }
+  return sinal + formatarNumero(Math.abs(valor), casas) + " p.p.";
+}
+
+function formatarMilhoes(valor, casas) {
+  let sinal = "";
+  if (valor < 0) {
+    sinal = "−";
+  }
+  return sinal + formatarNumero(Math.abs(valor) / 1e6, casas) + " mi";
+}
+
+function formatarMilhoesComSinal(valor, casas) {
+  let sinal = "";
+  if (valor > 0) {
+    sinal = "+";
+  }
+  return sinal + formatarMilhoes(valor, casas);
+}
+
+function formatarInteiro(valor) {
+  return valor.toLocaleString("pt-BR");
+}
+
+function formatarQuantidadeEleitores(valor) {
+  // Em recortes regionais as perdas podem ser pequenas: "0,00 mi" esconderia a ordem de grandeza.
+  if (valor >= 1e5) {
+    return formatarMilhoes(valor, 2);
+  }
+  if (valor >= 1000) {
+    return formatarNumero(valor / 1000, 0) + " mil";
+  }
+  return "menos de mil";
+}
+
+const PALAVRAS_MINUSCULAS = ["de", "da", "do", "das", "dos", "e"];
+
+function formatarNomeProprio(nomeMaiusculo) {
+  // O TSE publica nomes de município em maiúsculas; na frase, vira "São Paulo".
+  const palavras = nomeMaiusculo.toLocaleLowerCase("pt-BR").split(" ");
+  const formatadas = [];
+  palavras.forEach(function (palavra, indice) {
+    if (indice > 0 && PALAVRAS_MINUSCULAS.indexOf(palavra) >= 0) {
+      formatadas.push(palavra);
+    } else {
+      formatadas.push(palavra.charAt(0).toLocaleUpperCase("pt-BR") + palavra.slice(1));
+    }
+  });
+  return formatadas.join(" ");
+}
+
+/* ---------- Cores ---------- */
+
+function lerCor(nomeVariavel) {
+  const estilo = getComputedStyle(document.documentElement);
+  return estilo.getPropertyValue(nomeVariavel).trim();
+}
+
+function hexParaRgb(hex) {
+  const limpo = hex.replace("#", "");
+  return [
+    parseInt(limpo.slice(0, 2), 16) / 255,
+    parseInt(limpo.slice(2, 4), 16) / 255,
+    parseInt(limpo.slice(4, 6), 16) / 255,
+  ];
+}
+
+function linearizar(canal) {
+  if (canal <= 0.04045) {
+    return canal / 12.92;
+  }
+  return Math.pow((canal + 0.055) / 1.055, 2.4);
+}
+
+function deslinearizar(canal) {
+  if (canal <= 0.0031308) {
+    return 12.92 * canal;
+  }
+  return 1.055 * Math.pow(canal, 1 / 2.4) - 0.055;
+}
+
+function hexParaOklab(hex) {
+  const rgb = hexParaRgb(hex);
+  const r = linearizar(rgb[0]);
+  const g = linearizar(rgb[1]);
+  const b = linearizar(rgb[2]);
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [
+    0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+  ];
+}
+
+function oklabParaHex(lab) {
+  const l = Math.pow(lab[0] + 0.3963377774 * lab[1] + 0.2158037573 * lab[2], 3);
+  const m = Math.pow(lab[0] - 0.1055613458 * lab[1] - 0.0638541728 * lab[2], 3);
+  const s = Math.pow(lab[0] - 0.0894841775 * lab[1] - 1.2914855480 * lab[2], 3);
+  const canais = [
+    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+  ];
+  let hex = "#";
+  for (const canal of canais) {
+    const limitado = Math.min(1, Math.max(0, deslinearizar(canal)));
+    hex += Math.round(limitado * 255).toString(16).padStart(2, "0");
+  }
+  return hex;
+}
+
+function interpolarCor(hexInicio, hexFim, fracao) {
+  const inicio = hexParaOklab(hexInicio);
+  const fim = hexParaOklab(hexFim);
+  const mistura = [
+    inicio[0] + (fim[0] - inicio[0]) * fracao,
+    inicio[1] + (fim[1] - inicio[1]) * fracao,
+    inicio[2] + (fim[2] - inicio[2]) * fracao,
+  ];
+  return oklabParaHex(mistura);
+}
+
+function luminanciaRelativa(hex) {
+  const rgb = hexParaRgb(hex);
+  return 0.2126 * linearizar(rgb[0]) + 0.7152 * linearizar(rgb[1]) + 0.0722 * linearizar(rgb[2]);
+}
+
+function corDeTextoSobre(hexFundo) {
+  // Texto dentro de um preenchimento colorido: branco ou tinta, conforme o contraste.
+  const luminancia = luminanciaRelativa(hexFundo);
+  const contrasteComBranco = 1.05 / (luminancia + 0.05);
+  const contrasteComPreto = (luminancia + 0.05) / 0.05;
+  if (contrasteComBranco >= contrasteComPreto) {
+    return "#ffffff";
+  }
+  return "#0b0b0b";
+}
+
+function criarEscalaDivergente(minimo, centro, maximo, corMinimo, corCentro, corMaximo) {
+  return function (valor) {
+    const limitado = Math.min(maximo, Math.max(minimo, valor));
+    if (limitado <= centro) {
+      const fracao = (centro - limitado) / (centro - minimo);
+      return interpolarCor(corCentro, corMinimo, fracao);
+    }
+    const fracao = (limitado - centro) / (maximo - centro);
+    return interpolarCor(corCentro, corMaximo, fracao);
+  };
+}
+
+function criarEscalaSequencial(minimo, maximo, corInicio, corFim) {
+  return function (valor) {
+    const limitado = Math.min(maximo, Math.max(minimo, valor));
+    const fracao = (limitado - minimo) / (maximo - minimo);
+    return interpolarCor(corInicio, corFim, fracao);
+  };
+}
+
+/* ---------- Dica (tooltip) ---------- */
+
+const dica = document.getElementById("dica");
+
+function preencherDica(titulo, linhas, nota) {
+  dica.replaceChildren();
+  const elementoTitulo = document.createElement("div");
+  elementoTitulo.className = "dica-titulo";
+  elementoTitulo.textContent = titulo;
+  dica.appendChild(elementoTitulo);
+
+  for (const linha of linhas) {
+    const elementoLinha = document.createElement("div");
+    elementoLinha.className = "dica-linha";
+    if (linha.cor) {
+      const chave = document.createElement("span");
+      chave.className = "amostra-linha";
+      chave.style.background = linha.cor;
+      elementoLinha.appendChild(chave);
+    }
+    const valor = document.createElement("span");
+    valor.className = "dica-valor";
+    valor.textContent = linha.valor;
+    elementoLinha.appendChild(valor);
+    const rotulo = document.createElement("span");
+    rotulo.className = "dica-rotulo";
+    rotulo.textContent = linha.rotulo;
+    elementoLinha.appendChild(rotulo);
+    dica.appendChild(elementoLinha);
+  }
+
+  if (nota) {
+    const elementoNota = document.createElement("div");
+    elementoNota.className = "dica-nota";
+    elementoNota.textContent = nota;
+    dica.appendChild(elementoNota);
+  }
+}
+
+function posicionarDica(x, y) {
+  const margem = 12;
+  const larguraDica = dica.offsetWidth;
+  const alturaDica = dica.offsetHeight;
+  let esquerda = x + margem;
+  let topo = y + margem;
+  if (esquerda + larguraDica > window.innerWidth - 8) {
+    esquerda = x - larguraDica - margem;
+  }
+  if (topo + alturaDica > window.innerHeight - 8) {
+    topo = y - alturaDica - margem;
+  }
+  dica.style.left = Math.max(8, esquerda) + "px";
+  dica.style.top = Math.max(8, topo) + "px";
+}
+
+function ligarDica(elemento, montarConteudo) {
+  // Mesma dica no mouse e no foco do teclado: a dica nunca é a única forma de ler o valor.
+  elemento.addEventListener("pointermove", function (evento) {
+    const conteudo = montarConteudo();
+    preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota);
+    dica.classList.add("visivel");
+    posicionarDica(evento.clientX, evento.clientY);
+  });
+  elemento.addEventListener("pointerleave", function () {
+    dica.classList.remove("visivel");
+  });
+  elemento.addEventListener("focus", function () {
+    const conteudo = montarConteudo();
+    preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota);
+    dica.classList.add("visivel");
+    const caixa = elemento.getBoundingClientRect();
+    posicionarDica(caixa.right, caixa.top);
+  });
+  elemento.addEventListener("blur", function () {
+    dica.classList.remove("visivel");
+  });
+}
+
+/* ---------- SVG ---------- */
+
+const ESPACO_SVG = "http://www.w3.org/2000/svg";
+
+function criarSvg(nomeElemento, atributos) {
+  const elemento = document.createElementNS(ESPACO_SVG, nomeElemento);
+  for (const nomeAtributo in atributos) {
+    elemento.setAttribute(nomeAtributo, atributos[nomeAtributo]);
+  }
+  return elemento;
+}
+
+function larguraDoConteiner(conteiner) {
+  return Math.max(280, conteiner.clientWidth);
+}
+
+/* ---------- Textos de apoio ---------- */
+
+const NOMES_ORIGEM = {
+  bloco: { nome: "Caiado, Cury e Renan, juntos", detalhe: "os 3 maiores eliminados" },
+  caiado: { nome: "Ronaldo Caiado", detalhe: "PSD, 1º turno" },
+  cury: { nome: "Augusto Cury", detalhe: "Avante, 1º turno" },
+  renan: { nome: "Renan Santos", detalhe: "Missão, 1º turno" },
+  demais: { nome: "Os outros 7 candidatos", detalhe: "somados, 1º turno" },
+  branco_nulo: { nome: "Votou branco ou nulo", detalhe: "no 1º turno" },
+  abstencao: { nome: "Não votou", detalhe: "no 1º turno" },
+  lula: { nome: "Lula", detalhe: "PT, 1º turno" },
+  flavio: { nome: "Flávio Bolsonaro", detalhe: "PL, 1º turno" },
+};
+
+const DESTINOS = [
+  { codigo: "lula", nome: "Lula", variavelCor: "--cor-lula" },
+  { codigo: "flavio", nome: "Flávio", variavelCor: "--cor-flavio" },
+  { codigo: "branco_nulo", nome: "Branco ou nulo", variavelCor: "--cor-branco-nulo" },
+  { codigo: "abstencao", nome: "Não votou", variavelCor: "--cor-abstencao" },
+];
+
+// Grupos estimados individualmente que mudam muito de um modelo para outro.
+const ORIGENS_FRAGEIS = ["caiado", "cury", "renan"];
+const ORIGENS_BLOCO = ["caiado", "cury", "renan"];
+const ORIGENS_TODOS_ELIMINADOS = ["caiado", "cury", "renan", "demais"];
+const ORIGENS_CONTEXTO = ["branco_nulo", "abstencao", "lula", "flavio"];
+const ORIGENS_TABELA = ["bloco", "caiado", "cury", "renan", "demais", "branco_nulo", "abstencao", "lula", "flavio"];
+const ESPECIFICACAO_PRINCIPAL = "E1";
+const ESPECIFICACOES = [
+  { codigo: "E1", nome: "Por região (principal)" },
+  { codigo: "E2", nome: "Nacional único" },
+  { codigo: "E3", nome: "Por região, sem ponderação" },
+];
+// O Brasil é o recorte principal. As regiões ficam disponíveis no seletor, sempre com
+// aviso: com poucos municípios efetivos e grupos pequenos, muitas estimativas regionais
+// caem nos limites de 0% ou 100% e mudam bastante de um modelo para outro.
+const REGIAO_BRASIL = "Brasil";
+const REGIOES_MIGRACAO = ["Brasil", "Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"];
+const LIMITE_FRONTEIRA = 1e-6;
+const TOTAL_CELULAS_MIGRACAO = 32;
+let regiaoMigracaoAtual = REGIAO_BRASIL;
+
+const GRUPOS_ENTRADA = [
+  { codigo: "eliminados", nome: "Eleitores dos 10 eliminados", origens: ORIGENS_TODOS_ELIMINADOS, variavelCor: "--ponte-1" },
+  { codigo: "abstencao", nome: "Não tinham votado no 1º turno", origens: ["abstencao"], variavelCor: "--ponte-2" },
+  { codigo: "branco_nulo", nome: "Votaram branco ou nulo no 1º turno", origens: ["branco_nulo"], variavelCor: "--ponte-3" },
+];
+
+/* ---------- Cabeçalho e indicadores ---------- */
+
+function renderizarCabecalho() {
+  const brasil = DADOS.brasil;
+  const pctFlavio2t = 100 - brasil.pct_lula_2t;
+  const desvantagem1t = brasil.pct_flavio_1t - brasil.pct_lula_1t;
+  document.getElementById("abertura").textContent =
+    "Lula foi reeleito com " + formatarPercentual(brasil.pct_lula_2t, 2) +
+    " dos votos válidos depois de terminar o 1º turno " +
+    formatarNumero(desvantagem1t, 2) + " pontos atrás de Flávio Bolsonaro, que fez " +
+    formatarPercentual(pctFlavio2t, 2) + " no 2º turno. Esta página mostra onde a disputa mudou " +
+    "e para onde foram os eleitores dos candidatos que ficaram pelo caminho.";
+  document.getElementById("fonte-topo").textContent =
+    "Fonte: Tribunal Superior Eleitoral. 1º turno (" + DADOS.meta.data_1t + ") pelos dados abertos; 2º turno (" +
+    DADOS.meta.data_2t + ") pela divulgação oficial de resultados. Dados gerados em " + DADOS.meta.data_geracao + ".";
+}
+
+function criarIndicador(rotulo, variavelCor, valor, delta) {
+  const cartao = document.createElement("div");
+  cartao.className = "indicador";
+
+  const elementoRotulo = document.createElement("p");
+  elementoRotulo.className = "rotulo";
+  if (variavelCor) {
+    const amostra = document.createElement("span");
+    amostra.className = "amostra";
+    amostra.style.background = "var(" + variavelCor + ")";
+    elementoRotulo.appendChild(amostra);
+  }
+  elementoRotulo.appendChild(document.createTextNode(rotulo));
+  cartao.appendChild(elementoRotulo);
+
+  const elementoValor = document.createElement("p");
+  elementoValor.className = "valor";
+  elementoValor.textContent = valor;
+  cartao.appendChild(elementoValor);
+
+  const elementoDelta = document.createElement("p");
+  elementoDelta.className = "delta";
+  elementoDelta.textContent = delta;
+  cartao.appendChild(elementoDelta);
+  return cartao;
+}
+
+function renderizarIndicadores() {
+  const brasil = DADOS.brasil;
+  const conteiner = document.getElementById("indicadores");
+  conteiner.replaceChildren();
+
+  const pctFlavio2t = 100 - brasil.pct_lula_2t;
+  const brancosNulos1t = brasil.brancos_1t + brasil.nulos_1t;
+  const brancosNulos2t = brasil.brancos_2t + brasil.nulos_2t;
+
+  conteiner.appendChild(criarIndicador(
+    "Lula (PT), eleito",
+    "--cor-lula",
+    formatarPercentual(brasil.pct_lula_2t, 2),
+    "1º turno: " + formatarPercentual(brasil.pct_lula_1t, 2) + " · " +
+      formatarPontos(brasil.pct_lula_2t - brasil.pct_lula_1t, 2) + " · " +
+      formatarMilhoes(brasil.votos_2t_13, 1) + " de votos"
+  ));
+  conteiner.appendChild(criarIndicador(
+    "Flávio Bolsonaro (PL)",
+    "--cor-flavio",
+    formatarPercentual(pctFlavio2t, 2),
+    "1º turno: " + formatarPercentual(brasil.pct_flavio_1t, 2) + " · " +
+      formatarPontos(pctFlavio2t - brasil.pct_flavio_1t, 2) + " · " +
+      formatarMilhoes(brasil.votos_2t_22, 1) + " de votos"
+  ));
+  conteiner.appendChild(criarIndicador(
+    "Comparecimento",
+    null,
+    formatarPercentual(brasil.comparecimento_pct_2t, 2),
+    "1º turno: " + formatarPercentual(brasil.comparecimento_pct_1t, 2) + " · " +
+      formatarMilhoesComSinal(brasil.comparecimento_2t - brasil.comparecimento_1t, 2) + " de eleitores"
+  ));
+  conteiner.appendChild(criarIndicador(
+    "Brancos e nulos",
+    null,
+    formatarMilhoes(brancosNulos2t, 2),
+    "1º turno: " + formatarMilhoes(brancosNulos1t, 2) + " · " +
+      formatarMilhoesComSinal(brancosNulos2t - brancosNulos1t, 2)
+  ));
+}
+
+/* ---------- Barras empilhadas (HTML) ---------- */
+
+function criarSegmento(parte, total, montarDica) {
+  const segmento = document.createElement("div");
+  segmento.className = "segmento";
+  segmento.tabIndex = 0;
+  segmento.style.flexGrow = String(Math.max(parte.valor, 0));
+  segmento.style.flexBasis = "0";
+  const corFundo = lerCor(parte.variavelCor);
+  segmento.style.background = corFundo;
+  segmento.setAttribute("aria-label", parte.rotuloAcessivel);
+
+  const fracao = parte.valor / total;
+  // Rótulo dentro do segmento só quando cabe com folga; senão, fica na dica e na tabela.
+  if (fracao >= 0.09 && parte.rotuloInterno) {
+    segmento.textContent = parte.rotuloInterno;
+    segmento.style.color = corDeTextoSobre(corFundo);
+  }
+  ligarDica(segmento, montarDica);
+  return segmento;
+}
+
+function preencherLegenda(conteinerLegenda, itens) {
+  conteinerLegenda.replaceChildren();
+  for (const item of itens) {
+    const elementoItem = document.createElement("li");
+    const amostra = document.createElement("span");
+    amostra.className = "amostra amostra-quadrada";
+    amostra.style.background = "var(" + item.variavelCor + ")";
+    elementoItem.appendChild(amostra);
+    if (item.valor) {
+      const valor = document.createElement("strong");
+      valor.textContent = item.valor;
+      elementoItem.appendChild(valor);
+    }
+    elementoItem.appendChild(document.createTextNode(item.rotulo));
+    conteinerLegenda.appendChild(elementoItem);
+  }
+}
+
+/* ---------- Ponte de votos ---------- */
+
+function renderizarPonte() {
+  const ponte = DADOS.brasil.ponte;
+  document.getElementById("sub-ponte").textContent =
+    "Lula e Flávio somaram " + formatarMilhoes(ponte.total, 2) +
+    " de votos a mais no 2º turno do que no 1º. Esse saldo tem três origens e foi dividido de forma desigual: Lula ficou com " +
+    formatarPercentual(100 * ponte.ganho_lula / ponte.total, 1) + ".";
+
+  const partesOrigem = [
+    { valor: ponte.votos_eliminados, variavelCor: "--ponte-1", nome: "Votos dos 10 candidatos eliminados" },
+    { valor: ponte.comparecimento_extra, variavelCor: "--ponte-2", nome: "Aumento do comparecimento" },
+    { valor: ponte.queda_brancos_nulos, variavelCor: "--ponte-3", nome: "Queda de brancos e nulos" },
+  ];
+  const partesDestino = [
+    { valor: ponte.ganho_lula, variavelCor: "--cor-lula", nome: "Ganho de Lula" },
+    { valor: ponte.ganho_flavio, variavelCor: "--cor-flavio", nome: "Ganho de Flávio" },
+  ];
+
+  const blocos = [
+    { partes: partesOrigem, idBarra: "ponte-origem", idLegenda: "legenda-ponte-origem" },
+    { partes: partesDestino, idBarra: "ponte-destino", idLegenda: "legenda-ponte-destino" },
+  ];
+
+  for (const bloco of blocos) {
+    const barra = document.getElementById(bloco.idBarra);
+    barra.replaceChildren();
+    const itensLegenda = [];
+    for (const parte of bloco.partes) {
+      const percentual = 100 * parte.valor / ponte.total;
+      parte.rotuloInterno = formatarMilhoes(parte.valor, 1);
+      parte.rotuloAcessivel = parte.nome + ": " + formatarMilhoes(parte.valor, 2);
+      const segmento = criarSegmento(parte, ponte.total, function () {
+        return {
+          titulo: parte.nome,
+          linhas: [
+            { valor: formatarInteiro(parte.valor), rotulo: "votos" },
+            { valor: formatarPercentual(percentual, 1), rotulo: "do saldo" },
+          ],
+        };
+      });
+      barra.appendChild(segmento);
+      itensLegenda.push({ variavelCor: parte.variavelCor, valor: formatarMilhoes(parte.valor, 2), rotulo: parte.nome });
+    }
+    preencherLegenda(document.getElementById(bloco.idLegenda), itensLegenda);
+  }
+}
+
+/* ---------- Regiões ---------- */
+
+function regioesOrdenadas() {
+  const lista = DADOS.regioes.slice();
+  const linhaBrasil = Object.assign({}, DADOS.brasil, { nm_regiao: "Brasil" });
+  lista.push(linhaBrasil);
+  return lista;
+}
+
+function renderizarHalteres() {
+  const conteiner = document.getElementById("grafico-halteres");
+  conteiner.replaceChildren();
+  const regioes = regioesOrdenadas();
+
+  const largura = larguraDoConteiner(conteiner);
+  const margemEsquerda = 92;
+  const margemDireita = 56;
+  const alturaLinha = 34;
+  const margemTopo = 8;
+  const alturaEixo = 24;
+  const altura = margemTopo + regioes.length * alturaLinha + alturaEixo;
+  const minimoEixo = 20;
+  const maximoEixo = 80;
+  const larguraPlot = largura - margemEsquerda - margemDireita;
+
+  function posicaoX(valor) {
+    return margemEsquerda + (valor - minimoEixo) / (maximoEixo - minimoEixo) * larguraPlot;
+  }
+
+  const svg = criarSvg("svg", { width: largura, height: altura, role: "img", "aria-label": "Lula nos votos válidos por região, 1º e 2º turno" });
+
+  for (const marca of [20, 35, 50, 65, 80]) {
+    const x = posicaoX(marca);
+    const corLinha = marca === 50 ? lerCor("--eixo") : lerCor("--grade");
+    svg.appendChild(criarSvg("line", { x1: x, x2: x, y1: margemTopo, y2: altura - alturaEixo + 4, stroke: corLinha, "stroke-width": 1 }));
+    const texto = criarSvg("text", { x: x, y: altura - 6, "text-anchor": "middle", "font-size": 12 });
+    texto.textContent = marca + "%";
+    svg.appendChild(texto);
+  }
+
+  regioes.forEach(function (regiao, indice) {
+    const y = margemTopo + indice * alturaLinha + alturaLinha / 2;
+    const ehBrasil = regiao.nm_regiao === "Brasil";
+
+    const rotulo = criarSvg("text", { x: 0, y: y + 4, "font-size": 13, "font-weight": ehBrasil ? 700 : 400 });
+    rotulo.style.fill = "var(--tinta)";
+    rotulo.textContent = regiao.nm_regiao;
+    svg.appendChild(rotulo);
+
+    const x1t = posicaoX(regiao.pct_lula_1t);
+    const x2t = posicaoX(regiao.pct_lula_2t);
+    svg.appendChild(criarSvg("line", { x1: x1t, x2: x2t, y1: y, y2: y, stroke: lerCor("--cor-lula-1t"), "stroke-width": 2, "stroke-linecap": "round" }));
+
+    const ponto1t = criarSvg("circle", { cx: x1t, cy: y, r: 5, fill: lerCor("--superficie"), stroke: lerCor("--cor-lula"), "stroke-width": 2 });
+    svg.appendChild(ponto1t);
+    const ponto2t = criarSvg("circle", { cx: x2t, cy: y, r: 6, fill: lerCor("--cor-lula"), stroke: lerCor("--superficie"), "stroke-width": 2 });
+    svg.appendChild(ponto2t);
+
+    const valor = criarSvg("text", { x: Math.max(x1t, x2t) + 12, y: y + 4, "font-size": 12, "font-weight": 600 });
+    valor.style.fill = "var(--tinta)";
+    valor.textContent = formatarPercentual(regiao.pct_lula_2t, 1);
+    svg.appendChild(valor);
+
+    const alvo = criarSvg("rect", { x: 0, y: y - alturaLinha / 2, width: largura, height: alturaLinha, fill: "transparent", tabindex: 0 });
+    alvo.setAttribute("aria-label", regiao.nm_regiao + ": Lula " + formatarPercentual(regiao.pct_lula_1t, 1) + " no 1º turno e " + formatarPercentual(regiao.pct_lula_2t, 1) + " no 2º turno");
+    ligarDica(alvo, function () {
+      return {
+        titulo: regiao.nm_regiao,
+        linhas: [
+          { valor: formatarPercentual(regiao.pct_lula_1t, 2), rotulo: "Lula no 1º turno", cor: lerCor("--cor-lula-1t") },
+          { valor: formatarPercentual(regiao.pct_lula_2t, 2), rotulo: "Lula no 2º turno", cor: lerCor("--cor-lula") },
+          { valor: formatarPercentual(regiao.pct_flavio_1t, 2), rotulo: "Flávio no 1º turno", cor: lerCor("--cor-flavio") },
+          { valor: formatarPercentual(100 - regiao.pct_lula_2t, 2), rotulo: "Flávio no 2º turno", cor: lerCor("--cor-flavio") },
+        ],
+        nota: "Vencedor: " + regiao.vencedor_1t + " no 1º turno, " + regiao.vencedor_2t + " no 2º.",
+      };
+    });
+    svg.appendChild(alvo);
+  });
+
+  conteiner.appendChild(svg);
+}
+
+function renderizarComparecimento() {
+  const conteiner = document.getElementById("grafico-comparecimento");
+  conteiner.replaceChildren();
+  const regioes = regioesOrdenadas();
+
+  const largura = larguraDoConteiner(conteiner);
+  const margemEsquerda = 92;
+  const margemDireita = 56;
+  const alturaLinha = 34;
+  const margemTopo = 8;
+  const alturaEixo = 24;
+  const altura = margemTopo + regioes.length * alturaLinha + alturaEixo;
+  const limiteEixo = 5;
+  const larguraPlot = largura - margemEsquerda - margemDireita;
+  const espessuraBarra = 16;
+
+  function posicaoX(valor) {
+    return margemEsquerda + (valor + limiteEixo) / (2 * limiteEixo) * larguraPlot;
+  }
+
+  const svg = criarSvg("svg", { width: largura, height: altura, role: "img", "aria-label": "Variação do comparecimento por região" });
+
+  for (const marca of [-5, -2.5, 0, 2.5, 5]) {
+    const x = posicaoX(marca);
+    const corLinha = marca === 0 ? lerCor("--eixo") : lerCor("--grade");
+    svg.appendChild(criarSvg("line", { x1: x, x2: x, y1: margemTopo, y2: altura - alturaEixo + 4, stroke: corLinha, "stroke-width": 1 }));
+    const texto = criarSvg("text", { x: x, y: altura - 6, "text-anchor": "middle", "font-size": 12 });
+    texto.textContent = formatarNumero(marca, marca % 1 === 0 ? 0 : 1);
+    svg.appendChild(texto);
+  }
+
+  regioes.forEach(function (regiao, indice) {
+    const y = margemTopo + indice * alturaLinha + alturaLinha / 2;
+    const ehBrasil = regiao.nm_regiao === "Brasil";
+    const variacao = regiao.variacao_comparecimento_pp;
+
+    const rotulo = criarSvg("text", { x: 0, y: y + 4, "font-size": 13, "font-weight": ehBrasil ? 700 : 400 });
+    rotulo.style.fill = "var(--tinta)";
+    rotulo.textContent = regiao.nm_regiao;
+    svg.appendChild(rotulo);
+
+    const xZero = posicaoX(0);
+    const xValor = posicaoX(variacao);
+    const inicio = Math.min(xZero, xValor);
+    const comprimento = Math.max(2, Math.abs(xValor - xZero));
+    const variavelCor = variacao >= 0 ? "--comp-alta" : "--comp-queda";
+    const raio = 4;
+
+    // Ponta arredondada só no extremo do dado; quadrada na linha do zero.
+    let caminho;
+    if (variacao >= 0) {
+      caminho = "M" + inicio + "," + (y - espessuraBarra / 2) +
+        " h" + (comprimento - raio) +
+        " a" + raio + "," + raio + " 0 0 1 " + raio + "," + raio +
+        " v" + (espessuraBarra - 2 * raio) +
+        " a" + raio + "," + raio + " 0 0 1 " + (-raio) + "," + raio +
+        " h" + (-(comprimento - raio)) + " Z";
+    } else {
+      caminho = "M" + (inicio + comprimento) + "," + (y - espessuraBarra / 2) +
+        " h" + (-(comprimento - raio)) +
+        " a" + raio + "," + raio + " 0 0 0 " + (-raio) + "," + raio +
+        " v" + (espessuraBarra - 2 * raio) +
+        " a" + raio + "," + raio + " 0 0 0 " + raio + "," + raio +
+        " h" + (comprimento - raio) + " Z";
+    }
+    svg.appendChild(criarSvg("path", { d: caminho, fill: lerCor(variavelCor) }));
+
+    const xTexto = variacao >= 0 ? xValor + 6 : xValor - 6;
+    const valor = criarSvg("text", { x: xTexto, y: y + 4, "font-size": 12, "font-weight": 600, "text-anchor": variacao >= 0 ? "start" : "end" });
+    valor.style.fill = "var(--tinta)";
+    valor.textContent = formatarPontos(variacao, 1);
+    svg.appendChild(valor);
+
+    const alvo = criarSvg("rect", { x: 0, y: y - alturaLinha / 2, width: largura, height: alturaLinha, fill: "transparent", tabindex: 0 });
+    alvo.setAttribute("aria-label", regiao.nm_regiao + ": comparecimento " + formatarPontos(variacao, 2));
+    ligarDica(alvo, function () {
+      return {
+        titulo: regiao.nm_regiao,
+        linhas: [
+          { valor: formatarPercentual(regiao.comparecimento_pct_1t, 2), rotulo: "comparecimento no 1º turno" },
+          { valor: formatarPercentual(regiao.comparecimento_pct_2t, 2), rotulo: "comparecimento no 2º turno" },
+          { valor: formatarMilhoesComSinal(regiao.comparecimento_2t - regiao.comparecimento_1t, 2), rotulo: "eleitores" },
+        ],
+      };
+    });
+    svg.appendChild(alvo);
+  });
+
+  conteiner.appendChild(svg);
+}
+
+function criarTabela(colunas, linhas, idConteiner, ordenavel) {
+  const conteiner = document.getElementById(idConteiner);
+  conteiner.replaceChildren();
+  const tabela = document.createElement("table");
+  const cabecalho = document.createElement("thead");
+  const linhaCabecalho = document.createElement("tr");
+  const corpo = document.createElement("tbody");
+  let ordemAtual = { indice: -1, crescente: true };
+
+  function preencherCorpo(linhasOrdenadas) {
+    corpo.replaceChildren();
+    for (const linha of linhasOrdenadas) {
+      const elementoLinha = document.createElement("tr");
+      for (const coluna of colunas) {
+        const celula = document.createElement("td");
+        celula.textContent = coluna.formatar(linha);
+        elementoLinha.appendChild(celula);
+      }
+      corpo.appendChild(elementoLinha);
+    }
+  }
+
+  colunas.forEach(function (coluna, indiceColuna) {
+    const celulaCabecalho = document.createElement("th");
+    celulaCabecalho.scope = "col";
+    if (ordenavel) {
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.textContent = coluna.titulo;
+      botao.addEventListener("click", function () {
+        const crescente = ordemAtual.indice === indiceColuna ? !ordemAtual.crescente : false;
+        ordemAtual = { indice: indiceColuna, crescente: crescente };
+        const copia = linhas.slice();
+        copia.sort(function (linhaA, linhaB) {
+          const valorA = coluna.ordenar(linhaA);
+          const valorB = coluna.ordenar(linhaB);
+          let comparacao = 0;
+          if (valorA < valorB) {
+            comparacao = -1;
+          } else if (valorA > valorB) {
+            comparacao = 1;
+          }
+          return crescente ? comparacao : -comparacao;
+        });
+        preencherCorpo(copia);
+      });
+      celulaCabecalho.appendChild(botao);
+    } else {
+      celulaCabecalho.textContent = coluna.titulo;
+    }
+    linhaCabecalho.appendChild(celulaCabecalho);
+  });
+
+  cabecalho.appendChild(linhaCabecalho);
+  tabela.appendChild(cabecalho);
+  preencherCorpo(linhas);
+  tabela.appendChild(corpo);
+  conteiner.appendChild(tabela);
+}
+
+function colunasIndicadores(nomePrimeiraColuna, chaveNome) {
+  return [
+    { titulo: nomePrimeiraColuna, formatar: function (linha) { return linha[chaveNome]; }, ordenar: function (linha) { return linha[chaveNome]; } },
+    { titulo: "Lula 1º t.", formatar: function (linha) { return formatarPercentual(linha.pct_lula_1t, 2); }, ordenar: function (linha) { return linha.pct_lula_1t; } },
+    { titulo: "Flávio 1º t.", formatar: function (linha) { return formatarPercentual(linha.pct_flavio_1t, 2); }, ordenar: function (linha) { return linha.pct_flavio_1t; } },
+    { titulo: "Outros 1º t.", formatar: function (linha) { return formatarPercentual(linha.pct_outros_1t, 2); }, ordenar: function (linha) { return linha.pct_outros_1t; } },
+    { titulo: "Lula 2º t.", formatar: function (linha) { return formatarPercentual(linha.pct_lula_2t, 2); }, ordenar: function (linha) { return linha.pct_lula_2t; } },
+    { titulo: "Flávio 2º t.", formatar: function (linha) { return formatarPercentual(100 - linha.pct_lula_2t, 2); }, ordenar: function (linha) { return 100 - linha.pct_lula_2t; } },
+    { titulo: "Avanço de Lula", formatar: function (linha) { return formatarPontos(linha.variacao_lula_pp, 2); }, ordenar: function (linha) { return linha.variacao_lula_pp; } },
+    { titulo: "Compar. 1º t.", formatar: function (linha) { return formatarPercentual(linha.comparecimento_pct_1t, 2); }, ordenar: function (linha) { return linha.comparecimento_pct_1t; } },
+    { titulo: "Compar. 2º t.", formatar: function (linha) { return formatarPercentual(linha.comparecimento_pct_2t, 2); }, ordenar: function (linha) { return linha.comparecimento_pct_2t; } },
+    { titulo: "Vencedor", formatar: function (linha) { return linha.vencedor_1t === linha.vencedor_2t ? linha.vencedor_2t : linha.vencedor_1t + " → " + linha.vencedor_2t; }, ordenar: function (linha) { return linha.vencedor_2t; } },
+  ];
+}
+
+function renderizarRegioes() {
+  const brasil = DADOS.brasil;
+  const regioes = DADOS.regioes;
+  let regiaoQueda = null;
+  for (const regiao of regioes) {
+    if (regiao.variacao_comparecimento_pp < 0) {
+      regiaoQueda = regiao;
+    }
+  }
+  const avancos = regioes.map(function (regiao) { return regiao.variacao_lula_pp; });
+  let texto = "Lula avançou em todas as regiões, entre " +
+    formatarNumero(Math.min.apply(null, avancos), 1) + " e " +
+    formatarNumero(Math.max.apply(null, avancos), 1) + " pontos percentuais. O comparecimento subiu " +
+    formatarNumero(brasil.variacao_comparecimento_pp, 2) + " ponto no país";
+  if (regiaoQueda) {
+    texto += ", mas caiu " + formatarNumero(Math.abs(regiaoQueda.variacao_comparecimento_pp), 2) + " ponto no " + regiaoQueda.nm_regiao;
+  }
+  texto += ".";
+  document.getElementById("sub-regioes").textContent = texto;
+
+  renderizarHalteres();
+  renderizarComparecimento();
+  criarTabela(colunasIndicadores("Região", "nm_regiao"), regioesOrdenadas(), "tabela-regioes", false);
+}
+
+/* ---------- Estados: mapa em mosaico ---------- */
+
+// Posição aproximada de cada UF numa grade de 6 colunas × 8 linhas (coluna, linha).
+const POSICAO_UF = {
+  RR: [1, 0], AP: [2, 0],
+  AM: [1, 1], PA: [2, 1], MA: [3, 1], CE: [4, 1], RN: [5, 1],
+  AC: [0, 2], RO: [1, 2], TO: [2, 2], PI: [3, 2], PE: [4, 2], PB: [5, 2],
+  MT: [1, 3], GO: [2, 3], DF: [3, 3], BA: [4, 3], AL: [5, 3],
+  MS: [1, 4], SP: [2, 4], MG: [3, 4], ES: [4, 4], SE: [5, 4],
+  PR: [2, 5], RJ: [3, 5],
+  SC: [2, 6],
+  RS: [2, 7], ZZ: [5, 7],
+};
+
+const INDICADORES_MAPA = [
+  {
+    codigo: "lula_2t",
+    rotulo: "Lula no 2º turno",
+    tituloEscala: "Lula nos votos válidos do 2º turno (abaixo de 50%, venceu Flávio)",
+    valor: function (uf) { return uf.pct_lula_2t; },
+    formatarCurto: function (valor) { return formatarNumero(valor, 0) + "%"; },
+    marcas: ["25%", "50%", "75%"],
+    criarEscala: function () {
+      return criarEscalaDivergente(25, 50, 75, lerCor("--div-azul"), lerCor("--div-meio"), lerCor("--div-vermelho"));
+    },
+    dominio: [25, 75],
+  },
+  {
+    codigo: "avanco_lula",
+    rotulo: "Avanço de Lula",
+    tituloEscala: "Variação de Lula nos votos válidos, do 1º para o 2º turno (pontos percentuais)",
+    valor: function (uf) { return uf.variacao_lula_pp; },
+    formatarCurto: function (valor) { return "+" + formatarNumero(valor, 1); },
+    marcas: ["+4", "+7", "+10"],
+    criarEscala: function () {
+      return criarEscalaSequencial(4, 10, lerCor("--seq-inicio"), lerCor("--seq-fim"));
+    },
+    dominio: [4, 10],
+  },
+  {
+    codigo: "comparecimento",
+    rotulo: "Comparecimento",
+    tituloEscala: "Variação do comparecimento, do 1º para o 2º turno (pontos percentuais)",
+    valor: function (uf) { return uf.variacao_comparecimento_pp; },
+    formatarCurto: function (valor) { return (valor > 0 ? "+" : valor < 0 ? "−" : "") + formatarNumero(Math.abs(valor), 1); },
+    marcas: ["−8", "0", "+8"],
+    criarEscala: function () {
+      return criarEscalaDivergente(-8, 0, 8, lerCor("--comp-queda"), lerCor("--div-meio"), lerCor("--comp-alta"));
+    },
+    dominio: [-8, 8],
+  },
+];
+
+let indicadorMapaAtual = INDICADORES_MAPA[0];
+
+function renderizarControlesMapa() {
+  const conteiner = document.getElementById("controles-mapa");
+  conteiner.replaceChildren();
+  for (const indicador of INDICADORES_MAPA) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.textContent = indicador.rotulo;
+    botao.setAttribute("aria-pressed", indicador === indicadorMapaAtual ? "true" : "false");
+    botao.addEventListener("click", function () {
+      indicadorMapaAtual = indicador;
+      renderizarControlesMapa();
+      renderizarMosaico();
+    });
+    conteiner.appendChild(botao);
+  }
+}
+
+function renderizarMosaico() {
+  const conteiner = document.getElementById("mosaico");
+  conteiner.replaceChildren();
+  const escala = indicadorMapaAtual.criarEscala();
+
+  for (const uf of DADOS.ufs) {
+    const posicao = POSICAO_UF[uf.sg_uf];
+    const valor = indicadorMapaAtual.valor(uf);
+    const corFundo = escala(valor);
+    const corTexto = corDeTextoSobre(corFundo);
+
+    const ladrilho = document.createElement("button");
+    ladrilho.type = "button";
+    ladrilho.className = "ladrilho";
+    if (uf.vencedor_1t !== uf.vencedor_2t) {
+      ladrilho.classList.add("destaque");
+    }
+    ladrilho.style.gridColumn = String(posicao[0] + 1);
+    ladrilho.style.gridRow = String(posicao[1] + 1);
+    ladrilho.style.background = corFundo;
+    ladrilho.style.color = corTexto;
+    ladrilho.setAttribute("aria-label", uf.nm_uf + ": " + indicadorMapaAtual.rotulo + " " + indicadorMapaAtual.formatarCurto(valor));
+
+    const sigla = document.createElement("span");
+    sigla.className = "sigla";
+    sigla.textContent = uf.sg_uf === "ZZ" ? "EXT" : uf.sg_uf;
+    ladrilho.appendChild(sigla);
+    const numero = document.createElement("span");
+    numero.className = "numero";
+    numero.textContent = indicadorMapaAtual.formatarCurto(valor);
+    ladrilho.appendChild(numero);
+
+    ligarDica(ladrilho, function () {
+      let notaVirada = null;
+      if (uf.vencedor_1t !== uf.vencedor_2t) {
+        notaVirada = "Virou: " + uf.vencedor_1t + " venceu o 1º turno, " + uf.vencedor_2t + " o 2º.";
+      }
+      return {
+        titulo: uf.nm_uf,
+        linhas: [
+          { valor: formatarPercentual(uf.pct_lula_2t, 2), rotulo: "Lula no 2º turno (1º: " + formatarPercentual(uf.pct_lula_1t, 1) + ")", cor: lerCor("--cor-lula") },
+          { valor: formatarPercentual(100 - uf.pct_lula_2t, 2), rotulo: "Flávio no 2º turno (1º: " + formatarPercentual(uf.pct_flavio_1t, 1) + ")", cor: lerCor("--cor-flavio") },
+          { valor: formatarPontos(uf.variacao_lula_pp, 2), rotulo: "avanço de Lula" },
+          { valor: formatarPontos(uf.variacao_comparecimento_pp, 2), rotulo: "comparecimento" },
+        ],
+        nota: notaVirada,
+      };
+    });
+    conteiner.appendChild(ladrilho);
+  }
+
+  renderizarEscala(escala);
+}
+
+function renderizarEscala(escala) {
+  const conteiner = document.getElementById("escala-legenda");
+  conteiner.replaceChildren();
+  const dominio = indicadorMapaAtual.dominio;
+  const paradas = [];
+  const totalParadas = 12;
+  for (let indice = 0; indice <= totalParadas; indice += 1) {
+    const valor = dominio[0] + (dominio[1] - dominio[0]) * indice / totalParadas;
+    paradas.push(escala(valor) + " " + (100 * indice / totalParadas) + "%");
+  }
+
+  const titulo = document.createElement("div");
+  titulo.className = "titulo-escala";
+  titulo.textContent = indicadorMapaAtual.tituloEscala;
+  conteiner.appendChild(titulo);
+
+  const gradiente = document.createElement("div");
+  gradiente.className = "gradiente";
+  gradiente.style.background = "linear-gradient(to right, " + paradas.join(", ") + ")";
+  conteiner.appendChild(gradiente);
+
+  const marcas = document.createElement("div");
+  marcas.className = "marcas";
+  for (const textoMarca of indicadorMapaAtual.marcas) {
+    const marca = document.createElement("span");
+    marca.textContent = textoMarca;
+    marcas.appendChild(marca);
+  }
+  conteiner.appendChild(marcas);
+
+  const notaContorno = document.createElement("div");
+  notaContorno.className = "titulo-escala";
+  notaContorno.style.marginTop = "10px";
+  notaContorno.textContent = "Contorno: estado em que o vencedor mudou entre os turnos.";
+  conteiner.appendChild(notaContorno);
+}
+
+function adicionarDestaque(lista, textoForte, textoResto) {
+  const item = document.createElement("li");
+  const forte = document.createElement("strong");
+  forte.textContent = textoForte;
+  item.appendChild(forte);
+  item.appendChild(document.createTextNode(" " + textoResto));
+  lista.appendChild(item);
+}
+
+function renderizarDestaquesUf() {
+  const lista = document.getElementById("destaques-uf");
+  lista.replaceChildren();
+  const ufsBrasil = DADOS.ufs.filter(function (uf) { return uf.sg_uf !== "ZZ"; });
+
+  const viradas = ufsBrasil.filter(function (uf) { return uf.vencedor_1t !== uf.vencedor_2t; });
+  for (const uf of viradas) {
+    adicionarDestaque(lista, uf.nm_uf + " foi o único estado que virou.",
+      uf.vencedor_1t + " venceu o 1º turno lá (" + formatarPercentual(uf.pct_flavio_1t, 2) + " para Flávio e " +
+      formatarPercentual(uf.pct_lula_1t, 2) + " para Lula); no 2º turno, Lula fez " + formatarPercentual(uf.pct_lula_2t, 2) + ".");
+  }
+
+  const ordenadasPorAvanco = ufsBrasil.slice().sort(function (ufA, ufB) { return ufB.variacao_lula_pp - ufA.variacao_lula_pp; });
+  const maiorAvanco = ordenadasPorAvanco[0];
+  const ordenadasPorEliminados = ufsBrasil.slice().sort(function (ufA, ufB) { return ufB.pct_outros_1t - ufA.pct_outros_1t; });
+  let textoAvanco = "";
+  if (ordenadasPorEliminados[0].sg_uf === maiorAvanco.sg_uf) {
+    textoAvanco = "— é também onde os candidatos eliminados tiveram mais votos no 1º turno (" +
+      formatarPercentual(maiorAvanco.pct_outros_1t, 1) + " dos válidos).";
+    if (maiorAvanco.pct_caiado_1t > maiorAvanco.pct_outros_1t / 2) {
+      textoAvanco += " A maior parte foi de Ronaldo Caiado, que teve " + formatarPercentual(maiorAvanco.pct_caiado_1t, 1) + " dos votos válidos no estado.";
+    }
+  } else {
+    textoAvanco = "— no 1º turno, os candidatos eliminados tiveram " + formatarPercentual(maiorAvanco.pct_outros_1t, 1) + " dos válidos ali.";
+  }
+  adicionarDestaque(lista, "Maior avanço de Lula: " + maiorAvanco.nm_uf + ", " + formatarPontos(maiorAvanco.variacao_lula_pp, 2), textoAvanco);
+
+  const quedas = ufsBrasil.filter(function (uf) { return uf.variacao_comparecimento_pp < 0; });
+  quedas.sort(function (ufA, ufB) { return ufA.variacao_comparecimento_pp - ufB.variacao_comparecimento_pp; });
+  if (quedas.length > 0) {
+    const regioesComQueda = [];
+    for (const uf of quedas) {
+      if (regioesComQueda.indexOf(uf.nm_regiao) < 0) {
+        regioesComQueda.push(uf.nm_regiao);
+      }
+    }
+    const maioresQuedas = quedas.slice(0, 3).map(function (uf) { return uf.nm_uf + " (" + formatarPontos(uf.variacao_comparecimento_pp, 1) + ")"; });
+    const perdasFlavio = quedas.filter(function (uf) { return uf.ganho_flavio < 0; }).length;
+    adicionarDestaque(lista, "O comparecimento caiu em " + quedas.length + " das 27 unidades da federação,",
+      "todas no " + regioesComQueda.join(" e no ") + ", na contramão do resto do país. Maiores quedas: " + maioresQuedas.join(", ") +
+      ". Em " + perdasFlavio + " delas, Flávio terminou o 2º turno com menos votos do que no 1º.");
+  }
+
+  const vitoriasLula = ufsBrasil.filter(function (uf) { return uf.vencedor_2t === "Lula"; }).length;
+  adicionarDestaque(lista, "Lula venceu em " + vitoriasLula + " das 27 unidades da federação; Flávio, em " + (ufsBrasil.length - vitoriasLula) + ".",
+    "A diferença nacional veio da margem larga no Nordeste, da redução da desvantagem no Sudeste e da virada em Minas Gerais.");
+}
+
+function renderizarEstados() {
+  renderizarControlesMapa();
+  renderizarMosaico();
+  renderizarDestaquesUf();
+  const ufsOrdenadas = DADOS.ufs.slice().sort(function (ufA, ufB) { return ufA.nm_uf.localeCompare(ufB.nm_uf, "pt-BR"); });
+  criarTabela(colunasIndicadores("Estado", "nm_uf"), ufsOrdenadas, "tabela-ufs", true);
+}
+
+/* ---------- Migração de votos ---------- */
+
+function buscarTransferencias(especificacao, regiao) {
+  const porOrigem = {};
+  for (const registro of DADOS.migracao) {
+    if (registro.especificacao !== especificacao || registro.regiao !== regiao) {
+      continue;
+    }
+    if (!porOrigem[registro.origem]) {
+      porOrigem[registro.origem] = {};
+    }
+    porOrigem[registro.origem][registro.destino] = registro;
+  }
+  porOrigem.bloco = somarOrigens(porOrigem, ORIGENS_BLOCO);
+  return porOrigem;
+}
+
+function somarOrigens(porOrigem, origens) {
+  // Agrega grupos somando votos estimados; o bloco não tem intervalo de bootstrap próprio.
+  const somaPorDestino = {};
+  let total = 0;
+  for (const destino of DESTINOS) {
+    let soma = 0;
+    for (const origem of origens) {
+      soma += porOrigem[origem][destino.codigo].votos;
+    }
+    somaPorDestino[destino.codigo] = soma;
+    total += soma;
+  }
+  const registros = {};
+  for (const destino of DESTINOS) {
+    registros[destino.codigo] = {
+      beta: somaPorDestino[destino.codigo] / total,
+      beta_ic_inf: null,
+      beta_ic_sup: null,
+      votos: somaPorDestino[destino.codigo],
+    };
+  }
+  return registros;
+}
+
+function tamanhoDoGrupo(registrosOrigem) {
+  let total = 0;
+  for (const destino of DESTINOS) {
+    total += registrosOrigem[destino.codigo].votos;
+  }
+  return total;
+}
+
+function transferenciasPorEspecificacao() {
+  const resultado = {};
+  for (const especificacao of ESPECIFICACOES) {
+    resultado[especificacao.codigo] = buscarTransferencias(especificacao.codigo, regiaoMigracaoAtual);
+  }
+  return resultado;
+}
+
+function ehRecorteRegional() {
+  return regiaoMigracaoAtual !== REGIAO_BRASIL;
+}
+
+function nomeDoRecorte() {
+  return "no " + regiaoMigracaoAtual;
+}
+
+function nomeEspecificacao(especificacao) {
+  // No recorte regional, o modelo nacional único aplica à região o padrão do Brasil.
+  if (especificacao.codigo === "E2" && ehRecorteRegional()) {
+    return "Padrão nacional (modelo único)";
+  }
+  return especificacao.nome;
+}
+
+function estaNaFronteira(beta) {
+  return beta <= LIMITE_FRONTEIRA || beta >= 1 - LIMITE_FRONTEIRA;
+}
+
+function contarCelulasNaFronteira(transferencias) {
+  const origensEstimadas = ["lula", "flavio", "caiado", "cury", "renan", "demais", "branco_nulo", "abstencao"];
+  let quantidade = 0;
+  for (const origem of origensEstimadas) {
+    for (const destino of DESTINOS) {
+      if (estaNaFronteira(transferencias[origem][destino.codigo].beta)) {
+        quantidade += 1;
+      }
+    }
+  }
+  return quantidade;
+}
+
+function buscarDiagnosticoRegiao(nomeRegiao) {
+  for (const diagnostico of DADOS.diagnosticos_regiao) {
+    if (diagnostico.regiao === nomeRegiao) {
+      return diagnostico;
+    }
+  }
+  return null;
+}
+
+function renderizarControlesMigracao() {
+  const conteiner = document.getElementById("controles-migracao");
+  conteiner.replaceChildren();
+  for (const regiao of REGIOES_MIGRACAO) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.textContent = regiao === REGIAO_BRASIL ? "Brasil" : regiao + " ⚠";
+    botao.setAttribute("aria-pressed", regiao === regiaoMigracaoAtual ? "true" : "false");
+    if (regiao !== REGIAO_BRASIL) {
+      botao.setAttribute("aria-label", regiao + " (estimativa instável)");
+    }
+    botao.addEventListener("click", function () {
+      regiaoMigracaoAtual = regiao;
+      gravarRegiaoNoEndereco(regiao);
+      renderizarMigracao();
+    });
+    conteiner.appendChild(botao);
+  }
+}
+
+function lerRegiaoDoEndereco() {
+  // Permite compartilhar um recorte: index.html#regiao=Centro-Oeste
+  const correspondencia = window.location.hash.match(/regiao=([^&]+)/);
+  if (!correspondencia) {
+    return REGIAO_BRASIL;
+  }
+  const regiao = decodeURIComponent(correspondencia[1]);
+  if (REGIOES_MIGRACAO.indexOf(regiao) >= 0) {
+    return regiao;
+  }
+  return REGIAO_BRASIL;
+}
+
+function gravarRegiaoNoEndereco(regiao) {
+  let novoHash = "";
+  if (regiao !== REGIAO_BRASIL) {
+    novoHash = "#regiao=" + encodeURIComponent(regiao);
+  }
+  try {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search + novoHash);
+  } catch (erro) {
+    // Sem acesso ao histórico (ex.: arquivo local restrito): o recorte vale só na tela.
+  }
+}
+
+function renderizarAvisoRegional(todas) {
+  const aviso = document.getElementById("aviso-regional");
+  aviso.replaceChildren();
+  if (!ehRecorteRegional()) {
+    aviso.hidden = true;
+    return;
+  }
+  aviso.hidden = false;
+  const diagnostico = buscarDiagnosticoRegiao(regiaoMigracaoAtual);
+  const celulasNaFronteira = contarCelulasNaFronteira(todas[ESPECIFICACAO_PRINCIPAL]);
+
+  const titulo = document.createElement("p");
+  titulo.className = "aviso-titulo";
+  const icone = document.createElement("span");
+  icone.className = "icone-alerta";
+  icone.setAttribute("aria-hidden", "true");
+  icone.textContent = "!";
+  titulo.appendChild(icone);
+  titulo.appendChild(document.createTextNode("Estimativa instável: use só como indicação de direção"));
+  aviso.appendChild(titulo);
+
+  const introducao = document.createElement("p");
+  introducao.textContent = "Os números " + nomeDoRecorte() + " são bem menos confiáveis que os do Brasil. O total do Brasil soma as cinco regiões e compensa parte desses erros; uma região isolada, não.";
+  aviso.appendChild(introducao);
+
+  const lista = document.createElement("ul");
+  const itens = [];
+  if (diagnostico) {
+    itens.push("Poucos municípios efetivos: são " + formatarInteiro(diagnostico.municipios) + " municípios, mas o eleitorado é tão concentrado que o modelo tem a precisão de cerca de " +
+      formatarNumero(diagnostico.n_efetivo, 0) + " municípios de mesmo tamanho. Só " + formatarNomeProprio(diagnostico.maior_municipio) + " (" + diagnostico.maior_municipio_uf + ") responde por " +
+      formatarPercentual(diagnostico.maior_peso_pct, 1) + " do peso no ajuste.");
+  }
+  itens.push(celulasNaFronteira + " das " + TOTAL_CELULAS_MIGRACAO + " frações estimadas caíram exatamente em 0% ou 100%. Isso indica que o modelo está sendo empurrado para os limites, não que o comportamento seja de fato tudo ou nada.");
+  itens.push("Os círculos vazados no gráfico de sensibilidade mostram o quanto cada número muda com o modelo; aqui as diferenças costumam ser grandes.");
+  for (const textoItem of itens) {
+    const item = document.createElement("li");
+    item.textContent = textoItem;
+    lista.appendChild(item);
+  }
+  aviso.appendChild(lista);
+}
+
+function faixaEntreModelos(todas, calcular) {
+  let minimo = Infinity;
+  let maximo = -Infinity;
+  for (const especificacao of ESPECIFICACOES) {
+    const valor = calcular(todas[especificacao.codigo]);
+    minimo = Math.min(minimo, valor);
+    maximo = Math.max(maximo, valor);
+  }
+  return { minimo: minimo, maximo: maximo };
+}
+
+function calcularEntrada(transferencias, grupo, codigoDestino) {
+  let soma = 0;
+  for (const origem of grupo.origens) {
+    soma += transferencias[origem][codigoDestino].votos;
+  }
+  return soma;
+}
+
+function calcularPerdas(transferencias, codigoCandidato) {
+  let soma = 0;
+  for (const destino of DESTINOS) {
+    if (destino.codigo !== codigoCandidato) {
+      soma += transferencias[codigoCandidato][destino.codigo].votos;
+    }
+  }
+  return soma;
+}
+
+function formatarFaixaMilhoes(faixa) {
+  return formatarNumero(faixa.minimo / 1e6, 1) + " a " + formatarNumero(faixa.maximo / 1e6, 1) + " mi";
+}
+
+function formatarFaixaPercentual(faixa) {
+  return formatarNumero(100 * faixa.minimo, 0) + "% a " + formatarNumero(100 * faixa.maximo, 0) + "%";
+}
+
+function renderizarFraseMigracao(todas) {
+  const gruposNaoEscolheram = [GRUPOS_ENTRADA[1], GRUPOS_ENTRADA[2]];
+  function entradaNaoEscolheram(transferencias, codigoDestino) {
+    let soma = 0;
+    for (const grupo of gruposNaoEscolheram) {
+      soma += calcularEntrada(transferencias, grupo, codigoDestino);
+    }
+    return soma;
+  }
+  const flavioEliminados = faixaEntreModelos(todas, function (transferencias) { return calcularEntrada(transferencias, GRUPOS_ENTRADA[0], "flavio"); });
+  const flavioNaoEscolheram = faixaEntreModelos(todas, function (transferencias) { return entradaNaoEscolheram(transferencias, "flavio"); });
+  const lulaEliminados = faixaEntreModelos(todas, function (transferencias) { return calcularEntrada(transferencias, GRUPOS_ENTRADA[0], "lula"); });
+  const lulaNaoEscolheram = faixaEntreModelos(todas, function (transferencias) { return entradaNaoEscolheram(transferencias, "lula"); });
+  const blocoLula = faixaEntreModelos(todas, function (transferencias) { return transferencias.bloco.lula.beta; });
+  const blocoFlavio = faixaEntreModelos(todas, function (transferencias) { return transferencias.bloco.flavio.beta; });
+  const blocoBrancoNulo = faixaEntreModelos(todas, function (transferencias) { return transferencias.bloco.branco_nulo.beta; });
+
+  if (ehRecorteRegional()) {
+    // Na região não há garantia de que os modelos concordam: a frase descreve só o modelo principal.
+    const principal = todas[ESPECIFICACAO_PRINCIPAL];
+    const bloco = principal.bloco;
+    document.getElementById("frase-migracao").textContent =
+      "Pelo modelo principal, " + nomeDoRecorte() + ", os eleitores de Caiado, Cury e Renan Santos, juntos, foram " +
+      formatarNumero(100 * bloco.lula.beta, 0) + "% para Lula, " + formatarNumero(100 * bloco.flavio.beta, 0) + "% para Flávio e " +
+      formatarNumero(100 * bloco.branco_nulo.beta, 0) + "% branco ou nulo. Entre os três modelos, a fatia de Lula vai de " + formatarFaixaPercentual(blocoLula) +
+      " e a de Flávio, de " + formatarFaixaPercentual(blocoFlavio) + ". Flávio recebeu " +
+      formatarMilhoes(calcularEntrada(principal, GRUPOS_ENTRADA[0], "flavio"), 2) + " dos eliminados; Lula, " +
+      formatarMilhoes(calcularEntrada(principal, GRUPOS_ENTRADA[0], "lula"), 2) + " dos eliminados e " +
+      formatarMilhoes(entradaNaoEscolheram(principal, "lula"), 2) + " de quem não tinha escolhido candidato no 1º turno.";
+    return;
+  }
+
+  document.getElementById("frase-migracao").textContent =
+    "Nos três modelos, a história é a mesma. Flávio cresceu quase só com eleitores dos candidatos eliminados (" +
+    formatarFaixaMilhoes(flavioEliminados) + ", contra " + formatarFaixaMilhoes(flavioNaoEscolheram) +
+    " de quem não tinha escolhido candidato). Lula recebeu uma fatia parecida dos eliminados (" + formatarFaixaMilhoes(lulaEliminados) +
+    ") e somou outros " + formatarFaixaMilhoes(lulaNaoEscolheram) + " de quem tinha anulado, votado em branco ou não tinha votado no 1º turno. " +
+    "Os eleitores de Caiado, Cury e Renan Santos, juntos, se dividiram: " + formatarFaixaPercentual(blocoLula) + " para Lula, " +
+    formatarFaixaPercentual(blocoFlavio) + " para Flávio e " + formatarFaixaPercentual(blocoBrancoNulo) + " em branco ou nulo.";
+}
+
+function renderizarEntradas(todas) {
+  const principal = todas[ESPECIFICACAO_PRINCIPAL];
+  const candidatos = [
+    { codigo: "lula", nome: "Lula" },
+    { codigo: "flavio", nome: "Flávio Bolsonaro" },
+  ];
+
+  const totaisEntrada = {};
+  let maiorTotal = 0;
+  for (const candidato of candidatos) {
+    let total = 0;
+    for (const grupo of GRUPOS_ENTRADA) {
+      total += calcularEntrada(principal, grupo, candidato.codigo);
+    }
+    totaisEntrada[candidato.codigo] = total;
+    maiorTotal = Math.max(maiorTotal, total);
+  }
+
+  document.getElementById("nota-entradas").textContent =
+    "Votos recebidos no 2º turno de eleitores que, no 1º, não tinham votado no candidato (modelo principal, em milhões). " +
+    "As barras estão na mesma escala. Em sentido contrário, Lula perdeu " + formatarQuantidadeEleitores(calcularPerdas(principal, "lula")) +
+    " dos seus eleitores do 1º turno, e Flávio, " + formatarQuantidadeEleitores(calcularPerdas(principal, "flavio")) + ".";
+
+  const itensLegenda = GRUPOS_ENTRADA.map(function (grupo) {
+    return { variavelCor: grupo.variavelCor, rotulo: grupo.nome };
+  });
+  preencherLegenda(document.getElementById("legenda-entradas"), itensLegenda);
+
+  const conteiner = document.getElementById("barras-entradas");
+  conteiner.replaceChildren();
+  for (const candidato of candidatos) {
+    const linha = document.createElement("div");
+    linha.className = "linha-barra";
+    const nome = document.createElement("div");
+    nome.className = "nome-barra";
+    nome.textContent = candidato.nome;
+    const detalhe = document.createElement("small");
+    detalhe.textContent = formatarMilhoes(totaisEntrada[candidato.codigo], 2) + " recebidos";
+    nome.appendChild(detalhe);
+    linha.appendChild(nome);
+
+    const trilho = document.createElement("div");
+    const barra = document.createElement("div");
+    barra.className = "barra-empilhada";
+    barra.style.width = (100 * totaisEntrada[candidato.codigo] / maiorTotal) + "%";
+    for (const grupo of GRUPOS_ENTRADA) {
+      const votos = calcularEntrada(principal, grupo, candidato.codigo);
+      const faixa = faixaEntreModelos(todas, function (transferencias) { return calcularEntrada(transferencias, grupo, candidato.codigo); });
+      const parte = {
+        valor: votos,
+        variavelCor: grupo.variavelCor,
+        rotuloInterno: formatarNumero(votos / 1e6, 1),
+        rotuloAcessivel: candidato.nome + ", " + grupo.nome + ": " + formatarMilhoes(votos, 2),
+      };
+      // A fração para decidir o rótulo interno é relativa à largura total do cartão.
+      const segmento = criarSegmento(parte, maiorTotal, function () {
+        return {
+          titulo: candidato.nome + " ← " + grupo.nome,
+          linhas: [
+            { valor: formatarMilhoes(votos, 2), rotulo: "modelo principal", cor: lerCor(grupo.variavelCor) },
+            { valor: formatarFaixaMilhoes(faixa), rotulo: "entre os três modelos" },
+          ],
+          nota: ehRecorteRegional() ? "Estimativa regional instável (" + regiaoMigracaoAtual + ")." : "Estimativa estatística, não contagem.",
+        };
+      });
+      barra.appendChild(segmento);
+    }
+    trilho.appendChild(barra);
+    linha.appendChild(trilho);
+    conteiner.appendChild(linha);
+  }
+
+  const linhasTabela = [];
+  for (const candidato of candidatos) {
+    for (const grupo of GRUPOS_ENTRADA) {
+      const faixa = faixaEntreModelos(todas, function (transferencias) { return calcularEntrada(transferencias, grupo, candidato.codigo); });
+      linhasTabela.push({
+        candidato: candidato.nome,
+        grupo: grupo.nome,
+        principal: calcularEntrada(principal, grupo, candidato.codigo),
+        faixa: faixa,
+      });
+    }
+  }
+  criarTabela([
+    { titulo: "Candidato", formatar: function (linha) { return linha.candidato; } },
+    { titulo: "Origem", formatar: function (linha) { return linha.grupo; } },
+    { titulo: "Modelo principal", formatar: function (linha) { return formatarMilhoes(linha.principal, 2); } },
+    { titulo: "Entre os três modelos", formatar: function (linha) { return formatarFaixaMilhoes(linha.faixa); } },
+  ], linhasTabela, "tabela-entradas", false);
+}
+
+function criarLinhaMigracao(codigoOrigem, todas) {
+  const registrosOrigem = todas[ESPECIFICACAO_PRINCIPAL][codigoOrigem];
+  const linha = document.createElement("div");
+  linha.className = "linha-barra";
+  const nome = document.createElement("div");
+  nome.className = "nome-barra";
+  nome.textContent = NOMES_ORIGEM[codigoOrigem].nome;
+  const detalhe = document.createElement("small");
+  const tamanho = tamanhoDoGrupo(registrosOrigem);
+  let textoDetalhe = NOMES_ORIGEM[codigoOrigem].detalhe + " · " + formatarMilhoes(tamanho, 2) + " de eleitores";
+  if (ORIGENS_FRAGEIS.indexOf(codigoOrigem) >= 0) {
+    textoDetalhe += " · estimativa frágil";
+  }
+  detalhe.textContent = textoDetalhe;
+  nome.appendChild(detalhe);
+  linha.appendChild(nome);
+
+  const barra = document.createElement("div");
+  barra.className = "barra-empilhada";
+  for (const destino of DESTINOS) {
+    const registro = registrosOrigem[destino.codigo];
+    const percentual = 100 * registro.beta;
+    const faixa = faixaEntreModelos(todas, function (transferencias) { return transferencias[codigoOrigem][destino.codigo].beta; });
+    const parte = {
+      valor: registro.beta,
+      variavelCor: destino.variavelCor,
+      rotuloInterno: formatarNumero(percentual, 0) + "%",
+      rotuloAcessivel: NOMES_ORIGEM[codigoOrigem].nome + " para " + destino.nome + ": " + formatarPercentual(percentual, 1),
+    };
+    const segmento = criarSegmento(parte, 1, function () {
+      const linhasDica = [
+        { valor: formatarPercentual(percentual, 1), rotulo: "do grupo (modelo principal)", cor: lerCor(destino.variavelCor) },
+      ];
+      if (registro.beta_ic_inf !== null) {
+        linhasDica.push({ valor: formatarNumero(100 * registro.beta_ic_inf, 1) + "% a " + formatarPercentual(100 * registro.beta_ic_sup, 1), rotulo: "intervalo de 95%" });
+      }
+      linhasDica.push({ valor: formatarFaixaPercentual(faixa), rotulo: "entre os três modelos" });
+      linhasDica.push({ valor: formatarMilhoes(registro.votos, 2), rotulo: "eleitores estimados" });
+      let nota = "Estimativa estatística, não contagem.";
+      if (ehRecorteRegional()) {
+        nota = "Estimativa regional instável (" + regiaoMigracaoAtual + "): indica direção, não medida.";
+      }
+      if (codigoOrigem !== "bloco" && estaNaFronteira(registro.beta)) {
+        nota += " Valor no limite de 0% ou 100%: sinal de que o modelo foi forçado ao extremo.";
+      }
+      return {
+        titulo: NOMES_ORIGEM[codigoOrigem].nome + " → " + destino.nome,
+        linhas: linhasDica,
+        nota: nota,
+      };
+    });
+    barra.appendChild(segmento);
+  }
+  linha.appendChild(barra);
+  return linha;
+}
+
+function renderizarBarrasMigracao(todas) {
+  const itensLegenda = DESTINOS.map(function (destino) {
+    return { variavelCor: destino.variavelCor, rotulo: destino.nome + " no 2º turno" };
+  });
+  preencherLegenda(document.getElementById("legenda-migracao"), itensLegenda);
+
+  const conteiner = document.getElementById("barras-migracao");
+  conteiner.replaceChildren();
+  const rotuloFoco = document.createElement("p");
+  rotuloFoco.className = "grupo-rotulo";
+  rotuloFoco.textContent = "Eleitores dos candidatos eliminados";
+  conteiner.appendChild(rotuloFoco);
+  conteiner.appendChild(criarLinhaMigracao("bloco", todas));
+  for (const codigoOrigem of ORIGENS_FRAGEIS) {
+    conteiner.appendChild(criarLinhaMigracao(codigoOrigem, todas));
+  }
+  const rotuloContexto = document.createElement("p");
+  rotuloContexto.className = "grupo-rotulo";
+  rotuloContexto.textContent = "Os demais grupos do 1º turno";
+  conteiner.appendChild(rotuloContexto);
+  for (const codigoOrigem of ORIGENS_CONTEXTO) {
+    conteiner.appendChild(criarLinhaMigracao(codigoOrigem, todas));
+  }
+}
+
+function renderizarIncerteza(todas) {
+  const conteiner = document.getElementById("grafico-incerteza");
+  conteiner.replaceChildren();
+  const origensIncerteza = ["bloco"].concat(ORIGENS_FRAGEIS);
+  const destinosIncerteza = [DESTINOS[0], DESTINOS[1]];
+  const largura = larguraDoConteiner(conteiner);
+  const margemEsquerda = Math.min(170, Math.round(largura * 0.36));
+  const margemDireita = 16;
+  const alturaLinha = 24;
+  const espacoGrupo = 14;
+  const margemTopo = 6;
+  const alturaEixo = 24;
+  const alturaGrupo = destinosIncerteza.length * alturaLinha + espacoGrupo;
+  const altura = margemTopo + origensIncerteza.length * alturaGrupo + alturaEixo;
+  const larguraPlot = largura - margemEsquerda - margemDireita;
+
+  function posicaoX(fracao) {
+    return margemEsquerda + fracao * larguraPlot;
+  }
+
+  const svg = criarSvg("svg", { width: largura, height: altura, role: "img", "aria-label": "Estimativas por modelo para os eleitores dos candidatos eliminados" });
+  for (const marca of [0, 0.25, 0.5, 0.75, 1]) {
+    const x = posicaoX(marca);
+    svg.appendChild(criarSvg("line", { x1: x, x2: x, y1: margemTopo, y2: altura - alturaEixo + 4, stroke: lerCor(marca === 0 ? "--eixo" : "--grade"), "stroke-width": 1 }));
+    const texto = criarSvg("text", { x: x, y: altura - 6, "text-anchor": "middle", "font-size": 12 });
+    texto.textContent = formatarNumero(100 * marca, 0) + "%";
+    svg.appendChild(texto);
+  }
+
+  origensIncerteza.forEach(function (codigoOrigem, indiceGrupo) {
+    const topoGrupo = margemTopo + indiceGrupo * alturaGrupo;
+    const nomeCurto = codigoOrigem === "bloco" ? "Os 3, juntos" : NOMES_ORIGEM[codigoOrigem].nome;
+    const rotulo = criarSvg("text", { x: 0, y: topoGrupo + alturaLinha + 4, "font-size": 13, "font-weight": codigoOrigem === "bloco" ? 700 : 400 });
+    rotulo.style.fill = "var(--tinta)";
+    rotulo.textContent = nomeCurto;
+    svg.appendChild(rotulo);
+
+    destinosIncerteza.forEach(function (destino, indiceDestino) {
+      const y = topoGrupo + indiceDestino * alturaLinha + alturaLinha / 2;
+      const cor = lerCor(destino.variavelCor);
+      const principal = todas[ESPECIFICACAO_PRINCIPAL][codigoOrigem][destino.codigo];
+      if (principal.beta_ic_inf !== null) {
+        svg.appendChild(criarSvg("line", { x1: posicaoX(principal.beta_ic_inf), x2: posicaoX(principal.beta_ic_sup), y1: y, y2: y, stroke: cor, "stroke-width": 2, "stroke-linecap": "round" }));
+      }
+      for (const especificacao of ESPECIFICACOES) {
+        if (especificacao.codigo === ESPECIFICACAO_PRINCIPAL) {
+          continue;
+        }
+        const alternativa = todas[especificacao.codigo][codigoOrigem][destino.codigo];
+        svg.appendChild(criarSvg("circle", { cx: posicaoX(alternativa.beta), cy: y, r: 4, fill: lerCor("--superficie"), stroke: cor, "stroke-width": 1.5 }));
+      }
+      svg.appendChild(criarSvg("circle", { cx: posicaoX(principal.beta), cy: y, r: 5, fill: cor, stroke: lerCor("--superficie"), "stroke-width": 2 }));
+
+      const alvo = criarSvg("rect", { x: margemEsquerda, y: y - alturaLinha / 2, width: larguraPlot, height: alturaLinha, fill: "transparent", tabindex: 0 });
+      alvo.setAttribute("aria-label", NOMES_ORIGEM[codigoOrigem].nome + " para " + destino.nome + ": " + formatarPercentual(100 * principal.beta, 1) + " no modelo principal");
+      ligarDica(alvo, function () {
+        const linhasDica = [];
+        for (const especificacao of ESPECIFICACOES) {
+          const registro = todas[especificacao.codigo][codigoOrigem][destino.codigo];
+          let texto = nomeEspecificacao(especificacao);
+          if (registro.beta_ic_inf !== null) {
+            texto += " (95%: " + formatarNumero(100 * registro.beta_ic_inf, 0) + "–" + formatarNumero(100 * registro.beta_ic_sup, 0) + "%)";
+          }
+          linhasDica.push({ valor: formatarPercentual(100 * registro.beta, 1), rotulo: texto, cor: especificacao.codigo === ESPECIFICACAO_PRINCIPAL ? cor : null });
+        }
+        return { titulo: NOMES_ORIGEM[codigoOrigem].nome + " → " + destino.nome, linhas: linhasDica };
+      });
+      svg.appendChild(alvo);
+    });
+  });
+  conteiner.appendChild(svg);
+}
+
+function renderizarTabelaMigracao(todas) {
+  const principal = todas[ESPECIFICACAO_PRINCIPAL];
+  const linhas = [];
+  for (const codigoOrigem of ORIGENS_TABELA) {
+    const registrosOrigem = principal[codigoOrigem];
+    let nomeLinha = NOMES_ORIGEM[codigoOrigem].nome + " (" + NOMES_ORIGEM[codigoOrigem].detalhe + ")";
+    if (codigoOrigem === "demais") {
+      nomeLinha += " · muito frágil";
+    }
+    const linha = { origem: nomeLinha, tamanho: tamanhoDoGrupo(registrosOrigem) };
+    for (const destino of DESTINOS) {
+      linha[destino.codigo] = registrosOrigem[destino.codigo];
+    }
+    linhas.push(linha);
+  }
+  function formatarCelula(registro) {
+    let texto = formatarPercentual(100 * registro.beta, 1);
+    if (registro.beta_ic_inf !== null) {
+      texto += " (" + formatarNumero(100 * registro.beta_ic_inf, 1) + "–" + formatarNumero(100 * registro.beta_ic_sup, 1) + ")";
+    }
+    return texto;
+  }
+  const colunas = [
+    { titulo: "Grupo no 1º turno", formatar: function (linha) { return linha.origem; } },
+    { titulo: "Eleitores", formatar: function (linha) { return formatarInteiro(Math.round(linha.tamanho)); } },
+  ];
+  for (const destino of DESTINOS) {
+    colunas.push({ titulo: "→ " + destino.nome, formatar: function (linha) { return formatarCelula(linha[destino.codigo]); } });
+  }
+  criarTabela(colunas, linhas, "tabela-migracao", false);
+}
+
+function renderizarMigracao() {
+  const todas = transferenciasPorEspecificacao();
+  renderizarControlesMigracao();
+  renderizarAvisoRegional(todas);
+  renderizarFraseMigracao(todas);
+  renderizarEntradas(todas);
+  renderizarBarrasMigracao(todas);
+  renderizarIncerteza(todas);
+  renderizarTabelaMigracao(todas);
+}
+
+/* ---------- Metodologia ---------- */
+
+function renderizarMetodologia() {
+  const conteiner = document.getElementById("texto-metodologia");
+  conteiner.replaceChildren();
+
+  function adicionarTitulo(texto) {
+    const titulo = document.createElement("h3");
+    titulo.textContent = texto;
+    conteiner.appendChild(titulo);
+  }
+  function adicionarParagrafo(texto) {
+    const paragrafo = document.createElement("p");
+    paragrafo.textContent = texto;
+    conteiner.appendChild(paragrafo);
+  }
+  function adicionarLista(itens) {
+    const lista = document.createElement("ul");
+    for (const textoItem of itens) {
+      const item = document.createElement("li");
+      item.textContent = textoItem;
+      lista.appendChild(item);
+    }
+    conteiner.appendChild(lista);
+  }
+
+  adicionarTitulo("Dados");
+  adicionarLista([
+    "1º turno: arquivos de dados abertos do TSE (votação por município e zona eleitoral), cargo de presidente.",
+    "2º turno: arquivos oficiais da divulgação de resultados do TSE, por município. Na data desta análise, o 2º turno ainda não estava nos dados abertos.",
+    "Base: 5.571 municípios brasileiros e 186 cidades do exterior. Os totais nacionais conferem exatamente com o resultado oficial nos dois turnos.",
+    "O 1º turno também foi baixado no formato da divulgação e comparado com os dados abertos, município a município: não há nenhuma diferença. Por isso é seguro comparar as duas fontes.",
+  ]);
+
+  adicionarTitulo("Percentuais");
+  adicionarLista([
+    "Votos de candidato: percentual dos votos válidos do turno, como o TSE divulga.",
+    "Comparecimento: percentual dos eleitores aptos.",
+    "Agregados por região e estado somam votos antes de calcular percentuais, para que municípios grandes pesem o que de fato pesam.",
+  ]);
+
+  adicionarTitulo("Migração de votos: inferência ecológica");
+  adicionarParagrafo(
+    "O voto é secreto, então não existe registro de quem votou em quem. O modelo usa a variação entre municípios: se, onde Caiado foi mais forte, Flávio cresceu mais no 2º turno, isso indica que parte dos eleitores de Caiado foi para Flávio. " +
+    "Tecnicamente, é uma regressão de Goodman com restrições: cada grupo do 1º turno (os oito grupos mostrados acima, incluindo quem não votou) se divide em quatro destinos no 2º turno, com frações entre 0% e 100% que somam 100%. " +
+    "O ajuste é ponderado pelo eleitorado de cada município e feito separadamente em cada região; o resultado do Brasil é a soma das cinco regiões. O exterior fica de fora."
+  );
+  adicionarLista([
+    "Incerteza: 1.000 reamostragens dos municípios (bootstrap), dentro de cada região. O intervalo de 95% mede a variação por acaso, não o erro da hipótese do modelo.",
+    "Hipótese central: dentro de uma região, cada grupo se comporta da mesma forma em todos os municípios. Quando isso falha, a estimativa tem viés.",
+    "Teste com resposta conhecida: o método foi aplicado a votos simulados, gerados a partir dos municípios reais com uma migração definida de antemão. No total do Brasil, recuperou a migração com erro de até 4 pontos percentuais. Quando o comportamento de um grupo muda de região para região, o modelo por região acertou e o modelo nacional único errou muito, o que justifica usar o modelo por região como principal.",
+    "Verificação independente: o cálculo foi feito duas vezes, por duas implementações escritas separadamente e com algoritmos diferentes. As estimativas coincidem até a quarta casa decimal.",
+    "Regiões: disponíveis no seletor da seção, mas instáveis. Com o eleitorado concentrado em poucos municípios grandes, cada região equivale a uma amostra pequena (de cerca de 20 municípios efetivos no Centro-Oeste a cerca de 145 no Nordeste), e cerca de metade das frações estimadas cai nos limites de 0% ou 100%. Os intervalos de 95% regionais também variam de uma execução do bootstrap para outra. O total do Brasil, que soma as cinco regiões, é o número a usar.",
+    "Por candidato eliminado, a divisão muda bastante de um modelo para outro (ver tabela abaixo). O que se mantém nos três modelos é o comportamento dos eliminados como bloco, a lealdade dos eleitores de Lula e de Flávio e a origem do crescimento de cada um.",
+  ]);
+
+  const sensibilidade = document.createElement("div");
+  sensibilidade.className = "tabela-rolagem";
+  sensibilidade.id = "tabela-sensibilidade";
+  adicionarParagrafo("Sensibilidade: a estimativa principal (um modelo por região) comparada com um modelo nacional único e com um modelo por região sem ponderação. Diferenças grandes indicam que a hipótese central pesa no resultado.");
+  conteiner.appendChild(sensibilidade);
+
+  const linhasSensibilidade = [];
+  const origensSensibilidade = ["bloco"].concat(ORIGENS_FRAGEIS, ["branco_nulo", "abstencao"]);
+  for (const codigoOrigem of origensSensibilidade) {
+    for (const especificacao of ESPECIFICACOES) {
+      const transferencias = buscarTransferencias(especificacao.codigo, REGIAO_BRASIL);
+      linhasSensibilidade.push({
+        origem: NOMES_ORIGEM[codigoOrigem].nome,
+        modelo: especificacao.nome,
+        lula: transferencias[codigoOrigem].lula,
+        flavio: transferencias[codigoOrigem].flavio,
+        brancoNulo: transferencias[codigoOrigem].branco_nulo,
+      });
+    }
+  }
+  function formatarComIntervalo(registro) {
+    let texto = formatarPercentual(100 * registro.beta, 1);
+    if (registro.beta_ic_inf !== null) {
+      texto += " (" + formatarNumero(100 * registro.beta_ic_inf, 1) + "–" + formatarNumero(100 * registro.beta_ic_sup, 1) + ")";
+    }
+    return texto;
+  }
+  criarTabela([
+    { titulo: "Eleitores de", formatar: function (linha) { return linha.origem; } },
+    { titulo: "Modelo", formatar: function (linha) { return linha.modelo; } },
+    { titulo: "→ Lula", formatar: function (linha) { return formatarComIntervalo(linha.lula); } },
+    { titulo: "→ Flávio", formatar: function (linha) { return formatarComIntervalo(linha.flavio); } },
+    { titulo: "→ Branco ou nulo", formatar: function (linha) { return formatarComIntervalo(linha.brancoNulo); } },
+  ], linhasSensibilidade, "tabela-sensibilidade", false);
+
+  adicionarTitulo("Limites desta análise");
+  adicionarLista([
+    "O 2º turno só está disponível por município. Com dados por seção eleitoral, menores e mais homogêneos, a estimativa de migração ficaria mais precisa.",
+    "O número de eleitores aptos de cada município varia levemente entre os turnos nos próprios dados do TSE (no máximo 0,03% por estado; o total nacional é idêntico). O efeito sobre as taxas é desprezível.",
+    "Não há dado de governador nesta análise. A queda de comparecimento no Norte pode estar ligada à ausência de 2º turno estadual nesses estados, mas isso não foi verificado.",
+  ]);
+}
+
+function renderizarRodape() {
+  const rodape = document.getElementById("rodape");
+  rodape.replaceChildren();
+  rodape.appendChild(document.createTextNode("Código, dados processados e documentação: "));
+  const link = document.createElement("a");
+  link.href = "https://github.com/vinigm/eleicoes2026";
+  link.textContent = "github.com/vinigm/eleicoes2026";
+  rodape.appendChild(link);
+  rodape.appendChild(document.createTextNode(". Dados públicos do Tribunal Superior Eleitoral."));
+}
+
+/* ---------- Tema ---------- */
+
+const CHAVE_TEMA = "eleicoes2026-tema";
+const ROTULOS_TEMA = { auto: "Tema: automático", light: "Tema: claro", dark: "Tema: escuro" };
+const PROXIMO_TEMA = { auto: "light", light: "dark", dark: "auto" };
+
+function lerTemaSalvo() {
+  try {
+    const salvo = window.localStorage.getItem(CHAVE_TEMA);
+    if (salvo === "light" || salvo === "dark") {
+      return salvo;
+    }
+  } catch (erro) {
+    return "auto";
+  }
+  return "auto";
+}
+
+function aplicarTema(tema) {
+  if (tema === "auto") {
+    delete document.documentElement.dataset.theme;
+  } else {
+    document.documentElement.dataset.theme = tema;
+  }
+  document.getElementById("botao-tema").textContent = ROTULOS_TEMA[tema];
+  try {
+    window.localStorage.setItem(CHAVE_TEMA, tema);
+  } catch (erro) {
+    // Sem armazenamento disponível: o tema vale só para esta visita.
+  }
+}
+
+let temaAtual = lerTemaSalvo();
+
+/* ---------- Inicialização ---------- */
+
+function renderizarTudo() {
+  renderizarCabecalho();
+  renderizarIndicadores();
+  renderizarPonte();
+  renderizarRegioes();
+  renderizarEstados();
+  renderizarMigracao();
+  renderizarMetodologia();
+  renderizarRodape();
+}
+
+aplicarTema(temaAtual);
+regiaoMigracaoAtual = lerRegiaoDoEndereco();
+renderizarTudo();
+
+document.getElementById("botao-tema").addEventListener("click", function () {
+  temaAtual = PROXIMO_TEMA[temaAtual];
+  aplicarTema(temaAtual);
+  renderizarTudo();
+});
+
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+  renderizarTudo();
+});
+
+let temporizadorRedimensionar = null;
+let larguraAnterior = window.innerWidth;
+window.addEventListener("resize", function () {
+  if (window.innerWidth === larguraAnterior) {
+    return;
+  }
+  larguraAnterior = window.innerWidth;
+  window.clearTimeout(temporizadorRedimensionar);
+  temporizadorRedimensionar = window.setTimeout(function () {
+    renderizarRegioes();
+    renderizarMigracao();
+  }, 150);
+});
+</script>
+</body>
+</html>
