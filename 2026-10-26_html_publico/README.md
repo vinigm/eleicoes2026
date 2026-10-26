@@ -31,6 +31,10 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 - **Mapa:** divergente azul ↔ vermelho centrado em 50% (vencedor); avanço de Lula em rampa sequencial; comparecimento divergente laranja ↔ violeta, para não confundir com as cores dos partidos.
 - **Toda frase com número é gerada a partir de `dados.js`** (nada digitado à mão), para não divergir quando os dados forem regenerados.
 - Modo claro/escuro (automático + botão); tabela equivalente para cada gráfico; dica no mouse e no foco do teclado.
+- **Versão do `dados.js` no HTML (26/10/2026):** o gerador grava `dados.js?v=<SHA-256 do conteúdo>` no `index.html`.
+  - Por quê: o GitHub Pages manda o navegador guardar os arquivos por 10 minutos (`max-age=600`). Depois de um envio, quem já tinha aberto a página recebeu o HTML novo com o `dados.js` antigo, e a página parou no 1º turno do resultado.
+  - Reproduzido localmente: dava `Cannot read properties of undefined (reading '13')`.
+  - **Regra:** sempre regenerar `docs/` pelo gerador; nunca editar o `dados.js` à mão.
 - **Base dos percentuais (26/10/2026, pedido do Vinicius):** botão "Votos válidos" ↔ "Todo o eleitorado", repetido nos cartões de resultado, regiões e estados, mas com uma configuração só (mudar em um muda nos três).
   - Na visão eleitorado entram os grupos Lula, Flávio, Outros, Branco/nulo e Abstenção ("não votou" inclui seções não instaladas). Eles somam 100% dos aptos em cada turno, então as variações ▲▼ somam zero: é saldo, não fluxo.
   - Link direto: `#base=eleitorado`.

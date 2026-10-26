@@ -15,9 +15,11 @@ Rodar a partir da raiz do projeto com `python3 -I`.
 """
 
 import datetime
+import hashlib
 import json
 import logging
 import pathlib
+import re
 
 import pandas as pd
 
@@ -45,6 +47,11 @@ CAMINHO_BASE_MUNICIPIOS = (
     RAIZ_PROJETO / "dados" / "processados" / "presidente_municipio_turnos.parquet"
 )
 CAMINHO_SAIDA = RAIZ_PROJETO / "docs" / "dados.js"
+CAMINHO_HTML = RAIZ_PROJETO / "docs" / "index.html"
+
+# Tag que carrega os dados no HTML, com ou sem versão (`dados.js?v=<hash>`).
+PADRAO_TAG_DADOS = re.compile(r'<script src="dados\.js(?:\?v=[0-9a-f]+)?"></script>')
+TAMANHO_VERSAO = 12
 
 COLUNA_VOTOS_CAIADO_1T = "votos_1t_55"
 PREFIXO_VOTOS_1T = "votos_1t_"
@@ -647,6 +654,50 @@ def gravar_dados_js(dados_html: dict[str, object], caminho_saida: pathlib.Path) 
     LOGGER.info("Gravado %s (%d bytes).", caminho_saida, len(conteudo_js.encode("utf-8")))
 
 
+def versionar_dados_no_html(
+    caminho_dados: pathlib.Path,
+    caminho_html: pathlib.Path,
+) -> str:
+    """Grava no HTML a versão do `dados.js`, derivada do conteúdo do arquivo.
+
+    O GitHub Pages manda o navegador guardar os arquivos por 10 minutos.
+    Sem versão, quem já tinha visitado a página recebia o HTML novo com o
+    `dados.js` antigo, e a página quebrava no meio (aconteceu em 26/10/2026).
+    Com `dados.js?v=<hash do conteúdo>`, qualquer mudança nos dados muda o
+    endereço e força o download da versão nova; sem mudança, o cache segue
+    valendo.
+
+    Args:
+        caminho_dados: O `dados.js` recém-gravado.
+        caminho_html: O `index.html` que carrega os dados.
+
+    Returns:
+        A versão gravada (primeiros caracteres do SHA-256 do conteúdo).
+
+    Raises:
+        FileNotFoundError: Se o HTML não existir.
+        ValueError: Se o HTML não tiver exatamente uma tag de `dados.js`.
+    """
+    if not caminho_html.exists():
+        raise FileNotFoundError(f"HTML não encontrado: {caminho_html}")
+
+    conteudo_dados = caminho_dados.read_bytes()
+    versao = hashlib.sha256(conteudo_dados).hexdigest()[:TAMANHO_VERSAO]
+
+    html = caminho_html.read_text(encoding="utf-8")
+    quantidade_tags = len(PADRAO_TAG_DADOS.findall(html))
+    if quantidade_tags != 1:
+        raise ValueError(
+            f"Esperada 1 tag de dados.js em {caminho_html}, achadas {quantidade_tags}."
+        )
+
+    tag_versionada = f'<script src="dados.js?v={versao}"></script>'
+    html_versionado = PADRAO_TAG_DADOS.sub(tag_versionada, html)
+    caminho_html.write_text(html_versionado, encoding="utf-8")
+    LOGGER.info("Versão do dados.js gravada no HTML: %s.", versao)
+    return versao
+
+
 def gerar_dados_html() -> None:
     """Orquestra leitura, validação, montagem e gravação dos dados do HTML."""
     indicadores_brasil = ler_csv_obrigatorio(CAMINHO_INDICADORES_BRASIL)
@@ -692,6 +743,7 @@ def gerar_dados_html() -> None:
     }
 
     gravar_dados_js(dados_html, CAMINHO_SAIDA)
+    versionar_dados_no_html(CAMINHO_SAIDA, CAMINHO_HTML)
 
 
 if __name__ == "__main__":

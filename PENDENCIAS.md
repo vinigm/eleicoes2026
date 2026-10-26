@@ -62,3 +62,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ GitHub Pages ativado; página publicada idêntica à local e renderizando sem erro.
   - ✅ Migração por estado (κ = 4, A e B idênticas) + Sankey com filtro Brasil/região/estado.
   - ✅ Página redesenhada (lado a lado, ▲▼, base eleitorado, sem metodologia) enviada ao GitHub.
+  - ✅ Página quebrava para quem tinha a versão anterior em cache: `dados.js` passou a ser versionado pelo conteúdo.
