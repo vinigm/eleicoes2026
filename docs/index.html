@@ -1120,14 +1120,13 @@ th button:hover { color: var(--tinta); }
     </div>
     <div class="cartao cartao-comparativo">
       <h3 class="titulo-cartao-grande">Índices sociais × voto, dentro de cada região</h3>
-      <p class="sub-cartao-grande">Cada ponto é uma cidade; a linha é a tendência, e o r mede a força da relação (de −1 a +1). Alfabetização e PIB medem acesso a estudo e renda, não inteligência, e a relação entre cidades não diz como votou cada eleitor.</p>
+      <p class="sub-cartao-grande">Cada ponto é uma cidade; o r mede a força da relação entre o índice e o voto (de −1 a +1). Alfabetização e PIB medem acesso a estudo e renda, não inteligência, e a relação entre cidades não diz como votou cada eleitor.</p>
       <div class="controles" id="controles-dispersao" role="group" aria-label="Índice do eixo horizontal" style="margin:16px 0 8px"></div>
       <ul class="legenda">
-        <li><strong>Eixo vertical:</strong>&nbsp;% de Flávio no 2º turno</li>
-        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-flavio);box-shadow:inset 0 0 0 1px var(--cor-flavio)"></span>Acima de 50%: Flávio venceu a cidade</li>
-        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-lula);box-shadow:inset 0 0 0 1px var(--cor-lula)"></span>Abaixo de 50%: Lula venceu</li>
+        <li><strong>Eixo vertical:</strong>&nbsp;divisão dos votos do 2º turno, de "só Lula" a "só Flávio"</li>
+        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-flavio);box-shadow:inset 0 0 0 1px var(--cor-flavio)"></span>Faixa azul: cidades onde Flávio venceu</li>
+        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-lula);box-shadow:inset 0 0 0 1px var(--cor-lula)"></span>Faixa vermelha: cidades onde Lula venceu</li>
         <li><span class="amostra" style="background:var(--tinta-2)"></span>Cada ponto é uma cidade</li>
-        <li><span class="amostra-linha" style="background:var(--tinta);height:3px"></span>Tendência: subindo = mais índice, mais voto em Flávio</li>
       </ul>
       <div class="grade-dispersao" id="grafico-dispersao"></div>
     </div>
@@ -5447,7 +5446,7 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
   painel.appendChild(resumo);
 
   const altura = 230;
-  const margem = { esquerda: 36, direita: 10, topo: 8, base: 26 };
+  const margem = { esquerda: 74, direita: 10, topo: 8, base: 26 };
   const larguraUtil = largura - margem.esquerda - margem.direita;
   const alturaUtil = altura - margem.topo - margem.base;
   const dominioX = indicador.escalaLog ? [Math.log10(indicador.dominio[0]), Math.log10(indicador.dominio[1])] : indicador.dominio;
@@ -5460,13 +5459,6 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
   }
   const svg = criarSvg("svg", { width: largura, height: altura, role: "img",
     "aria-label": nomePainel + ": % de Flávio no 2º turno por " + indicador.rotuloCurto + " de cada cidade" });
-  // Recorte da área do gráfico: a reta de tendência não invade os eixos (ex.: abaixo de 0%).
-  const idRecorte = "recorte-dispersao-" + normalizarBusca(nomePainel).replace(/[^a-z]/g, "");
-  const definicoes = criarSvg("defs", {});
-  const recorte = criarSvg("clipPath", { id: idRecorte });
-  recorte.appendChild(criarSvg("rect", { x: margem.esquerda, y: margem.topo, width: larguraUtil, height: alturaUtil }));
-  definicoes.appendChild(recorte);
-  svg.appendChild(definicoes);
 
   // Fundo em duas faixas: acima de 50% Flávio venceu a cidade; abaixo, Lula. Os pontos ficam
   // neutros, porque a cor do vencedor só repetiria a altura do ponto (dúvida do Vinicius).
@@ -5481,13 +5473,21 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
   rotuloLula.style.fill = lerCor("--titulo-lula");
   rotuloLula.textContent = "Lula venceu";
 
-  // Grade, eixos e linha dos 50%.
-  for (const valorY of [0, 25, 50, 75, 100]) {
-    const y = posicaoY(valorY);
+  // Grade e eixo vertical simétrico: em cima "só Flávio", embaixo "só Lula", no meio "empate".
+  // Assim subir é ir para o lado de Flávio, e não "valer mais" (observação do Vinicius).
+  const marcasY = [
+    { valor: 100, texto: "só Flávio" },
+    { valor: 75, texto: "Flávio 75%" },
+    { valor: 50, texto: "empate" },
+    { valor: 25, texto: "Lula 75%" },
+    { valor: 0, texto: "só Lula" },
+  ];
+  for (const marca of marcasY) {
+    const y = posicaoY(marca.valor);
     svg.appendChild(criarSvg("line", { x1: margem.esquerda, x2: largura - margem.direita, y1: y, y2: y,
-      stroke: lerCor(valorY === 50 ? "--eixo" : "--grade"), "stroke-width": 1, "stroke-dasharray": valorY === 50 ? "4 3" : "" }));
+      stroke: lerCor(marca.valor === 50 ? "--eixo" : "--grade"), "stroke-width": 1, "stroke-dasharray": marca.valor === 50 ? "4 3" : "" }));
     const rotuloY = criarSvg("text", { x: margem.esquerda - 6, y: y + 4, "text-anchor": "end", class: "marca-dispersao" });
-    rotuloY.textContent = valorY + "%";
+    rotuloY.textContent = marca.texto;
     svg.appendChild(rotuloY);
   }
   for (const marca of indicador.marcas) {
@@ -5508,22 +5508,6 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
   }
   svg.appendChild(rotuloFlavio);
   svg.appendChild(rotuloLula);
-
-  // Reta de tendência dentro da faixa de x da região.
-  if (regressao) {
-    let menorX = Infinity;
-    let maiorX = -Infinity;
-    for (const ponto of pontos) {
-      menorX = Math.min(menorX, ponto.x);
-      maiorX = Math.max(maiorX, ponto.x);
-    }
-    const yInicio = regressao.intercepto + regressao.inclinacao * menorX;
-    const yFim = regressao.intercepto + regressao.inclinacao * maiorX;
-    svg.appendChild(criarSvg("line", { x1: posicaoX(menorX), y1: posicaoY(yInicio), x2: posicaoX(maiorX), y2: posicaoY(yFim),
-      stroke: lerCor("--superficie"), "stroke-width": 5, "stroke-linecap": "round", "clip-path": "url(#" + idRecorte + ")" }));
-    svg.appendChild(criarSvg("line", { x1: posicaoX(menorX), y1: posicaoY(yInicio), x2: posicaoX(maiorX), y2: posicaoY(yFim),
-      stroke: lerCor("--tinta"), "stroke-width": 2.5, "stroke-linecap": "round", "clip-path": "url(#" + idRecorte + ")" }));
-  }
 
   // Dica: cidade mais próxima do ponteiro (um único ouvinte por painel).
   svg.addEventListener("pointermove", function (evento) {

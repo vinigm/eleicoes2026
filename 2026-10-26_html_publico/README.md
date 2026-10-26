@@ -139,9 +139,11 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - **Dispersão "índices sociais × voto":** 6 painéis (Brasil e as 5 regiões); cada ponto é uma cidade.
     - Os pontos são cinza e o fundo tem duas faixas: azul-claro acima de 50% ("Flávio venceu") e vermelho-claro abaixo ("Lula venceu").
       - Antes, a cor do ponto era o vencedor e só repetia a altura. Parecia um padrão sem ser (dúvida do Vinicius em 26/10/2026).
-      - A legenda diz que o eixo vertical é o % de Flávio e que uma linha subindo quer dizer mais índice, mais voto em Flávio.
+      - A legenda explica o eixo vertical (divisão dos votos do 2º turno) e as faixas.
     - Índice no eixo x: alfabetização (Censo 2022) ou PIB per capita (2023, escala log). Fonte: `2026-10-26_indicadores_ibge/`.
-    - Cada painel tem a reta de mínimos quadrados e o r de Pearson. Cada cidade pesa igual, e o PIB entra em log10.
+    - Cada painel mostra o r de Pearson (cada cidade pesa igual; o PIB entra em log10).
+      - A reta de tendência saiu a pedido do Vinicius ("não gostei").
+      - O eixo vertical é simétrico ("só Lula", "Lula 75%", "empate", "Flávio 75%", "só Flávio") para não sugerir que mais alto vale mais.
     - O texto do cartão avisa: os índices medem acesso a estudo e renda, não inteligência; e a relação entre cidades não diz como votou cada eleitor.
     - **Fato:** dentro de todas as regiões, cidades com mais alfabetização e mais PIB per capita deram mais votos a Flávio.
       - Alfabetização: r de +0,20 (Norte) a +0,65 (Sudeste).

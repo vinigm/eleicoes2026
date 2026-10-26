@@ -87,3 +87,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Cidades: filtro por faixa de habitantes (até 50 mil … mais de 300 mil) aplicado a todo o recorte.
   - ✅ Mapa de calor tamanho × voto e dispersão alfabetização/PIB × voto por região (IBGE; conferência independente aprovada).
   - ✅ Dispersão com pontos neutros e faixas "Flávio venceu / Lula venceu"; filtros de cidades em painel destacado e maiores.
+  - ✅ Dispersão sem reta de tendência e com eixo simétrico (só Lula … empate … só Flávio).
