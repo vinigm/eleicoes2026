@@ -78,3 +78,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Resumo executivo no topo: big numbers do Brasil e cartões por região, com 1º turno, 2º turno e variação.
   - ✅ Mapa com filtros na coluna lateral e aviso de uso; seções na ordem da história; seção Cidades (busca + filtro por estado).
   - ✅ Cidades com 1º/2º turno/variação em % e votos e habitantes (IBGE 2026, soma = Brasil); "virou" em selo vermelho.
+  - ✅ Card Lula × Flávio (2º turno) ao lado da busca de cidades e filtro "Lula ganhou / Flávio ganhou" com contagens.

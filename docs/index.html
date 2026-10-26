@@ -40,6 +40,12 @@
   --texto-negativo: #c62828;
   --fundo-virou: #c62828;
   --texto-virou: #ffffff;
+  --fundo-lula: #fdf0ef;
+  --fundo-flavio: #eef4fc;
+  --cabecalho-lula: #f9dcda;
+  --cabecalho-flavio: #d9e6f8;
+  --titulo-lula: #a8282a;
+  --titulo-flavio: #184f95;
   --seq-comp-inicio: #ece9fb;
   --seq-comp-fim: #3b2e9a;
   --status-serio: #ec835a;
@@ -80,6 +86,12 @@
     --texto-negativo: #ff8a80;
   --fundo-virou: #ff8a80;
   --texto-virou: #1a1a19;
+  --fundo-lula: #2a1f1f;
+  --fundo-flavio: #1c2430;
+  --cabecalho-lula: #3d2626;
+  --cabecalho-flavio: #22314a;
+  --titulo-lula: #ef8a88;
+  --titulo-flavio: #7fb0ef;
     --seq-comp-inicio: #2a2640;
     --seq-comp-fim: #b3abf3;
     --status-serio: #ec835a;
@@ -120,6 +132,12 @@
   --texto-negativo: #ff8a80;
   --fundo-virou: #ff8a80;
   --texto-virou: #1a1a19;
+  --fundo-lula: #2a1f1f;
+  --fundo-flavio: #1c2430;
+  --cabecalho-lula: #3d2626;
+  --cabecalho-flavio: #22314a;
+  --titulo-lula: #ef8a88;
+  --titulo-flavio: #7fb0ef;
   --seq-comp-inicio: #2a2640;
   --seq-comp-fim: #b3abf3;
   --status-serio: #ec835a;
@@ -534,6 +552,32 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
   color: var(--tinta);
 }
 .filtros-cidades input { width: 100%; }
+/* Card do recorte ao lado da busca: só Lula x% e Flávio y% no 2º turno. */
+.selecao-cidades {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 280px;
+  padding: 10px 16px;
+  border: 1px solid var(--eixo);
+  border-radius: 10px;
+  background: var(--realce-fundo);
+}
+.rotulo-selecao { font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tinta-2); }
+.valores-selecao { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.valor-selecao { display: flex; align-items: center; gap: 6px; }
+.valor-selecao .nome-selecao { font-size: 14px; color: var(--tinta-2); }
+.valor-selecao strong { font-size: 24px; font-weight: 750; font-variant-numeric: tabular-nums; }
+/* Coluna da direita: card de % e, embaixo, o filtro por vencedor com contagens. */
+.coluna-selecao { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.filtro-vencedor { margin: 0; }
+.filtro-vencedor button { display: inline-flex; align-items: center; gap: 6px; }
+.contagem-vencedor { font-weight: 700; font-variant-numeric: tabular-nums; }
+.filtros-cidades { align-items: flex-start; }
+@media (max-width: 819px) {
+  .coluna-selecao { flex: 1 1 100%; }
+  .selecao-cidades { min-width: 0; }
+}
 .resumo-cidades { color: var(--tinta-2); margin: 0 0 14px; }
 .tabela-cidades .celula-nome { flex-wrap: wrap; row-gap: 2px; }
 .tabela-cidades td:first-child { white-space: normal; }
@@ -547,6 +591,14 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 .tabela-cidades .variacao-negativa { color: var(--texto-negativo); }
 .tabela-cidades .celula-variacao-cidade .linha-principal-cidade { font-weight: 600; }
 .tabela-cidades .grupo-coluna-cidade { text-align: center; border-bottom: 1px solid var(--eixo); padding-bottom: 4px; }
+/* Blocos de Lula (vermelho claro) e Flávio (azul claro): fundo na cor do candidato, texto escuro. */
+.tabela-cidades .coluna-lula { background: var(--fundo-lula); }
+.tabela-cidades .coluna-flavio { background: var(--fundo-flavio); }
+.tabela-cidades th.coluna-lula { background: var(--cabecalho-lula); }
+.tabela-cidades th.coluna-flavio { background: var(--cabecalho-flavio); }
+.tabela-cidades .grupo-coluna-cidade.coluna-lula { color: var(--titulo-lula); border-bottom-color: var(--cor-lula); }
+.tabela-cidades .grupo-coluna-cidade.coluna-flavio { color: var(--titulo-flavio); border-bottom-color: var(--cor-flavio); }
+.tabela-cidades .inicio-grupo-cidade { border-left: 2px solid var(--superficie); }
 .tabela-cidades .subcoluna-cidade { font-size: 12px; padding-top: 4px; }
 .tabela-cidades td, .tabela-cidades th { padding-left: 6px; padding-right: 6px; }
 /* Entre 820 e 1.279 px, a barra e a vantagem saem (seguem na dica) para não haver rolagem lateral. */
@@ -986,6 +1038,10 @@ th button:hover { color: var(--tinta); }
           <span class="rotulo-controle">Buscar cidade</span>
           <input type="search" id="busca-cidade" placeholder="Digite o nome da cidade" autocomplete="off" spellcheck="false">
         </label>
+        <div class="coluna-selecao">
+          <div class="selecao-cidades" id="selecao-cidades" aria-live="polite"></div>
+          <div class="controles filtro-vencedor" id="filtro-vencedor" role="group" aria-label="Filtrar cidades pelo vencedor do 2º turno"></div>
+        </div>
       </div>
       <p class="resumo-cidades" id="resumo-cidades"></p>
       <div class="tabela-rolagem tabela-turno" id="tabela-cidades"></div>
@@ -4263,6 +4319,8 @@ function cidadesPorPagina() {
 }
 let ufCidadesAtual = "";
 let buscaCidadesAtual = "";
+// Filtro por vencedor do 2º turno: "" (todas), "Lula" ou "Flávio".
+let vencedorCidadesAtual = "";
 let limiteCidadesAtual = cidadesPorPagina();
 let ordenacaoCidadesAtual = { campo: "eleitores", crescente: false };
 let cidadesCarregadas = null;
@@ -4464,14 +4522,18 @@ function criarCelulaDuplaCidade(rotulo, textoPrincipal, textoSecundario, opcoes)
 
 function adicionarColunasCandidato(linha, cidade, nome, percentual1t, percentual2t, votos1t, votos2t, venceu1t, venceu2t) {
   // Três colunas por candidato: 1º turno, 2º turno e variação, cada uma com % (ou pontos) e votos.
+  // O fundo leva a cor do candidato (texto continua escuro, para o ▼ vermelho seguir visível).
   const temVotos = cidade.temVotos;
+  const classeCandidato = nome === "Lula" ? "coluna-lula" : "coluna-flavio";
   linha.appendChild(criarCelulaDuplaCidade(nome + " · 1º turno",
-    temVotos ? formatarPercentual(percentual1t, 1) : null, formatarInteiro(votos1t), { vencedor: venceu1t, votos: true }));
+    temVotos ? formatarPercentual(percentual1t, 1) : null, formatarInteiro(votos1t),
+    { vencedor: venceu1t, votos: true, classe: classeCandidato + " inicio-grupo-cidade" }));
   linha.appendChild(criarCelulaDuplaCidade(nome + " · 2º turno",
-    temVotos ? formatarPercentual(percentual2t, 1) : null, formatarInteiro(votos2t), { vencedor: venceu2t, votos: true }));
+    temVotos ? formatarPercentual(percentual2t, 1) : null, formatarInteiro(votos2t),
+    { vencedor: venceu2t, votos: true, classe: classeCandidato }));
   linha.appendChild(criarCelulaDuplaCidade(nome + " · variação",
     temVotos ? textoVariacaoPontos(percentual2t - percentual1t, 1) + " pts" : null, textoVariacaoInteiro(votos2t - votos1t),
-    { classe: "celula-variacao-cidade", votos: true }));
+    { classe: "celula-variacao-cidade " + classeCandidato, votos: true }));
 }
 
 function criarLinhaCidade(cidade) {
@@ -4568,13 +4630,14 @@ function criarCabecalhoCidades(tabela) {
       grupoAberto.scope = "colgroup";
       grupoAberto.colSpan = 1;
       grupoAberto.dataset.grupo = coluna.grupo;
-      grupoAberto.className = "grupo-coluna-cidade";
+      grupoAberto.className = "grupo-coluna-cidade " + (coluna.grupo === "Lula" ? "coluna-lula" : "coluna-flavio");
       grupoAberto.textContent = coluna.grupo + " · % e votos";
       linhaGrupos.appendChild(grupoAberto);
     } else {
       grupoAberto.colSpan += 1;
     }
     classes.push("subcoluna-cidade");
+    classes.push(coluna.grupo === "Lula" ? "coluna-lula" : "coluna-flavio");
     celula.className = classes.join(" ");
     linhaColunas.appendChild(celula);
   }
@@ -4601,11 +4664,118 @@ function textoResumoCidades(cidadesDoFiltro) {
     formatarInteiro(comVotos.length) + " " + onde + " com votos (no 1º turno: " + formatarInteiro(lula1t) + " e " + formatarInteiro(flavio1t) + ").";
 }
 
+function nomeDaSelecaoCidades(encontradas) {
+  // Como o card descreve o recorte: a cidade, as cidades encontradas, o estado ou o Brasil.
+  if (buscaCidadesAtual.trim() !== "") {
+    if (encontradas.length === 1) {
+      return encontradas[0].nome + " (" + (encontradas[0].uf === "ZZ" ? "exterior" : encontradas[0].uf) + ")";
+    }
+    return formatarInteiro(encontradas.length) + " cidades encontradas";
+  }
+  if (ufCidadesAtual === "ZZ") {
+    return "Exterior";
+  }
+  if (ufCidadesAtual) {
+    return buscarUf(ufCidadesAtual).nm_uf;
+  }
+  return "Brasil e exterior";
+}
+
+function renderizarSelecaoCidades(encontradas) {
+  // Card ao lado da busca: % de Lula e de Flávio no 2º turno somando as cidades do recorte.
+  let votosLula = 0;
+  let votosFlavio = 0;
+  for (const cidade of encontradas) {
+    votosLula += cidade.votos_2t_13;
+    votosFlavio += cidade.votos_2t_22;
+  }
+  const totalFinalistas = votosLula + votosFlavio;
+  const conteiner = document.getElementById("selecao-cidades");
+  conteiner.replaceChildren();
+
+  const rotulo = document.createElement("div");
+  rotulo.className = "rotulo-selecao";
+  rotulo.textContent = "2º turno · " + nomeDaSelecaoCidades(encontradas);
+  conteiner.appendChild(rotulo);
+
+  const valores = document.createElement("div");
+  valores.className = "valores-selecao";
+  const candidatos = [
+    { nome: "Lula", variavelCor: "--cor-lula", votos: votosLula },
+    { nome: "Flávio", variavelCor: "--cor-flavio", votos: votosFlavio },
+  ];
+  for (const candidato of candidatos) {
+    const valor = document.createElement("div");
+    valor.className = "valor-selecao";
+    const amostra = document.createElement("span");
+    amostra.className = "amostra amostra-quadrada";
+    amostra.style.background = "var(" + candidato.variavelCor + ")";
+    valor.appendChild(amostra);
+    const nome = document.createElement("span");
+    nome.className = "nome-selecao";
+    nome.textContent = candidato.nome;
+    valor.appendChild(nome);
+    const percentual = document.createElement("strong");
+    percentual.textContent = totalFinalistas > 0 ? formatarPercentual(100 * candidato.votos / totalFinalistas, 2) : "—";
+    valor.appendChild(percentual);
+    valores.appendChild(valor);
+  }
+  conteiner.appendChild(valores);
+}
+
+function renderizarFiltroVencedor(recorte) {
+  // Botões "Todas", "Lula ganhou" e "Flávio ganhou", cada um com a contagem de cidades do recorte.
+  let vitoriasLula = 0;
+  let vitoriasFlavio = 0;
+  for (const cidade of recorte) {
+    if (cidade.temVotos && cidade.vencedor_2t === "Lula") {
+      vitoriasLula += 1;
+    } else if (cidade.temVotos && cidade.vencedor_2t === "Flávio") {
+      vitoriasFlavio += 1;
+    }
+  }
+  const opcoes = [
+    { valor: "", rotulo: "Todas", contagem: recorte.length, variavelCor: null },
+    { valor: "Lula", rotulo: "Lula ganhou", contagem: vitoriasLula, variavelCor: "--cor-lula" },
+    { valor: "Flávio", rotulo: "Flávio ganhou", contagem: vitoriasFlavio, variavelCor: "--cor-flavio" },
+  ];
+  const conteiner = document.getElementById("filtro-vencedor");
+  conteiner.replaceChildren();
+  for (const opcao of opcoes) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.setAttribute("aria-pressed", opcao.valor === vencedorCidadesAtual ? "true" : "false");
+    if (opcao.variavelCor) {
+      const amostra = document.createElement("span");
+      amostra.className = "amostra amostra-quadrada";
+      amostra.style.background = "var(" + opcao.variavelCor + ")";
+      botao.appendChild(amostra);
+    }
+    botao.appendChild(document.createTextNode(opcao.rotulo + " "));
+    const contagem = document.createElement("span");
+    contagem.className = "contagem-vencedor";
+    contagem.textContent = formatarInteiro(opcao.contagem);
+    botao.appendChild(contagem);
+    botao.addEventListener("click", function () {
+      vencedorCidadesAtual = opcao.valor;
+      limiteCidadesAtual = cidadesPorPagina();
+      renderizarListaCidades();
+    });
+    conteiner.appendChild(botao);
+  }
+}
+
 function renderizarListaCidades() {
   const doFiltroUf = carregarCidades().filter(function (cidade) { return !ufCidadesAtual || cidade.uf === ufCidadesAtual; });
   document.getElementById("resumo-cidades").textContent = textoResumoCidades(doFiltroUf);
 
-  const encontradas = ordenarCidades(filtrarCidades());
+  // O card de % e as contagens usam o recorte (estado + busca); a lista aplica também o vencedor.
+  const recorte = filtrarCidades();
+  renderizarSelecaoCidades(recorte);
+  renderizarFiltroVencedor(recorte);
+  const encontradas = ordenarCidades(recorte.filter(function (cidade) {
+    return !vencedorCidadesAtual || (cidade.temVotos && cidade.vencedor_2t === vencedorCidadesAtual);
+  }));
   const visiveis = encontradas.slice(0, limiteCidadesAtual);
   const conteiner = document.getElementById("tabela-cidades");
   conteiner.replaceChildren();

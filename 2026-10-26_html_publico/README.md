@@ -134,8 +134,17 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - Colunas: barra do 2º turno; Lula e Flávio com 1º turno, 2º turno e variação, cada uma com % (ou pontos) em cima e votos embaixo; vantagem e comparecimento (2º turno e ▲▼); eleitores; habitantes (IBGE 2026, ver `2026-10-26_populacao_ibge/`).
   - Entre 820 e 1.279 px saem a barra e a vantagem, para não haver rolagem lateral. Na tabela, a palavra "votos" fica só no cabeçalho ("Lula · % e votos"); nas fichas do celular, aparece em cada número.
   - Não há dica ao passar o mouse nem o card de instrução, a pedido do Vinicius: a linha já mostra tudo.
+  - As colunas de Lula têm fundo vermelho claro e as de Flávio, azul claro (pedido do Vinicius: "pra conseguir ver melhor"). O título de cada grupo vem na cor do candidato.
+    - O texto continua escuro de propósito: com os números de Lula em vermelho, o ▼ vermelho das quedas sumiria.
+    - Tokens: `--fundo-lula`, `--fundo-flavio`, `--cabecalho-*` e `--titulo-*`, com versões para o claro e o escuro.
   - "Virou" aparece num selo vermelho (`--fundo-virou`) aqui, no mapa e nos cartões de região do resumo.
   - A lista mostra 100 cidades por vez (25 no celular, onde cada uma vira uma ficha), com o botão "Mostrar mais". O padrão é ordenar pelo número de eleitores, maior primeiro.
+  - Ao lado da busca, um card mostra só Lula x% e Flávio y% no 2º turno, a pedido do Vinicius. A conta soma as cidades do recorte: Brasil, estado, cidades encontradas ou a cidade.
+    - Conferido em 26/10/2026: Brasil 51,79/48,21; MG 50,43/49,57; exterior 53,86/46,14; Belo Horizonte 49,20/50,80.
+  - Embaixo do card, os botões "Todas · N", "Lula ganhou · N" e "Flávio ganhou · N" filtram a lista pelo vencedor do 2º turno, a pedido do Vinicius.
+    - As contagens seguem o recorte (estado e busca); o card de % não muda com esse filtro.
+    - "Todas" inclui as 42 cidades sem voto válido e 1 empate, por isso Lula + Flávio dá menos que o total.
+    - Conferido: Brasil 2.963 × 2.751; MG 528 × 325.
   - O placar no topo vale para o estado escolhido. Exemplo de MG: Lula 528 × Flávio 325 cidades (no 1º turno, 452 × 401).
   - **Dados:** `municipios.js` (`window.DADOS_MUNICIPIOS`, em colunas + linhas), gravado pelo gerador a partir do parquet certificado.
     - O gerador confere que a soma das 5.757 linhas bate com o Brasil nos 10 campos (aptos, comparecimento, válidos e votos de Lula e Flávio, nos dois turnos).
