@@ -573,6 +573,27 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 .filtro-vencedor { margin: 0; }
 .filtro-vencedor button { display: inline-flex; align-items: center; gap: 6px; }
 .contagem-vencedor { font-weight: 700; font-variant-numeric: tabular-nums; }
+/* "Mais petista" e "Mais bolsonarista": um por linha, com a cidade e o % já à vista. */
+.destaques-cidades { display: flex; flex-direction: column; gap: 6px; }
+.botao-destaque-cidade {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  color: var(--tinta);
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.botao-destaque-cidade:hover { background: var(--realce-fundo); }
+.botao-destaque-cidade[aria-pressed="true"] { border-color: var(--tinta); box-shadow: inset 0 0 0 1px var(--tinta); background: var(--realce-fundo); }
+.botao-destaque-cidade:disabled { cursor: default; opacity: 0.6; }
+.detalhe-destaque-cidade { color: var(--tinta-2); font-variant-numeric: tabular-nums; }
 .filtros-cidades { align-items: flex-start; }
 @media (max-width: 819px) {
   .coluna-selecao { flex: 1 1 100%; }
@@ -1041,6 +1062,7 @@ th button:hover { color: var(--tinta); }
         <div class="coluna-selecao">
           <div class="selecao-cidades" id="selecao-cidades" aria-live="polite"></div>
           <div class="controles filtro-vencedor" id="filtro-vencedor" role="group" aria-label="Filtrar cidades pelo vencedor do 2º turno"></div>
+          <div class="destaques-cidades" id="destaques-cidades" role="group" aria-label="Cidade mais petista e mais bolsonarista"></div>
         </div>
       </div>
       <p class="resumo-cidades" id="resumo-cidades"></p>
@@ -4321,6 +4343,10 @@ let ufCidadesAtual = "";
 let buscaCidadesAtual = "";
 // Filtro por vencedor do 2º turno: "" (todas), "Lula" ou "Flávio".
 let vencedorCidadesAtual = "";
+// Destaque "cidade mais petista / mais bolsonarista": "" (desligado), "lula" ou "flavio".
+let destaqueCidadesAtual = "";
+// Cidades com poucos votos (só acontece no exterior, ex.: Havana com 44) não disputam o destaque.
+const MINIMO_VALIDOS_DESTAQUE = 100;
 let limiteCidadesAtual = cidadesPorPagina();
 let ordenacaoCidadesAtual = { campo: "eleitores", crescente: false };
 let cidadesCarregadas = null;
@@ -4744,7 +4770,7 @@ function renderizarFiltroVencedor(recorte) {
   for (const opcao of opcoes) {
     const botao = document.createElement("button");
     botao.type = "button";
-    botao.setAttribute("aria-pressed", opcao.valor === vencedorCidadesAtual ? "true" : "false");
+    botao.setAttribute("aria-pressed", !destaqueCidadesAtual && opcao.valor === vencedorCidadesAtual ? "true" : "false");
     if (opcao.variavelCor) {
       const amostra = document.createElement("span");
       amostra.className = "amostra amostra-quadrada";
@@ -4758,6 +4784,70 @@ function renderizarFiltroVencedor(recorte) {
     botao.appendChild(contagem);
     botao.addEventListener("click", function () {
       vencedorCidadesAtual = opcao.valor;
+      destaqueCidadesAtual = "";
+      limiteCidadesAtual = cidadesPorPagina();
+      renderizarListaCidades();
+    });
+    conteiner.appendChild(botao);
+  }
+}
+
+function cidadesExtremas(recorte) {
+  // Maior % de Lula e maior % de Flávio no 2º turno dentro do recorte. O exterior só entra
+  // quando "Exterior" está selecionado; e cidades com menos de 100 votos válidos ficam de fora.
+  let maisLula = null;
+  let maisFlavio = null;
+  for (const cidade of recorte) {
+    const disputa = cidade.temVotos && cidade.validos_2t >= MINIMO_VALIDOS_DESTAQUE &&
+      (ufCidadesAtual === "ZZ" || cidade.uf !== "ZZ");
+    if (!disputa) {
+      continue;
+    }
+    if (!maisLula || cidade.pct_lula_2t > maisLula.pct_lula_2t) {
+      maisLula = cidade;
+    }
+    if (!maisFlavio || cidade.pct_lula_2t < maisFlavio.pct_lula_2t) {
+      maisFlavio = cidade;
+    }
+  }
+  return { lula: maisLula, flavio: maisFlavio };
+}
+
+function renderizarDestaquesCidades(extremos) {
+  const opcoes = [
+    { codigo: "lula", rotulo: "Mais petista", candidato: "Lula", variavelCor: "--cor-lula" },
+    { codigo: "flavio", rotulo: "Mais bolsonarista", candidato: "Flávio", variavelCor: "--cor-flavio" },
+  ];
+  const conteiner = document.getElementById("destaques-cidades");
+  conteiner.replaceChildren();
+  for (const opcao of opcoes) {
+    const cidade = extremos[opcao.codigo];
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "botao-destaque-cidade";
+    botao.setAttribute("aria-pressed", destaqueCidadesAtual === opcao.codigo ? "true" : "false");
+    const amostra = document.createElement("span");
+    amostra.className = "amostra amostra-quadrada";
+    amostra.style.background = "var(" + opcao.variavelCor + ")";
+    botao.appendChild(amostra);
+    const rotulo = document.createElement("strong");
+    rotulo.textContent = opcao.rotulo + ":";
+    botao.appendChild(rotulo);
+    const detalhe = document.createElement("span");
+    detalhe.className = "detalhe-destaque-cidade";
+    if (cidade) {
+      const percentual = opcao.codigo === "lula" ? cidade.pct_lula_2t : 100 - cidade.pct_lula_2t;
+      detalhe.textContent = cidade.nome + " (" + (cidade.uf === "ZZ" ? "exterior" : cidade.uf) + ") · " +
+        opcao.candidato + " " + formatarPercentual(percentual, 1);
+    } else {
+      detalhe.textContent = "—";
+      botao.disabled = true;
+    }
+    botao.appendChild(detalhe);
+    botao.addEventListener("click", function () {
+      // Clicar de novo desliga; ligar o destaque desliga o filtro por vencedor.
+      destaqueCidadesAtual = destaqueCidadesAtual === opcao.codigo ? "" : opcao.codigo;
+      vencedorCidadesAtual = "";
       limiteCidadesAtual = cidadesPorPagina();
       renderizarListaCidades();
     });
@@ -4773,9 +4863,15 @@ function renderizarListaCidades() {
   const recorte = filtrarCidades();
   renderizarSelecaoCidades(recorte);
   renderizarFiltroVencedor(recorte);
-  const encontradas = ordenarCidades(recorte.filter(function (cidade) {
+  const extremos = cidadesExtremas(recorte);
+  renderizarDestaquesCidades(extremos);
+  let encontradas = ordenarCidades(recorte.filter(function (cidade) {
     return !vencedorCidadesAtual || (cidade.temVotos && cidade.vencedor_2t === vencedorCidadesAtual);
   }));
+  if (destaqueCidadesAtual) {
+    const destacada = extremos[destaqueCidadesAtual];
+    encontradas = destacada ? [destacada] : [];
+  }
   const visiveis = encontradas.slice(0, limiteCidadesAtual);
   const conteiner = document.getElementById("tabela-cidades");
   conteiner.replaceChildren();

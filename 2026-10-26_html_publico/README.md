@@ -145,6 +145,9 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
     - As contagens seguem o recorte (estado e busca); o card de % não muda com esse filtro.
     - "Todas" inclui as 42 cidades sem voto válido e 1 empate, por isso Lula + Flávio dá menos que o total.
     - Conferido: Brasil 2.963 × 2.751; MG 528 × 325.
+  - Embaixo dos botões aparecem "Mais petista" e "Mais bolsonarista", a pedido do Vinicius: a cidade com o maior % de Lula e a com o maior % de Flávio no 2º turno, dentro do recorte. Clicar mostra só aquela cidade; clicar de novo volta.
+    - O exterior só entra quando "Exterior" está selecionado, e é preciso ter pelo menos 100 votos válidos. Sem essa regra, Havana (44 votos, 97,7% Lula) e Katmandu (13 votos) disputariam.
+    - Brasil em 26/10/2026: Carnaubeira da Penha (PE), Lula 92,3%; Nova Pádua (RS), Flávio 90,6%.
   - O placar no topo vale para o estado escolhido. Exemplo de MG: Lula 528 × Flávio 325 cidades (no 1º turno, 452 × 401).
   - **Dados:** `municipios.js` (`window.DADOS_MUNICIPIOS`, em colunas + linhas), gravado pelo gerador a partir do parquet certificado.
     - O gerador confere que a soma das 5.757 linhas bate com o Brasil nos 10 campos (aptos, comparecimento, válidos e votos de Lula e Flávio, nos dois turnos).

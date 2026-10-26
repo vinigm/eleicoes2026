@@ -79,3 +79,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Mapa com filtros na coluna lateral e aviso de uso; seções na ordem da história; seção Cidades (busca + filtro por estado).
   - ✅ Cidades com 1º/2º turno/variação em % e votos e habitantes (IBGE 2026, soma = Brasil); "virou" em selo vermelho.
   - ✅ Card Lula × Flávio (2º turno) ao lado da busca de cidades e filtro "Lula ganhou / Flávio ganhou" com contagens.
+  - ✅ Cidades: botões "mais petista" / "mais bolsonarista" (Brasil: Carnaubeira da Penha 92,3%; Nova Pádua 90,6%).
