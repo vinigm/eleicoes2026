@@ -990,6 +990,24 @@ th button:hover { color: var(--tinta); }
   transition: opacity 80ms;
 }
 .dica.visivel { opacity: 1; }
+/* Quadro abaixo do mapa: só em tela de toque, onde substitui a dica flutuante. */
+.detalhe-toque-mapa { display: none; }
+@media (hover: none) {
+  .dica.detalhe-toque-mapa { display: block; position: static; opacity: 1; pointer-events: auto; box-shadow: none; max-width: none; margin-top: 12px; }
+  /* O tocado fica com a cor; os outros apagam. Contorno não serve: no nível Regiões, cada estado da
+     região ganhava o seu e as linhas cortavam o rótulo da região. */
+  .mosaico.com-selecao .ladrilho:not(.ladrilho-selecionado) { opacity: 0.35; }
+  /* A tabela 1º × 2º × diferença tem de caber na largura do cartão (na dica flutuante ela podia sobrar). */
+  .dica.detalhe-toque-mapa { padding: 8px 10px; overflow-x: auto; }
+  .dica.detalhe-toque-mapa .dica-tabela { width: 100%; font-size: 10.5px; }
+  .dica.detalhe-toque-mapa .dica-tabela th, .dica.detalhe-toque-mapa .dica-tabela td { padding-left: 6px; }
+  .dica.detalhe-toque-mapa .dica-tabela th:first-child { padding-left: 0; white-space: normal; }
+}
+/* Celulares estreitos (até 380 px): os votos das regiões, na casa dos milhões, só cabem com 10 px. */
+@media (hover: none) and (max-width: 380px) {
+  .dica.detalhe-toque-mapa { padding: 8px 6px; }
+  .dica.detalhe-toque-mapa .dica-tabela { font-size: 10px; }
+}
 .dica .dica-titulo { font-weight: 600; margin-bottom: 6px; }
 .dica .dica-linha {
   display: flex;
@@ -1025,6 +1043,92 @@ th button:hover { color: var(--tinta); }
   color: var(--tinta-3);
   border-bottom: 1px solid var(--grade);
 }
+/* ---------- Celular (até 560 px): tudo mais compacto, para rolar menos (pedido do Vinicius) ----------
+   Painéis lado a lado viram abas (preencherAbasCelular); a lista de cidades vira ficha curta, que abre
+   ao tocar. No desktop nada disto se aplica: as abas e a ficha curta ficam escondidas. */
+.abas-celular, .celula-resumo-celular { display: none; }
+@media (max-width: 560px) {
+  body { font-size: 15px; line-height: 1.5; }
+  .pagina { padding: 16px 12px 48px; }
+  section { margin-top: 32px; }
+  h1 { font-size: 24px; margin-bottom: 10px; }
+  h2 { font-size: 20px; }
+  .cartao { padding: 14px; border-radius: 10px; }
+  .cartao + .cartao { margin-top: 12px; }
+  .cartao-comparativo { padding: 14px; border-left-width: 3px; }
+  .cartao .titulo-cartao-grande { font-size: 18px; }
+  .sub-cartao-grande, .sub { font-size: 14px; }
+  .paineis-turnos { gap: 20px; margin-top: 12px; }
+  .painel-turno h4 { font-size: 15px; }
+  .painel-turno .sub-painel { font-size: 13.5px; margin-bottom: 8px; }
+  .controles button { font-size: 13px; padding: 5px 11px; }
+  .legenda { font-size: 12px; }
+
+  .abas-celular { display: flex; align-items: center; margin: 12px 0 0; }
+  .painel-aba:not(.aba-escolhida) { display: none; }
+
+  /* Resumo: big numbers 2 por linha; regiões uma por linha, com as variações numa linha só. */
+  .grade-numeros { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .cartao-numero { padding: 10px 12px; }
+  .rotulo-numero { font-size: 10.5px; }
+  .valor-numero { font-size: 24px; margin-top: 2px; }
+  .complemento-numero { font-size: 11.5px; line-height: 1.35; }
+  .comparacao-numero { margin-top: 8px; padding-top: 6px; font-size: 11.5px; gap: 2px; }
+  .linha-comparacao { gap: 0 6px; }
+  .grade-regioes { gap: 8px; }
+  .cartao-regiao { padding: 10px 12px; }
+  .nome-regiao { font-size: 14px; }
+  .numeros-regiao { margin-top: 4px; gap: 2px 10px; }
+  .percentual-regiao { font-size: 18px; }
+  .numero-regiao .linha-variacao-regiao { display: inline; font-size: 11px; }
+  .numero-regiao .linha-variacao-regiao + .linha-variacao-regiao::before { content: " · "; }
+  .barra-resumo-regiao { height: 6px; margin-top: 6px; }
+
+  /* Tabelas dos turnos: sem as linhas "—" dos eliminados no 2º turno. */
+  .tabela-turno { font-size: 13.5px; }
+  .tabela-turno td, .tabela-turno th { padding: 5px 4px; }
+  .tabela-turno .linha-ausente { display: none; }
+
+  .instrucao-mapa { font-size: 13px; padding: 8px 10px; margin-bottom: 10px; }
+  .instrucao-mapa svg { width: 16px; height: 16px; }
+
+  .linha-cascata { padding: 3px 0; }
+  .nome-cascata { font-size: 12.5px; }
+  .valor-cascata strong { font-size: 13px; }
+  .valor-cascata .faixa-cascata { font-size: 10.5px; }
+
+  /* Cidades: ficha curta (barra, Lula e Flávio, eleitores); tocar abre o resto. */
+  .tabela-cidades tr { cursor: pointer; padding: 10px 0; }
+  .tabela-cidades tr > td:not(:first-child):not(.celula-resumo-celular) { display: none; }
+  .tabela-cidades tr.ficha-aberta > td:not(:first-child):not(.celula-resumo-celular):not(.celula-barra-cidade) { display: flex; }
+  .tabela-cidades td.celula-resumo-celular { display: block; padding: 4px 0 0; text-align: left; }
+  .tabela-cidades td.celula-resumo-celular::before { content: none; }
+  .tabela-cidades tr.ficha-aberta > td.celula-resumo-celular { padding-bottom: 6px; }
+  .linha-resumo-celular { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 6px; font-size: 13.5px; }
+  .candidato-resumo-celular { display: inline-flex; align-items: center; gap: 5px; }
+  .variacao-resumo-celular { font-size: 11.5px; color: var(--tinta-2); }
+  .eleitores-resumo-celular { display: flex; justify-content: space-between; font-size: 12px; color: var(--tinta-2); margin-top: 2px; }
+  .abrir-ficha-celular::after { content: "detalhes ▾"; font-weight: 600; color: var(--tinta); }
+  .ficha-aberta .abrir-ficha-celular::after { content: "fechar ▴"; }
+
+  /* Último big number sozinho na linha ocupa as duas colunas. */
+  .grade-numeros > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  /* Mapa menor e centrado: com a largura toda, ocupava quase uma tela. */
+  .painel-mapa .mosaico { max-width: 320px; margin: 0 auto; }
+  /* Virada: coluna de valores mais larga, para "puxou 0,78 mi para Lula" caber em duas linhas. */
+  .cascata-virada .linha-cascata { grid-template-columns: minmax(0, 1fr) 150px; }
+  .cascata-virada .valor-cascata strong { font-size: 12.5px; }
+  /* Filtros das cidades: Estado e Habitantes lado a lado, campos mais baixos. A fonte fica em 16 px:
+     abaixo disso o iPhone dá zoom ao tocar no campo. */
+  .painel-filtros-cidades { gap: 10px 10px; padding: 12px; }
+  .painel-filtros-cidades .campo-filtro { flex: 1 1 40%; gap: 4px; }
+  .painel-filtros-cidades .campo-busca { flex: 1 1 100%; }
+  .campo-filtro .rotulo-controle { font-size: 12.5px; }
+  .filtros-cidades select, .filtros-cidades input { font-size: 16px; height: 40px; padding: 0 10px; }
+  .filtros-cidades select { padding-right: 30px; background-position: right 10px center; }
+  .selecao-cidades { padding: 8px 12px; }
+  .valor-selecao strong { font-size: 20px; }
+}
 </style>
 </head>
 <body>
@@ -1051,6 +1155,7 @@ th button:hover { color: var(--tinta); }
     <div class="cartao cartao-comparativo">
       <h3 class="titulo-cartao-grande">Brasil</h3>
       <div class="controles controle-base" id="controle-base-resultado" role="group" aria-label="Base dos percentuais"></div>
+      <div class="controles abas-celular" id="abas-resultado" role="group" aria-label="Turno"></div>
       <div class="paineis-turnos">
         <div class="painel-turno" id="painel-1t"></div>
         <div class="painel-turno" id="painel-2t"></div>
@@ -1112,6 +1217,7 @@ th button:hover { color: var(--tinta); }
     <div class="cartao cartao-comparativo">
       <h3 class="titulo-cartao-grande" id="titulo-cascata"></h3>
       <p class="sub-cartao-grande">Total: contagem oficial. Divisão por origem: <strong>estimativa estatística</strong>; embaixo de cada número, o menor e o maior valor entre os 3 modelos.</p>
+      <div class="controles abas-celular" id="abas-cascata" role="group" aria-label="Candidato"></div>
       <div class="paineis-turnos">
         <div class="painel-turno" id="painel-cascata-lula"></div>
         <div class="painel-turno" id="painel-cascata-flavio"></div>
@@ -1150,6 +1256,7 @@ th button:hover { color: var(--tinta); }
     <div class="cartao cartao-comparativo">
       <h3 class="titulo-cartao-grande">Índices sociais × voto, dentro de cada região</h3>
       <div class="controles" id="controles-dispersao" role="group" aria-label="Índice do eixo horizontal" style="margin:16px 0 8px"></div>
+      <div class="controles abas-celular" id="abas-dispersao" role="group" aria-label="Região"></div>
       <div class="grade-dispersao" id="grafico-dispersao"></div>
     </div>
     <div class="cartao">
@@ -1479,15 +1586,17 @@ function criarTabelaDica(tabela) {
   return elementoTabela;
 }
 
-function preencherDica(titulo, linhas, nota, tabela) {
-  dica.replaceChildren();
+function preencherDica(titulo, linhas, nota, tabela, destino) {
+  // destino: onde escrever (padrão: a dica flutuante; no toque, o quadro abaixo do mapa).
+  const alvo = destino || dica;
+  alvo.replaceChildren();
   const elementoTitulo = document.createElement("div");
   elementoTitulo.className = "dica-titulo";
   elementoTitulo.textContent = titulo;
-  dica.appendChild(elementoTitulo);
+  alvo.appendChild(elementoTitulo);
 
   if (tabela) {
-    dica.appendChild(criarTabelaDica(tabela));
+    alvo.appendChild(criarTabelaDica(tabela));
   }
   for (const linha of linhas || []) {
     const elementoLinha = document.createElement("div");
@@ -1509,14 +1618,14 @@ function preencherDica(titulo, linhas, nota, tabela) {
     rotulo.className = "dica-rotulo";
     rotulo.textContent = linha.rotulo;
     elementoLinha.appendChild(rotulo);
-    dica.appendChild(elementoLinha);
+    alvo.appendChild(elementoLinha);
   }
 
   if (nota) {
     const elementoNota = document.createElement("div");
     elementoNota.className = "dica-nota";
     elementoNota.textContent = nota;
-    dica.appendChild(elementoNota);
+    alvo.appendChild(elementoNota);
   }
 }
 
@@ -1536,39 +1645,36 @@ function posicionarDica(x, y) {
   dica.style.top = Math.max(8, topo) + "px";
 }
 
-// No celular não existe "passar o mouse": o toque abre a dica, que fica até tocar fora de um
-// elemento com dica ou rolar a página (a dica é fixa na tela e ficaria solta sobre outro conteúdo).
-document.addEventListener("pointerdown", function (evento) {
-  if (evento.pointerType === "touch" && !evento.target.closest("[data-com-dica]")) {
-    dica.classList.remove("visivel");
-  }
-});
+function telaDeToque() {
+  // Celular e tablet: não existe "passar o mouse". Ali a dica flutuante cobria meia tela e abria sem
+  // querer ao tocar para rolar (reclamação do Vinicius): no toque não há dica flutuante. Os números
+  // ficam na própria página; no mapa, num quadro abaixo dele (mostrarDetalheToqueMapa).
+  return window.matchMedia("(hover: none)").matches;
+}
+
+// A dica é fixa na tela: ao rolar, ela ficaria solta sobre outro conteúdo.
 window.addEventListener("scroll", function () {
   dica.classList.remove("visivel");
 }, { passive: true });
 
 function ligarDica(elemento, montarConteudo) {
-  // Mesma dica no mouse, no toque e no foco do teclado: a dica nunca é a única forma de ler o valor.
-  function mostrarNoPonto(evento) {
+  // Mesma dica no mouse e no foco do teclado; no toque, nenhuma (ver telaDeToque).
+  elemento.addEventListener("pointermove", function (evento) {
+    if (evento.pointerType === "touch" || telaDeToque()) {
+      return;
+    }
     const conteudo = montarConteudo();
     preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota, conteudo.tabela);
     dica.classList.add("visivel");
     posicionarDica(evento.clientX, evento.clientY);
-  }
-  elemento.dataset.comDica = "1";
-  elemento.addEventListener("pointermove", mostrarNoPonto);
-  elemento.addEventListener("pointerdown", function (evento) {
-    if (evento.pointerType === "touch") {
-      mostrarNoPonto(evento);
-    }
   });
-  elemento.addEventListener("pointerleave", function (evento) {
-    // No toque, o navegador manda "saiu" logo depois de soltar o dedo: a dica fica aberta.
-    if (evento.pointerType !== "touch") {
-      dica.classList.remove("visivel");
-    }
+  elemento.addEventListener("pointerleave", function () {
+    dica.classList.remove("visivel");
   });
   elemento.addEventListener("focus", function () {
+    if (telaDeToque()) {
+      return;
+    }
     const conteudo = montarConteudo();
     preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota, conteudo.tabela);
     dica.classList.add("visivel");
@@ -2149,9 +2255,56 @@ function renderizarPainelTurno(turno, idPainel) {
   painel.appendChild(rolagem);
 }
 
+/* ---------- Abas do celular ---------- */
+// No celular (até 560 px), painéis que no desktop ficam lado a lado viram abas: um por vez, escolhido
+// por botões, para encurtar a rolagem (pedido do Vinicius). No desktop os botões somem pelo CSS e
+// todos os painéis aparecem. A aba escolhida sobrevive aos redesenhos (filtros, tema).
+const abasCelularEscolhidas = {};
+
+function preencherAbasCelular(idBarra, paineis, nomePadrao, textoRotulo) {
+  // paineis: [{ nome, elemento }]; textoRotulo (opcional) vai antes dos botões, como "Região:".
+  const nomes = paineis.map(function (painel) { return painel.nome; });
+  if (nomes.indexOf(abasCelularEscolhidas[idBarra]) < 0) {
+    abasCelularEscolhidas[idBarra] = nomePadrao;
+  }
+  const barra = document.getElementById(idBarra);
+  barra.replaceChildren();
+  if (textoRotulo) {
+    const rotulo = document.createElement("span");
+    rotulo.className = "rotulo-controle";
+    rotulo.textContent = textoRotulo;
+    barra.appendChild(rotulo);
+  }
+  const botoes = [];
+  function marcarEscolhida() {
+    paineis.forEach(function (painel, posicao) {
+      const escolhida = painel.nome === abasCelularEscolhidas[idBarra];
+      painel.elemento.classList.add("painel-aba");
+      painel.elemento.classList.toggle("aba-escolhida", escolhida);
+      botoes[posicao].setAttribute("aria-pressed", escolhida ? "true" : "false");
+    });
+  }
+  for (const painel of paineis) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.textContent = painel.nome;
+    botao.addEventListener("click", function () {
+      abasCelularEscolhidas[idBarra] = painel.nome;
+      marcarEscolhida();
+    });
+    botoes.push(botao);
+    barra.appendChild(botao);
+  }
+  marcarEscolhida();
+}
+
 function renderizarResultado() {
   renderizarPainelTurno(1, "painel-1t");
   renderizarPainelTurno(2, "painel-2t");
+  preencherAbasCelular("abas-resultado", [
+    { nome: "1º turno", elemento: document.getElementById("painel-1t") },
+    { nome: "2º turno", elemento: document.getElementById("painel-2t") },
+  ], "2º turno");
 }
 
 /* ---------- Barras empilhadas (HTML) ---------- */
@@ -2953,6 +3106,12 @@ function criarMosaico(turno, escala) {
     }
 
     ligarDica(ladrilho, function () { return montarDicaTurnos(fonte, nomeLadrilho, turno); });
+    ladrilho.dataset.nomeLadrilho = nomeLadrilho;
+    ladrilho.addEventListener("click", function () {
+      if (telaDeToque()) {
+        mostrarDetalheToqueMapa(nomeLadrilho, montarDicaTurnos(fonte, nomeLadrilho, turno));
+      }
+    });
     mosaico.appendChild(ladrilho);
   }
 
@@ -3036,6 +3195,21 @@ function renderizarMapaSegundoTurno(escala) {
   const painelMapa = document.getElementById("painel-estados-2t");
   painelMapa.replaceChildren();
   painelMapa.appendChild(criarMosaico(2, escala));
+  // Quadro do toque (só aparece em tela de toque, pelo CSS): recebe os detalhes do ladrilho tocado.
+  const quadro = document.createElement("div");
+  quadro.id = "detalhe-toque-mapa";
+  quadro.className = "dica detalhe-toque-mapa";
+  quadro.textContent = "Toque em " + (nivelMapaAtual === "regiao" ? "uma região" : "um estado") + " para ver os detalhes aqui.";
+  painelMapa.appendChild(quadro);
+}
+
+function mostrarDetalheToqueMapa(nomeLadrilho, conteudo) {
+  // No toque, os detalhes do mapa vão para o quadro abaixo dele, e não para uma dica flutuante.
+  preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota, conteudo.tabela, document.getElementById("detalhe-toque-mapa"));
+  document.querySelector("#painel-estados-2t .mosaico").classList.add("com-selecao");
+  for (const ladrilho of document.querySelectorAll("#painel-estados-2t .ladrilho")) {
+    ladrilho.classList.toggle("ladrilho-selecionado", ladrilho.dataset.nomeLadrilho === nomeLadrilho);
+  }
 }
 
 function criarInstrucaoMapa(alvo) {
@@ -3046,7 +3220,9 @@ function criarInstrucaoMapa(alvo) {
   icone.appendChild(criarSvg("path", { d: "M3 1 L3 13 L6.2 10.2 L8.6 15 L10.6 14 L8.3 9.3 L12.4 9.3 Z", fill: "currentColor" }));
   instrucao.appendChild(icone);
   const textoInstrucao = document.createElement("span");
-  textoInstrucao.textContent = "Passe o mouse (ou toque) em " + alvo + " para ver os detalhes: 1º e 2º turno, em % e em números.";
+  textoInstrucao.textContent = telaDeToque() ?
+    "Toque em " + alvo + " para ver os detalhes logo abaixo do mapa." :
+    "Passe o mouse em " + alvo + " para ver os detalhes: 1º e 2º turno, em % e em números.";
   instrucao.appendChild(textoInstrucao);
   return instrucao;
 }
@@ -4460,6 +4636,10 @@ function renderizarConclusao() {
   const teto = Math.ceil(maiorAcumuladoCascata() / 1e6) * 1e6;
   renderizarPainelCascata(FINALISTAS_CONCLUSAO[0], "painel-cascata-lula", teto);
   renderizarPainelCascata(FINALISTAS_CONCLUSAO[1], "painel-cascata-flavio", teto);
+  preencherAbasCelular("abas-cascata", [
+    { nome: "Lula", elemento: document.getElementById("painel-cascata-lula") },
+    { nome: "Flávio", elemento: document.getElementById("painel-cascata-flavio") },
+  ], "Lula");
   renderizarSankeyRegioes();
   renderizarVirada();
 }
@@ -4674,13 +4854,8 @@ function criarCelulaCidade(cidade) {
   return celula;
 }
 
-function criarCelulaBarraCidade(cidade) {
-  const celula = document.createElement("td");
-  celula.dataset.rotulo = "2º turno";
-  celula.className = "celula-barra-cidade";
-  if (!cidade.temVotos) {
-    return celula;
-  }
+function criarBarraSegundoTurno(cidade) {
+  // Barra Lula × Flávio do 2º turno (decorativa: os números estão ao lado).
   const barra = document.createElement("div");
   barra.className = "barra-resumo-regiao";
   barra.setAttribute("aria-hidden", "true");
@@ -4692,7 +4867,63 @@ function criarCelulaBarraCidade(cidade) {
   parteFlavio.style.width = (100 - cidade.pct_lula_2t) + "%";
   parteFlavio.style.background = "var(--cor-flavio)";
   barra.appendChild(parteFlavio);
-  celula.appendChild(barra);
+  return barra;
+}
+
+function criarCelulaBarraCidade(cidade) {
+  const celula = document.createElement("td");
+  celula.dataset.rotulo = "2º turno";
+  celula.className = "celula-barra-cidade";
+  if (!cidade.temVotos) {
+    return celula;
+  }
+  celula.appendChild(criarBarraSegundoTurno(cidade));
+  return celula;
+}
+
+function criarResumoCelularCidade(cidade) {
+  // Ficha curta do celular (pedido do Vinicius: rolar menos): barra do 2º turno, Lula e Flávio com a
+  // variação desde o 1º e os eleitores. As outras células aparecem ao tocar na cidade (ficha-aberta).
+  // No desktop esta célula some pelo CSS.
+  const celula = document.createElement("td");
+  celula.className = "celula-resumo-celular";
+  if (!cidade.temVotos) {
+    celula.textContent = "Sem votos válidos";
+    return celula;
+  }
+  celula.appendChild(criarBarraSegundoTurno(cidade));
+  const linhaVotos = document.createElement("div");
+  linhaVotos.className = "linha-resumo-celular";
+  const candidatos = [
+    { nome: "Lula", variavelCor: "--cor-lula", percentual2t: cidade.pct_lula_2t, percentual1t: cidade.pct_lula_1t },
+    { nome: "Flávio", variavelCor: "--cor-flavio", percentual2t: percentualFlavio2t(cidade), percentual1t: cidade.pct_flavio_1t },
+  ];
+  for (const candidato of candidatos) {
+    const bloco = document.createElement("span");
+    bloco.className = "candidato-resumo-celular";
+    const amostra = document.createElement("span");
+    amostra.className = "amostra amostra-quadrada";
+    amostra.style.background = "var(" + candidato.variavelCor + ")";
+    bloco.appendChild(amostra);
+    bloco.appendChild(document.createTextNode(candidato.nome + " "));
+    const percentual = document.createElement("strong");
+    percentual.textContent = formatarPercentual(candidato.percentual2t, 1);
+    bloco.appendChild(percentual);
+    const variacao = document.createElement("span");
+    const diferenca = candidato.percentual2t - candidato.percentual1t;
+    variacao.className = diferenca < 0 ? "variacao-resumo-celular variacao-negativa" : "variacao-resumo-celular";
+    variacao.textContent = textoVariacaoPontos(diferenca, 1);
+    bloco.appendChild(variacao);
+    linhaVotos.appendChild(bloco);
+  }
+  celula.appendChild(linhaVotos);
+  const linhaEleitores = document.createElement("div");
+  linhaEleitores.className = "eleitores-resumo-celular";
+  linhaEleitores.appendChild(document.createTextNode(formatarInteiro(cidade.aptos_2t) + " eleitores"));
+  const abrir = document.createElement("span");
+  abrir.className = "abrir-ficha-celular";
+  linhaEleitores.appendChild(abrir);
+  celula.appendChild(linhaEleitores);
   return celula;
 }
 
@@ -4754,6 +4985,11 @@ function adicionarColunasCandidato(linha, cidade, nome, percentual1t, percentual
 function criarLinhaCidade(cidade) {
   const linha = document.createElement("tr");
   linha.appendChild(criarCelulaCidade(cidade));
+  linha.appendChild(criarResumoCelularCidade(cidade));
+  // No celular, tocar na cidade abre e fecha a ficha completa (no desktop a classe não muda nada).
+  linha.addEventListener("click", function () {
+    linha.classList.toggle("ficha-aberta");
+  });
   const celulaBarra = criarCelulaBarraCidade(cidade);
   celulaBarra.classList.add("coluna-opcional");
   linha.appendChild(celulaBarra);
@@ -5137,7 +5373,8 @@ function renderizarCidades() {
   if (seletor.options.length === 0) {
     const todas = document.createElement("option");
     todas.value = "";
-    todas.textContent = "Todos os estados";
+    // "Todos" e não "Todos os estados": no celular o texto longo era cortado no campo (o rótulo já diz "Estado").
+    todas.textContent = "Todos";
     seletor.appendChild(todas);
     const ufsOrdenadas = DADOS.ufs.slice().sort(function (ufA, ufB) { return ufA.nm_uf.localeCompare(ufB.nm_uf, "pt-BR"); });
     for (const uf of ufsOrdenadas) {
@@ -5793,14 +6030,16 @@ function criarPainelDispersao(nomePainel, cidades, indicador, faixasEscolhidas, 
   svg.appendChild(rotuloLula);
 
   // Dica: cidade mais próxima do ponteiro (um único ouvinte por painel); com faixa, só as de dentro.
-  // No toque, o raio de busca é maior (o dedo cobre vários pontos) e a dica fica até tocar fora.
-  function mostrarCidadeMaisProxima(evento) {
+  // No toque não há dica (ver telaDeToque).
+  svg.addEventListener("pointermove", function (evento) {
+    if (evento.pointerType === "touch" || telaDeToque()) {
+      return;
+    }
     const caixa = svg.getBoundingClientRect();
     const xPonteiro = evento.clientX - caixa.left;
     const yPonteiro = evento.clientY - caixa.top;
-    const raioBusca = evento.pointerType === "touch" ? 20 : 8;
     let maisProximo = null;
-    let menorDistancia = raioBusca * raioBusca;
+    let menorDistancia = 64;
     for (const ponto of pontosNaFaixa) {
       const dx = posicaoX(ponto.x) - xPonteiro;
       const dy = posicaoY(ponto.y) - yPonteiro;
@@ -5823,18 +6062,9 @@ function criarPainelDispersao(nomePainel, cidades, indicador, faixasEscolhidas, 
     ], null);
     dica.classList.add("visivel");
     posicionarDica(evento.clientX, evento.clientY);
-  }
-  svg.dataset.comDica = "1";
-  svg.addEventListener("pointermove", mostrarCidadeMaisProxima);
-  svg.addEventListener("pointerdown", function (evento) {
-    if (evento.pointerType === "touch") {
-      mostrarCidadeMaisProxima(evento);
-    }
   });
-  svg.addEventListener("pointerleave", function (evento) {
-    if (evento.pointerType !== "touch") {
-      dica.classList.remove("visivel");
-    }
+  svg.addEventListener("pointerleave", function () {
+    dica.classList.remove("visivel");
   });
   painel.appendChild(svg);
   return { painel: painel, regressao: regressao };
@@ -5867,12 +6097,15 @@ function renderizarDispersao() {
       pctLula: buscarRegiaoPorNome(nomeRegiao).pct_lula_2t,
     });
   }
+  const abas = [];
   for (const definicao of paineis) {
     const resultado = criarPainelDispersao(definicao.nome, definicao.cidades, indicadorDispersaoAtual, faixasDispersaoAtuais,
       larguraPainel, definicao.pctLula);
     regressoesDispersao[definicao.nome] = resultado.regressao;
     conteiner.appendChild(resultado.painel);
+    abas.push({ nome: definicao.nome, elemento: resultado.painel });
   }
+  preencherAbasCelular("abas-dispersao", abas, "Brasil", "Região:");
 }
 
 function renderizarPerfilCidades() {

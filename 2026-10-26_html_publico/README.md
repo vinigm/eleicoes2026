@@ -191,14 +191,35 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - 42 cidades do exterior não tiveram voto válido: aparecem com "—" e vão para o fim de qualquer ordenação.
   - Conferido em 26/10/2026 contra o parquet, com cálculo independente: São Paulo, Rio de Janeiro, Brasília, Abadia dos Dourados e o placar de MG batem.
 
+## Celular (até 560 px): layout próprio
+
+Pedido do Vinicius em 26/10/2026: no celular, as dicas de "passar o mouse" atrapalhavam e era preciso rolar demais. No desktop nada muda.
+
+- **Sem dica flutuante no toque** (`telaDeToque`, media `hover: none`):
+  - antes, a dica cobria meia tela e abria sem querer ao tocar para rolar;
+  - no mapa, tocar numa região ou estado mostra a tabela 1º × 2º × diferença num quadro logo abaixo dele, e os outros ladrilhos apagam;
+  - nos outros gráficos os números já estão na página.
+- **Painéis lado a lado viram abas** (`preencherAbasCelular`), um por vez:
+  - resultado nacional: 1º turno | 2º turno (abre no 2º, que já traz a variação ▲▼);
+  - conclusão: Lula | Flávio;
+  - dispersão: Brasil e as 5 regiões.
+- **Lista de cidades em ficha curta:** barra, Lula e Flávio no 2º turno com a variação, e eleitores. Tocar abre a ficha completa.
+- **Compactação:**
+  - big numbers 2 por linha;
+  - regiões com as variações numa linha só;
+  - fontes e espaçamentos menores;
+  - sem as linhas "—" dos eliminados no 2º turno;
+  - mapa com no máximo 320 px de largura;
+  - Estado e Habitantes lado a lado. Os campos ficam com fonte de 16 px, porque abaixo disso o iPhone dá zoom.
+- **Resultado em 375 px:** a página caiu de 30,4 para 15,6 telas de altura (de 24.669 para 12.683 px). A lista de 25 cidades caiu de 9.714 para 2.820 px.
+
 ## Verificação feita em 26/10/2026
 
 - Renderizada no Chrome headless em desktop (1200 px), celular (390 px, via iframe) e modo escuro: sem rolagem horizontal, sem erro no console.
 - Frases conferidas contra os números em Python (faixas entre modelos, Goiás, quedas de comparecimento).
 - **Não verificado:** interação com o mouse (dicas) em navegador real; hospedagem no GitHub Pages.
 - **Revisão geral no celular (26/10/2026, pedido do Vinicius):** página inteira em 320, 360, 390, 430 e 768 px, claro e escuro. Corrigido:
-  - dicas no toque: tocar abre a dica e ela fica aberta; tocar fora ou rolar a página fecha. Antes, o toque não abria nada (só havia "passar o mouse"), e a dica fixa ficava solta ao rolar;
-  - dispersão: no toque, a busca da cidade mais próxima usa raio de 20 px (8 px no mouse);
+  - dica fixa solta na tela ao rolar a página: agora ela fecha ao rolar. A abertura da dica no toque, testada nesta revisão, foi substituída pelo layout próprio do celular (ver acima);
   - mapa de calor: no celular, o "%" some das células e o espaço entre elas cai para 2 px. Os números se encostavam em 360 px;
   - botões "Todas / Lula ganhou / Flávio ganhou / Virou" e da dispersão menores no celular: dois por linha, e não um;
   - rótulos cortados: "Centro-Oeste" e "Branco/nulo" nos Sankeys (coluna de rótulos de 76 para 92 px) e "100%" no eixo da dispersão (margem direita de 10 para 16 px);
