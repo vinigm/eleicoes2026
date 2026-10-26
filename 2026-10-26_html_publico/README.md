@@ -145,7 +145,8 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
       - alfabetização: 60–70% · 70–80% · 80–90% · 90–100%;
       - PIB per capita: < R$ 10 mil · 10–30 mil · 30–100 mil · 100–300 mil · ≥ R$ 300 mil (os cortes das marcas do eixo);
       - faixas fechadas embaixo e abertas em cima (70,00% entra em 70–80%);
-      - com uma faixa escolhida, o resto do gráfico fica cinza, e os cards e o resumo de cada painel passam a ser os das cidades da faixa: votos somados, contagem de cidades e vitórias de cada um;
+      - seleção múltipla (pedido do Vinicius): cada clique liga ou desliga uma faixa, e elas podem ser separadas (ex.: 60–70% e 90–100%); ligar todas volta para "Todas";
+      - com faixas escolhidas, o resto do gráfico fica cinza, e os cards e o resumo de cada painel passam a ser os das cidades dessas faixas: votos somados e "N cidades · vitórias: Lula X · Flávio Y";
       - nessa visão o Brasil não inclui o exterior (não tem índice do IBGE); trocar de índice volta para "Todas";
       - conferido por recálculo independente a partir dos CSVs de `dados/processados/` (APROVADO, 26/10/2026).
     - A legenda e o parágrafo do cartão saíram a pedido do Vinicius. O aviso "acesso a estudo e renda, não inteligência; relação entre cidades, não entre eleitores" segue em `2026-10-26_indicadores_ibge/README.md`.
