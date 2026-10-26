@@ -133,6 +133,21 @@ COLUNAS_TRANSFERENCIAS = [
 
 CASAS_DECIMAIS_PERCENTUAL = 4
 
+# Conclusão da página: decomposição do ganho oficial de cada finalista por origem.
+ESPECIFICACOES_CONCLUSAO = ["E1", "E2", "E3"]
+RECORTE_BRASIL = "Brasil"
+NOME_REGIAO_EXTERIOR = "Exterior"
+ORIGENS_GANHO = ["cury", "renan", "caiado", "demais", "branco_nulo", "abstencao"]
+DESTINOS_SEGUNDO_TURNO = ["lula", "flavio", "branco_nulo", "abstencao"]
+NUMERO_POR_FINALISTA = {"lula": "13", "flavio": "22"}
+RIVAL_POR_FINALISTA = {"lula": "flavio", "flavio": "lula"}
+# A linha de origem do finalista soma os votos dele no 1º turno (β soma 1);
+# acima de 1 voto de diferença, a migração não corresponde à base.
+TOLERANCIA_VOTOS_ORIGEM = 1.0
+# O ajuste do modelo é recalculado como real − previsto; a diferença para o valor
+# em inteiros só pode vir do arredondamento das 7 entradas e 3 perdas.
+TOLERANCIA_AJUSTE_MODELO = 6.0
+
 
 def ler_csv_obrigatorio(caminho: pathlib.Path) -> pd.DataFrame:
     """Lê um CSV do projeto (`;`, UTF-8) e falha cedo se ele não existir.
@@ -560,6 +575,190 @@ def montar_migracao(
     return registros
 
 
+def montar_fluxos_brasil(transferencias: pd.DataFrame, especificacao: str) -> pd.DataFrame:
+    """Monta a matriz origem (1º turno) × destino (2º turno) do Brasil, em votos.
+
+    Args:
+        transferencias: Tabela longa de `transferencias.csv`.
+        especificacao: Modelo (E1, E2 ou E3).
+
+    Returns:
+        Matriz com as 8 origens nas linhas e os 4 destinos nas colunas.
+
+    Raises:
+        ValueError: Se a matriz estiver incompleta.
+    """
+    mascara_modelo = transferencias["especificacao"] == especificacao
+    mascara_brasil = transferencias["regiao"] == RECORTE_BRASIL
+    transferencias_brasil = transferencias[mascara_modelo & mascara_brasil]
+    fluxos_brasil = transferencias_brasil.pivot(
+        index="origem_1t", columns="destino_2t", values="votos"
+    )
+
+    origens_esperadas = set(ORIGENS_GANHO) | set(NUMERO_POR_FINALISTA)
+    origens_ausentes = origens_esperadas - set(fluxos_brasil.index)
+    destinos_ausentes = set(DESTINOS_SEGUNDO_TURNO) - set(fluxos_brasil.columns)
+    if origens_ausentes or destinos_ausentes or fluxos_brasil.isna().any().any():
+        raise ValueError(
+            f"Matriz de migração incompleta em {especificacao}: origens ausentes "
+            f"{sorted(origens_ausentes)}, destinos ausentes {sorted(destinos_ausentes)}."
+        )
+    return fluxos_brasil
+
+
+def decompor_ganho_finalista(
+    fluxos_brasil: pd.DataFrame,
+    codigo_finalista: str,
+    votos_1t_brasil: int,
+    votos_2t_brasil: int,
+) -> dict[str, object]:
+    """Decompõe o saldo de um finalista no Brasil (sem exterior) por origem.
+
+    Identidade, em votos inteiros:
+        votos do 2º − votos do 1º = Σ entradas − Σ perdas + ajuste do modelo
+
+    - entradas: eleitores de cada origem do 1º turno (eliminados, branco/nulo,
+      não votou e o outro finalista) que o modelo estima terem votado no
+      finalista no 2º turno;
+    - perdas: eleitores do finalista no 1º turno que, pelo modelo, foram para
+      outro destino no 2º (por destino);
+    - ajuste do modelo: real − previsto pelo modelo para o total do finalista.
+      É o erro de ajuste nacional, não um grupo de eleitores.
+
+    Args:
+        fluxos_brasil: Matriz origem × destino de um modelo.
+        codigo_finalista: `lula` ou `flavio`.
+        votos_1t_brasil: Votos do finalista no 1º turno, sem exterior.
+        votos_2t_brasil: Votos do finalista no 2º turno, sem exterior.
+
+    Returns:
+        Dicionário com `entradas`, `perdas` e `ajuste_modelo`.
+
+    Raises:
+        ValueError: Se a linha de origem do finalista não somar seus votos do
+            1º turno, ou se o ajuste em inteiros divergir de real − previsto.
+    """
+    soma_origem_finalista = float(fluxos_brasil.loc[codigo_finalista].sum())
+    if abs(soma_origem_finalista - votos_1t_brasil) > TOLERANCIA_VOTOS_ORIGEM:
+        raise ValueError(
+            f"Migração de {codigo_finalista} soma {soma_origem_finalista:.1f} votos, "
+            f"mas a base tem {votos_1t_brasil} no 1º turno."
+        )
+
+    origens_entrada = ORIGENS_GANHO + [RIVAL_POR_FINALISTA[codigo_finalista]]
+    entradas: dict[str, int] = {}
+    for origem in origens_entrada:
+        entradas[origem] = int(round(float(fluxos_brasil.loc[origem, codigo_finalista])))
+
+    perdas: dict[str, int] = {}
+    for destino in DESTINOS_SEGUNDO_TURNO:
+        if destino != codigo_finalista:
+            perdas[destino] = int(round(float(fluxos_brasil.loc[codigo_finalista, destino])))
+
+    saldo_brasil = votos_2t_brasil - votos_1t_brasil
+    saldo_estimado = sum(entradas.values()) - sum(perdas.values())
+    ajuste_modelo = saldo_brasil - saldo_estimado
+
+    # Conferência independente do ajuste: real − previsto, com o previsto somando
+    # a coluna do finalista inteira (retidos + todas as entradas), sem arredondar.
+    previsto_brasil = float(fluxos_brasil[codigo_finalista].sum())
+    ajuste_medido = votos_2t_brasil - previsto_brasil
+    if abs(ajuste_modelo - ajuste_medido) > TOLERANCIA_AJUSTE_MODELO:
+        raise ValueError(
+            f"Ajuste do modelo de {codigo_finalista} não confere: {ajuste_modelo} em "
+            f"inteiros ≠ {ajuste_medido:.1f} (real − previsto). Falta alguma origem?"
+        )
+
+    return {"entradas": entradas, "perdas": perdas, "ajuste_modelo": ajuste_modelo}
+
+
+def montar_conclusao(
+    transferencias: pd.DataFrame,
+    indicadores_brasil: pd.DataFrame,
+    indicadores_regiao: pd.DataFrame,
+) -> dict[str, object]:
+    """Monta a conclusão: de onde veio o ganho oficial de Lula e de Flávio.
+
+    Para cada finalista e cada modelo (E1 principal, E2 e E3), o ganho oficial
+    do 1º para o 2º turno (com exterior) fecha exatamente em:
+        Σ entradas − Σ perdas + ajuste do modelo + saldo do exterior
+
+    O ganho oficial e o saldo do exterior são fatos do TSE; entradas e perdas
+    são estimativas da inferência ecológica (o exterior ficou fora dela).
+
+    Args:
+        transferencias: Tabela longa de `transferencias.csv`.
+        indicadores_brasil: Uma linha, Brasil com exterior.
+        indicadores_regiao: Uma linha por região, inclusive o Exterior.
+
+    Returns:
+        Dicionário por finalista com ganho oficial, saldo do exterior e a
+        decomposição de cada modelo.
+
+    Raises:
+        ValueError: Se as regiões não fecharem com o Brasil ou a decomposição
+            não fechar com o ganho oficial.
+    """
+    linha_brasil = indicadores_brasil.iloc[0]
+    mascara_exterior = indicadores_regiao["nm_regiao"] == NOME_REGIAO_EXTERIOR
+    if int(mascara_exterior.sum()) != 1:
+        raise ValueError("Indicadores por região deveriam ter exatamente 1 linha de Exterior.")
+    linha_exterior = indicadores_regiao[mascara_exterior].iloc[0]
+    regioes_sem_exterior = indicadores_regiao[~mascara_exterior]
+
+    fluxos_por_modelo: dict[str, pd.DataFrame] = {}
+    for especificacao in ESPECIFICACOES_CONCLUSAO:
+        fluxos_por_modelo[especificacao] = montar_fluxos_brasil(transferencias, especificacao)
+
+    conclusao: dict[str, object] = {}
+    for codigo_finalista, numero_finalista in NUMERO_POR_FINALISTA.items():
+        coluna_1t = f"votos_1t_{numero_finalista}"
+        coluna_2t = f"votos_2t_{numero_finalista}"
+        votos_1t_brasil = int(regioes_sem_exterior[coluna_1t].sum())
+        votos_2t_brasil = int(regioes_sem_exterior[coluna_2t].sum())
+        saldo_exterior = int(linha_exterior[coluna_2t] - linha_exterior[coluna_1t])
+        ganho_oficial = int(linha_brasil[f"ganho_{codigo_finalista}"])
+
+        saldo_por_regioes = votos_2t_brasil - votos_1t_brasil + saldo_exterior
+        if saldo_por_regioes != ganho_oficial:
+            raise ValueError(
+                f"Regiões não fecham com o Brasil para {codigo_finalista}: "
+                f"{saldo_por_regioes} ≠ {ganho_oficial}."
+            )
+
+        modelos: dict[str, object] = {}
+        for especificacao, fluxos_brasil in fluxos_por_modelo.items():
+            decomposicao = decompor_ganho_finalista(
+                fluxos_brasil, codigo_finalista, votos_1t_brasil, votos_2t_brasil
+            )
+            soma_entradas = sum(decomposicao["entradas"].values())
+            soma_perdas = sum(decomposicao["perdas"].values())
+            total_decomposto = (
+                soma_entradas - soma_perdas + decomposicao["ajuste_modelo"] + saldo_exterior
+            )
+            if total_decomposto != ganho_oficial:
+                raise ValueError(
+                    f"Decomposição de {codigo_finalista} em {especificacao} não fecha: "
+                    f"{total_decomposto} ≠ {ganho_oficial}."
+                )
+            modelos[especificacao] = decomposicao
+
+        conclusao[codigo_finalista] = {
+            "ganho_oficial": ganho_oficial,
+            "saldo_exterior": saldo_exterior,
+            "modelos": modelos,
+        }
+        LOGGER.info(
+            "Conclusão de %s fecha em %d votos nos %d modelos (ajuste do principal: %d).",
+            codigo_finalista,
+            ganho_oficial,
+            len(modelos),
+            modelos[ESPECIFICACOES_CONCLUSAO[0]]["ajuste_modelo"],
+        )
+
+    return conclusao
+
+
 def resumir_validacao_uf(caminho_curva: pathlib.Path) -> dict[str, float]:
     """Resume a validação cruzada do modelo por estado para a metodologia.
 
@@ -740,6 +939,7 @@ def gerar_dados_html() -> None:
         "diagnosticos_uf": montar_diagnosticos_uf(transferencias_uf, CAMINHO_BASE_MUNICIPIOS),
         "validacao_uf": resumir_validacao_uf(CAMINHO_CURVA_VALIDACAO_UF),
         "diagnosticos_regiao": calcular_diagnosticos_regiao(CAMINHO_BASE_MUNICIPIOS),
+        "conclusao": montar_conclusao(transferencias, indicadores_brasil, indicadores_regiao),
     }
 
     gravar_dados_js(dados_html, CAMINHO_SAIDA)

@@ -30,6 +30,10 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
 - **HTML público (no ar)** — `docs/index.html` + `docs/dados.js`, gerado por `2026-10-26_html_publico/`.
   - Verificado no Chrome headless: desktop, celular e modo escuro, sem erro no console.
   - Layout (26/10/2026): cartões "1º × 2º turno" lado a lado com variação ▲▼, botão votos válidos ↔ todo o eleitorado, Sankey com filtro Brasil/região/estado. A página não tem mais seção de metodologia (fica no repositório).
+  - Regiões e estados num cartão só (Regiões é o padrão), com ▲▼ nos mapas do 2º turno.
+  - Conclusão no fim: cascata "de onde vieram os votos a mais" (Lula × Flávio) e a virada.
+    - Fato: o ganho de cada finalista e a virada, de −2,22 mi a +4,43 mi.
+    - Estimativa: a divisão por origem. 6,09 mi da virada vieram de quem anulou ou não votou; os eliminados deram +0,78 mi líquido a Lula (−0,06 a +0,87 entre os modelos).
   - Sem rolagem lateral em 1.440 a 390 px (medido).
   - **No ar em https://vinigm.github.io/eleicoes2026/** (GitHub Pages, branch `main`, pasta `/docs`, desde 26/10/2026).
   - Atualizar a página = regenerar `docs/`, fazer commit e push; o Pages republica sozinho.
@@ -53,5 +57,5 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
 
 ## Maquiagem de visualização
 
-- **Mapa de estados é um mosaico**, não um mapa geográfico: a posição de cada UF é aproximada.
+- **Mapa de estados é um mosaico**, não um mapa geográfico: a posição de cada UF é aproximada; no nível Regiões, os blocos são os quadrados das UFs colados (formato aproximado).
 - **No HTML, as barras de migração mostram só o modelo principal.** A faixa entre os modelos aparece na dica do mouse, nas tabelas e no gráfico de sensibilidade.

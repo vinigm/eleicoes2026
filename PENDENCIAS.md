@@ -22,6 +22,10 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
 
 - ✅ Exterior: entra como 6ª região nos gráficos descritivos e fica fora da migração (26/10/2026, decisão do agente com o Vinicius ausente; revisar).
 
+- 🚫 Cartão "Regiões" separado: removido por redundância com o seletor Regiões | Estados (26/10/2026, Vinicius).
+
+- ⏳ Cartão "De onde veio o crescimento" (seção de migração) repete parte da conclusão: manter (segue o filtro de recorte) ou podar?
+
 ## Agente (executa)
 
 - ✅ Primeiro push para `vinigm/eleicoes2026` (26/10/2026): README na raiz, autor com e-mail noreply do GitHub, caminhos absolutos trocados por relativos.
@@ -64,3 +68,5 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Página redesenhada (lado a lado, ▲▼, base eleitorado, sem metodologia) enviada ao GitHub.
   - ✅ Página quebrava para quem tinha a versão anterior em cache: `dados.js` passou a ser versionado pelo conteúdo.
   - ✅ Mapas de estados com seletor "Mostrar por: Estados | Regiões".
+  - ✅ Conclusão "de onde vieram os votos a mais de Lula" (cascata + virada); certificação independente achou e corrigiu a troca direta Flávio → Lula (E3).
+  - ✅ Regiões e estados fundidos (Regiões padrão), ▲▼ nos mapas, dicas na ordem 1º/2º/diferença, legenda dos mapas sem texto.
