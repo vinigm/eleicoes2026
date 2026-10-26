@@ -86,3 +86,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Cidades: botões "mais petista" / "mais bolsonarista" (Brasil: Carnaubeira da Penha 92,3%; Nova Pádua 90,6%).
   - ✅ Cidades: filtro por faixa de habitantes (até 50 mil … mais de 300 mil) aplicado a todo o recorte.
   - ✅ Mapa de calor tamanho × voto e dispersão alfabetização/PIB × voto por região (IBGE; conferência independente aprovada).
+  - ✅ Dispersão com pontos neutros e faixas "Flávio venceu / Lula venceu"; filtros de cidades em painel destacado e maiores.

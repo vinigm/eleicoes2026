@@ -136,7 +136,10 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
     - Colunas: as 5 faixas de habitantes e "Todas". Cada célula mostra o % de Flávio no 2º turno (votos somados), com a mesma cor do mapa (azul = Flávio, vermelho = Lula) e o número de cidades.
     - A frase de cima é gerada dos dados.
     - **Fato:** Flávio tem 43,9% nas cidades até 50 mil habitantes, o seu pior tamanho, porque 38% de quem mora nelas está no Nordeste. Dentro das regiões o desenho muda. No Nordeste e no Norte, Flávio cresce com o tamanho da cidade. No Sul, vai um pouco melhor nas pequenas e médias. No Sudeste, o pior resultado dele é acima de 300 mil.
-  - **Dispersão "índices sociais × voto":** 6 painéis (Brasil e as 5 regiões); cada ponto é uma cidade, colorido pelo vencedor.
+  - **Dispersão "índices sociais × voto":** 6 painéis (Brasil e as 5 regiões); cada ponto é uma cidade.
+    - Os pontos são cinza e o fundo tem duas faixas: azul-claro acima de 50% ("Flávio venceu") e vermelho-claro abaixo ("Lula venceu").
+      - Antes, a cor do ponto era o vencedor e só repetia a altura. Parecia um padrão sem ser (dúvida do Vinicius em 26/10/2026).
+      - A legenda diz que o eixo vertical é o % de Flávio e que uma linha subindo quer dizer mais índice, mais voto em Flávio.
     - Índice no eixo x: alfabetização (Censo 2022) ou PIB per capita (2023, escala log). Fonte: `2026-10-26_indicadores_ibge/`.
     - Cada painel tem a reta de mínimos quadrados e o r de Pearson. Cada cidade pesa igual, e o PIB entra em log10.
     - O texto do cartão avisa: os índices medem acesso a estudo e renda, não inteligência; e a relação entre cidades não diz como votou cada eleitor.
@@ -164,6 +167,7 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
   - Embaixo dos botões aparecem "Mais petista" e "Mais bolsonarista", a pedido do Vinicius: a cidade com o maior % de Lula e a com o maior % de Flávio no 2º turno, dentro do recorte. Clicar mostra só aquela cidade; clicar de novo volta.
     - O exterior só entra quando "Exterior" está selecionado, e é preciso ter pelo menos 100 votos válidos. Sem essa regra, Havana (44 votos, 97,7% Lula) e Katmandu (13 votos) disputariam.
     - Brasil em 26/10/2026: Carnaubeira da Penha (PE), Lula 92,3%; Nova Pádua (RS), Flávio 90,6%.
+  - Os filtros (Estado, Habitantes, Buscar cidade) ficam num painel destacado, com fonte de 17 px e todos com 46 px de altura (pedido do Vinicius: "tá meio perdido"). O `<select>` usa estilo próprio, porque o Safari desenha o nativo miúdo. A busca ficou mais estreita (até 280 px).
   - Seletor "Habitantes" ao lado de "Estado", a pedido do Vinicius, para não comparar só cidades de 2 mil habitantes. Faixas: até 50 mil, 50–100, 100–200, 200–300 e mais de 300 mil, cada uma com a contagem do recorte.
     - A faixa vale para tudo: lista, card de %, placar, botões de vencedor e "mais petista/bolsonarista". O exterior sai, porque não tem população.
     - Fato, 26/10/2026: Lula tem 56,07% nas cidades até 50 mil, cai até 45,87% em 200–300 mil e volta a 50,37% acima de 300 mil.

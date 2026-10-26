@@ -539,19 +539,49 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 .barra-resumo-regiao span:last-child { border-radius: 0 4px 4px 0; }
 /* Cidades: filtro por estado, busca sem acento e lista ordenável (100 por vez). */
 .filtros-cidades { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; margin-bottom: 14px; }
+/* Filtros num painel destacado, fonte grande e todos com a mesma altura (pedido do Vinicius:
+   "tá meio perdido, nem dá pra ver"). O Safari desenha <select> nativo miúdo, por isso o estilo próprio. */
+.painel-filtros-cidades {
+  flex: 1 1 520px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--eixo);
+  border-radius: 12px;
+  background: var(--realce-fundo);
+}
 .campo-filtro { display: flex; flex-direction: column; gap: 6px; }
-.campo-filtro .rotulo-controle { margin: 0; }
-.campo-busca { flex: 1 1 260px; }
+.campo-filtro .rotulo-controle { margin: 0; font-size: 14px; font-weight: 700; color: var(--tinta); }
+.campo-busca { flex: 0 1 280px; }
 .filtros-cidades select, .filtros-cidades input {
   font: inherit;
-  font-size: 15px;
-  padding: 9px 12px;
-  border: 1px solid var(--eixo);
-  border-radius: 8px;
-  background: var(--superficie);
+  font-size: 17px;
+  height: 46px;
+  padding: 0 14px;
+  border: 1.5px solid var(--eixo);
+  border-radius: 10px;
+  background-color: var(--superficie);
   color: var(--tinta);
 }
+.filtros-cidades select {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 210px;
+  padding-right: 40px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a8983' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.filtros-cidades select:focus-visible, .filtros-cidades input:focus-visible { outline: 2px solid var(--tinta); outline-offset: 1px; }
 .filtros-cidades input { width: 100%; }
+@media (max-width: 819px) {
+  .painel-filtros-cidades { flex: 1 1 100%; padding: 14px; }
+  .painel-filtros-cidades .campo-filtro { flex: 1 1 100%; }
+  .filtros-cidades select { width: 100%; min-width: 0; }
+}
 /* Card do recorte ao lado da busca: só Lula x% e Flávio y% no 2º turno. */
 .selecao-cidades {
   display: flex;
@@ -681,6 +711,7 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 #controles-calor, #controles-dispersao { align-items: center; }
 #controles-calor .rotulo-controle, #controles-dispersao .rotulo-controle { margin-right: 4px; }
 .marca-dispersao { font-size: 11px; fill: var(--tinta-3); }
+.faixa-dispersao { font-size: 11px; font-weight: 700; }
 .painel-dispersao svg { display: block; touch-action: pan-y; }
 /* Mapa em mosaico */
 /* Mapa do 2º turno: filtros e legenda numa coluna à esquerda, mapa à direita; destaques embaixo. */
@@ -1092,26 +1123,30 @@ th button:hover { color: var(--tinta); }
       <p class="sub-cartao-grande">Cada ponto é uma cidade; a linha é a tendência, e o r mede a força da relação (de −1 a +1). Alfabetização e PIB medem acesso a estudo e renda, não inteligência, e a relação entre cidades não diz como votou cada eleitor.</p>
       <div class="controles" id="controles-dispersao" role="group" aria-label="Índice do eixo horizontal" style="margin:16px 0 8px"></div>
       <ul class="legenda">
-        <li><span class="amostra" style="background:var(--cor-lula)"></span>Cidade onde Lula venceu</li>
-        <li><span class="amostra" style="background:var(--cor-flavio)"></span>Cidade onde Flávio venceu</li>
-        <li><span class="amostra-linha" style="background:var(--tinta);height:3px"></span>Tendência (cada cidade pesa igual)</li>
+        <li><strong>Eixo vertical:</strong>&nbsp;% de Flávio no 2º turno</li>
+        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-flavio);box-shadow:inset 0 0 0 1px var(--cor-flavio)"></span>Acima de 50%: Flávio venceu a cidade</li>
+        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-lula);box-shadow:inset 0 0 0 1px var(--cor-lula)"></span>Abaixo de 50%: Lula venceu</li>
+        <li><span class="amostra" style="background:var(--tinta-2)"></span>Cada ponto é uma cidade</li>
+        <li><span class="amostra-linha" style="background:var(--tinta);height:3px"></span>Tendência: subindo = mais índice, mais voto em Flávio</li>
       </ul>
       <div class="grade-dispersao" id="grafico-dispersao"></div>
     </div>
     <div class="cartao">
       <div class="filtros-cidades">
-        <label class="campo-filtro">
-          <span class="rotulo-controle">Estado</span>
-          <select id="filtro-uf-cidades"></select>
-        </label>
-        <label class="campo-filtro">
-          <span class="rotulo-controle">Habitantes</span>
-          <select id="filtro-habitantes"></select>
-        </label>
-        <label class="campo-filtro campo-busca">
-          <span class="rotulo-controle">Buscar cidade</span>
-          <input type="search" id="busca-cidade" placeholder="Digite o nome da cidade" autocomplete="off" spellcheck="false">
-        </label>
+        <div class="painel-filtros-cidades" role="group" aria-label="Filtros da lista de cidades">
+          <label class="campo-filtro">
+            <span class="rotulo-controle">Estado</span>
+            <select id="filtro-uf-cidades"></select>
+          </label>
+          <label class="campo-filtro">
+            <span class="rotulo-controle">Habitantes</span>
+            <select id="filtro-habitantes"></select>
+          </label>
+          <label class="campo-filtro campo-busca">
+            <span class="rotulo-controle">Buscar cidade</span>
+            <input type="search" id="busca-cidade" placeholder="Nome da cidade" autocomplete="off" spellcheck="false">
+          </label>
+        </div>
         <div class="coluna-selecao">
           <div class="selecao-cidades" id="selecao-cidades" aria-live="polite"></div>
           <div class="controles filtro-vencedor" id="filtro-vencedor" role="group" aria-label="Filtrar cidades pelo vencedor do 2º turno"></div>
@@ -5433,6 +5468,19 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
   definicoes.appendChild(recorte);
   svg.appendChild(definicoes);
 
+  // Fundo em duas faixas: acima de 50% Flávio venceu a cidade; abaixo, Lula. Os pontos ficam
+  // neutros, porque a cor do vencedor só repetiria a altura do ponto (dúvida do Vinicius).
+  svg.appendChild(criarSvg("rect", { x: margem.esquerda, y: posicaoY(100), width: larguraUtil, height: posicaoY(50) - posicaoY(100),
+    fill: lerCor("--fundo-flavio") }));
+  svg.appendChild(criarSvg("rect", { x: margem.esquerda, y: posicaoY(50), width: larguraUtil, height: posicaoY(0) - posicaoY(50),
+    fill: lerCor("--fundo-lula") }));
+  const rotuloFlavio = criarSvg("text", { x: margem.esquerda + 6, y: posicaoY(100) + 13, class: "faixa-dispersao" });
+  rotuloFlavio.style.fill = lerCor("--titulo-flavio");
+  rotuloFlavio.textContent = "Flávio venceu";
+  const rotuloLula = criarSvg("text", { x: margem.esquerda + 6, y: posicaoY(0) - 5, class: "faixa-dispersao" });
+  rotuloLula.style.fill = lerCor("--titulo-lula");
+  rotuloLula.textContent = "Lula venceu";
+
   // Grade, eixos e linha dos 50%.
   for (const valorY of [0, 25, 50, 75, 100]) {
     const y = posicaoY(valorY);
@@ -5450,13 +5498,16 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
     svg.appendChild(rotuloX);
   }
 
-  // Pontos: vermelho onde Lula venceu, azul onde Flávio venceu.
+  // Pontos neutros: a posição já diz quem venceu (acima ou abaixo da linha de 50%).
   const corLula = lerCor("--cor-lula");
   const corFlavio = lerCor("--cor-flavio");
+  const corPonto = lerCor("--tinta-2");
   for (const ponto of pontos) {
     svg.appendChild(criarSvg("circle", { cx: posicaoX(ponto.x), cy: posicaoY(ponto.y), r: 2,
-      fill: ponto.y > 50 ? corFlavio : corLula, "fill-opacity": 0.45 }));
+      fill: corPonto, "fill-opacity": 0.4 }));
   }
+  svg.appendChild(rotuloFlavio);
+  svg.appendChild(rotuloLula);
 
   // Reta de tendência dentro da faixa de x da região.
   if (regressao) {
