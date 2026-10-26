@@ -196,3 +196,11 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
 - Renderizada no Chrome headless em desktop (1200 px), celular (390 px, via iframe) e modo escuro: sem rolagem horizontal, sem erro no console.
 - Frases conferidas contra os números em Python (faixas entre modelos, Goiás, quedas de comparecimento).
 - **Não verificado:** interação com o mouse (dicas) em navegador real; hospedagem no GitHub Pages.
+- **Revisão geral no celular (26/10/2026, pedido do Vinicius):** página inteira em 320, 360, 390, 430 e 768 px, claro e escuro. Corrigido:
+  - dicas no toque: tocar abre a dica e ela fica aberta; tocar fora ou rolar a página fecha. Antes, o toque não abria nada (só havia "passar o mouse"), e a dica fixa ficava solta ao rolar;
+  - dispersão: no toque, a busca da cidade mais próxima usa raio de 20 px (8 px no mouse);
+  - mapa de calor: no celular, o "%" some das células e o espaço entre elas cai para 2 px. Os números se encostavam em 360 px;
+  - botões "Todas / Lula ganhou / Flávio ganhou / Virou" e da dispersão menores no celular: dois por linha, e não um;
+  - rótulos cortados: "Centro-Oeste" e "Branco/nulo" nos Sankeys (coluna de rótulos de 76 para 92 px) e "100%" no eixo da dispersão (margem direita de 10 para 16 px);
+  - selo "estimativa estatística" não se parte mais em duas linhas.
+  - Ainda não verificado em aparelho de verdade: o toque foi simulado no navegador.

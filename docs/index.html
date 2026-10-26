@@ -236,7 +236,7 @@ h2 {
 .controle-base { margin: 16px 0 0; align-items: center; }
 /* Na visão do eleitorado são 5 colunas de números: em telas médias a barra fina sai para a tabela caber na metade do cartão. */
 .rotulo-controle { font-size: 13px; font-weight: 600; color: var(--tinta-2); margin-right: 4px; }
-.etiqueta-titulo { font-size: 12px; vertical-align: middle; margin-left: 8px; font-weight: 600; }
+.etiqueta-titulo { font-size: 12px; vertical-align: middle; margin-left: 8px; font-weight: 600; display: inline-block; white-space: nowrap; }
 /* Abaixo de 1.280 px, cabeçalhos e textos quebram linha em vez de forçar rolagem lateral. */
 @media (max-width: 1279px) {
   .tabela-rolagem th, .tabela-rolagem td { white-space: normal; }
@@ -704,6 +704,8 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
   .tabela-calor thead th { font-size: 10.5px; }
   .contagem-calor { display: none; }
   .percentual-calor { font-size: 12px; }
+  .sinal-percentual { display: none; }
+  .tabela-calor { border-spacing: 2px; }
   .celula-calor { height: 34px; }
   .tabela-calor .celula-calor-total, .tabela-calor thead th:last-child { display: none; }
 }
@@ -730,6 +732,11 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 #controles-dispersao { column-gap: 22px; row-gap: 10px; }
 .grupo-controles-dispersao { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .grupo-controles-dispersao button { display: inline-flex; align-items: center; gap: 6px; }
+/* Celular: botões de filtro um pouco menores, para caberem dois por linha (antes, um por linha em 360 px). */
+@media (max-width: 560px) {
+  .filtro-vencedor button, #controles-dispersao button { font-size: 13px; padding: 6px 10px; gap: 5px; }
+  .painel-dispersao h4 { font-size: 15px; }
+}
 #controles-calor, #controles-dispersao { align-items: center; }
 #controles-calor .rotulo-controle, #controles-dispersao .rotulo-controle { margin-right: 4px; }
 .marca-dispersao { font-size: 11px; fill: var(--tinta-3); }
@@ -1529,16 +1536,37 @@ function posicionarDica(x, y) {
   dica.style.top = Math.max(8, topo) + "px";
 }
 
+// No celular não existe "passar o mouse": o toque abre a dica, que fica até tocar fora de um
+// elemento com dica ou rolar a página (a dica é fixa na tela e ficaria solta sobre outro conteúdo).
+document.addEventListener("pointerdown", function (evento) {
+  if (evento.pointerType === "touch" && !evento.target.closest("[data-com-dica]")) {
+    dica.classList.remove("visivel");
+  }
+});
+window.addEventListener("scroll", function () {
+  dica.classList.remove("visivel");
+}, { passive: true });
+
 function ligarDica(elemento, montarConteudo) {
-  // Mesma dica no mouse e no foco do teclado: a dica nunca é a única forma de ler o valor.
-  elemento.addEventListener("pointermove", function (evento) {
+  // Mesma dica no mouse, no toque e no foco do teclado: a dica nunca é a única forma de ler o valor.
+  function mostrarNoPonto(evento) {
     const conteudo = montarConteudo();
     preencherDica(conteudo.titulo, conteudo.linhas, conteudo.nota, conteudo.tabela);
     dica.classList.add("visivel");
     posicionarDica(evento.clientX, evento.clientY);
+  }
+  elemento.dataset.comDica = "1";
+  elemento.addEventListener("pointermove", mostrarNoPonto);
+  elemento.addEventListener("pointerdown", function (evento) {
+    if (evento.pointerType === "touch") {
+      mostrarNoPonto(evento);
+    }
   });
-  elemento.addEventListener("pointerleave", function () {
-    dica.classList.remove("visivel");
+  elemento.addEventListener("pointerleave", function (evento) {
+    // No toque, o navegador manda "saiu" logo depois de soltar o dedo: a dica fica aberta.
+    if (evento.pointerType !== "touch") {
+      dica.classList.remove("visivel");
+    }
   });
   elemento.addEventListener("focus", function () {
     const conteudo = montarConteudo();
@@ -3493,7 +3521,8 @@ function renderizarSankey(todas) {
   // Usa a largura real (sem o mínimo dos outros gráficos): em telas estreitas os rótulos encolhem.
   const largura = Math.max(200, conteiner.clientWidth);
   const estreito = largura < 560;
-  const larguraRotulos = estreito ? 76 : 168;
+  // 92 px no celular: com 76, "Branco/nulo" saía do desenho.
+  const larguraRotulos = estreito ? 92 : 168;
   const altura = estreito ? 340 : 380;
   const margemTopo = 6;
   // Espaço extra embaixo para o rótulo de duas linhas do último nó, que costuma ser fino.
@@ -4309,7 +4338,8 @@ function renderizarSankeyRegioes() {
   conteiner.replaceChildren();
   const largura = Math.max(200, conteiner.clientWidth);
   const estreito = largura < 560;
-  const larguraRotulos = estreito ? 76 : 168;
+  // 92 px no celular: com 76, "Centro-Oeste" saía do desenho.
+  const larguraRotulos = estreito ? 92 : 168;
   const altura = estreito ? 320 : 360;
   const margemTopo = 6;
   const margemBase = 26;
@@ -5236,7 +5266,12 @@ function criarCelulaCalor(nomeLinha, faixa, soma, escala) {
   celula.style.color = corDeTextoSobre(corFundo);
   const percentual = document.createElement("span");
   percentual.className = "percentual-calor";
-  percentual.textContent = formatarPercentual(soma.pctFlavio, 1);
+  // O "%" vai num span à parte: no celular ele some para o número caber na célula (a legenda diz que é %).
+  percentual.textContent = formatarNumero(soma.pctFlavio, 1);
+  const sinal = document.createElement("span");
+  sinal.className = "sinal-percentual";
+  sinal.textContent = "%";
+  percentual.appendChild(sinal);
   celula.appendChild(percentual);
   const contagem = document.createElement("span");
   contagem.className = "contagem-calor";
@@ -5665,7 +5700,8 @@ function criarPainelDispersao(nomePainel, cidades, indicador, faixasEscolhidas, 
   painel.appendChild(resumo);
 
   const altura = 230;
-  const margem = { esquerda: 74, direita: 10, topo: 8, base: 26 };
+  // Direita com 16 px: o último rótulo do eixo ("100%") é centrado na borda e era cortado no celular.
+  const margem = { esquerda: 74, direita: 16, topo: 8, base: 26 };
   const larguraUtil = largura - margem.esquerda - margem.direita;
   const alturaUtil = altura - margem.topo - margem.base;
   const dominioX = indicador.escalaLog ? [Math.log10(indicador.dominio[0]), Math.log10(indicador.dominio[1])] : indicador.dominio;
@@ -5757,12 +5793,14 @@ function criarPainelDispersao(nomePainel, cidades, indicador, faixasEscolhidas, 
   svg.appendChild(rotuloLula);
 
   // Dica: cidade mais próxima do ponteiro (um único ouvinte por painel); com faixa, só as de dentro.
-  svg.addEventListener("pointermove", function (evento) {
+  // No toque, o raio de busca é maior (o dedo cobre vários pontos) e a dica fica até tocar fora.
+  function mostrarCidadeMaisProxima(evento) {
     const caixa = svg.getBoundingClientRect();
     const xPonteiro = evento.clientX - caixa.left;
     const yPonteiro = evento.clientY - caixa.top;
+    const raioBusca = evento.pointerType === "touch" ? 20 : 8;
     let maisProximo = null;
-    let menorDistancia = 64;
+    let menorDistancia = raioBusca * raioBusca;
     for (const ponto of pontosNaFaixa) {
       const dx = posicaoX(ponto.x) - xPonteiro;
       const dy = posicaoY(ponto.y) - yPonteiro;
@@ -5785,9 +5823,18 @@ function criarPainelDispersao(nomePainel, cidades, indicador, faixasEscolhidas, 
     ], null);
     dica.classList.add("visivel");
     posicionarDica(evento.clientX, evento.clientY);
+  }
+  svg.dataset.comDica = "1";
+  svg.addEventListener("pointermove", mostrarCidadeMaisProxima);
+  svg.addEventListener("pointerdown", function (evento) {
+    if (evento.pointerType === "touch") {
+      mostrarCidadeMaisProxima(evento);
+    }
   });
-  svg.addEventListener("pointerleave", function () {
-    dica.classList.remove("visivel");
+  svg.addEventListener("pointerleave", function (evento) {
+    if (evento.pointerType !== "touch") {
+      dica.classList.remove("visivel");
+    }
   });
   painel.appendChild(svg);
   return { painel: painel, regressao: regressao };

@@ -95,3 +95,4 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ Dispersão: cards Lula × Flávio por painel (depois reduzidos e discretos); legenda e texto do cartão retirados.
   - ✅ Dispersão: filtro de faixa do índice, com seleção múltipla (resto em cinza; cards = votos das cidades das faixas). Cidades: filtro "Virou" (225). Recálculo independente APROVADO.
   - ⏳ Bairros e voto por escolaridade avaliados: viáveis só por seção, após o 2º turno sair nos dados abertos.
+  - ✅ Revisão no celular (320–768 px): dica abre no toque, mapa de calor legível, filtros 2 por linha, rótulos cortados corrigidos.
