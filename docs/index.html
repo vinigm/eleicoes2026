@@ -706,7 +706,21 @@ svg text { fill: var(--tinta-2); font-family: inherit; }
 }
 /* Dispersão "índice × voto": um painel por região, mesma escala em todos. */
 .grade-dispersao { display: grid; gap: 20px; margin-top: 12px; }
-.painel-dispersao h4 { font-size: 15px; margin: 0; }
+.painel-dispersao h4 { font-size: 17px; margin: 0; }
+.cabecalho-dispersao { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.cartoes-resultado-painel { display: flex; gap: 6px; }
+.cartao-resultado-painel {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid;
+  border-radius: 8px;
+}
+.cartao-resultado-painel strong { font-size: 18px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.nome-resultado-painel { font-size: 12px; font-weight: 600; }
+.cartao-resultado-lula { background: var(--fundo-lula); border-color: var(--cor-lula); color: var(--titulo-lula); }
+.cartao-resultado-flavio { background: var(--fundo-flavio); border-color: var(--cor-flavio); color: var(--titulo-flavio); }
 .resumo-dispersao { font-size: 12.5px; line-height: 1.5; color: var(--tinta-2); margin: 2px 0 6px; min-height: 3em; }
 #controles-calor, #controles-dispersao { align-items: center; }
 #controles-calor .rotulo-controle, #controles-dispersao .rotulo-controle { margin-right: 4px; }
@@ -1120,14 +1134,7 @@ th button:hover { color: var(--tinta); }
     </div>
     <div class="cartao cartao-comparativo">
       <h3 class="titulo-cartao-grande">Índices sociais × voto, dentro de cada região</h3>
-      <p class="sub-cartao-grande">Cada ponto é uma cidade; o r mede a força da relação entre o índice e o voto (de −1 a +1). Alfabetização e PIB medem acesso a estudo e renda, não inteligência, e a relação entre cidades não diz como votou cada eleitor.</p>
       <div class="controles" id="controles-dispersao" role="group" aria-label="Índice do eixo horizontal" style="margin:16px 0 8px"></div>
-      <ul class="legenda">
-        <li><strong>Eixo vertical:</strong>&nbsp;divisão dos votos do 2º turno, de "só Lula" a "só Flávio"</li>
-        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-flavio);box-shadow:inset 0 0 0 1px var(--cor-flavio)"></span>Faixa azul: cidades onde Flávio venceu</li>
-        <li><span class="amostra amostra-quadrada" style="background:var(--fundo-lula);box-shadow:inset 0 0 0 1px var(--cor-lula)"></span>Faixa vermelha: cidades onde Lula venceu</li>
-        <li><span class="amostra" style="background:var(--tinta-2)"></span>Cada ponto é uma cidade</li>
-      </ul>
       <div class="grade-dispersao" id="grafico-dispersao"></div>
     </div>
     <div class="cartao">
@@ -5419,7 +5426,31 @@ function renderizarControlesDispersao() {
   }
 }
 
-function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
+function criarCartoesResultadoPainel(pctLula) {
+  // Big numbers do 2º turno ao lado do nome do painel: Lula x% e Flávio y% (resultado oficial).
+  const cartoes = document.createElement("div");
+  cartoes.className = "cartoes-resultado-painel";
+  const candidatos = [
+    { nome: "Lula", classe: "cartao-resultado-lula", percentual: pctLula },
+    { nome: "Flávio", classe: "cartao-resultado-flavio", percentual: 100 - pctLula },
+  ];
+  for (const candidato of candidatos) {
+    const cartao = document.createElement("div");
+    cartao.className = "cartao-resultado-painel " + candidato.classe;
+    const nome = document.createElement("span");
+    nome.className = "nome-resultado-painel";
+    nome.textContent = candidato.nome;
+    cartao.appendChild(nome);
+    const valor = document.createElement("strong");
+    // Duas casas: com uma, o Norte (50,01% × 49,99%) apareceria como empate.
+    valor.textContent = formatarPercentual(candidato.percentual, 2);
+    cartao.appendChild(valor);
+    cartoes.appendChild(cartao);
+  }
+  return cartoes;
+}
+
+function criarPainelDispersao(nomePainel, cidades, indicador, largura, pctLulaPainel) {
   const painel = document.createElement("div");
   painel.className = "painel-dispersao";
   const pontos = [];
@@ -5432,9 +5463,13 @@ function criarPainelDispersao(nomePainel, cidades, indicador, largura) {
   }
   const regressao = calcularRegressao(pontos);
 
+  const cabecalho = document.createElement("div");
+  cabecalho.className = "cabecalho-dispersao";
   const titulo = document.createElement("h4");
   titulo.textContent = nomePainel;
-  painel.appendChild(titulo);
+  cabecalho.appendChild(titulo);
+  cabecalho.appendChild(criarCartoesResultadoPainel(pctLulaPainel));
+  painel.appendChild(cabecalho);
   const resumo = document.createElement("p");
   resumo.className = "resumo-dispersao";
   if (regressao) {
@@ -5564,12 +5599,17 @@ function renderizarDispersao() {
   const larguraPainel = Math.floor((larguraConteiner - 20 * (colunas - 1)) / colunas);
   conteiner.style.gridTemplateColumns = "repeat(" + colunas + ", minmax(0, 1fr))";
   regressoesDispersao = {};
-  const paineis = [{ nome: "Brasil", cidades: cidades }];
+  // Resultado oficial do 2º turno de cada painel (Brasil com exterior, como no resumo do topo).
+  const paineis = [{ nome: "Brasil", cidades: cidades, pctLula: DADOS.brasil.pct_lula_2t }];
   for (const nomeRegiao of REGIOES_PERFIL) {
-    paineis.push({ nome: nomeRegiao, cidades: cidades.filter(function (cidade) { return regiaoDaUf(cidade.uf) === nomeRegiao; }) });
+    paineis.push({
+      nome: nomeRegiao,
+      cidades: cidades.filter(function (cidade) { return regiaoDaUf(cidade.uf) === nomeRegiao; }),
+      pctLula: buscarRegiaoPorNome(nomeRegiao).pct_lula_2t,
+    });
   }
   for (const definicao of paineis) {
-    const resultado = criarPainelDispersao(definicao.nome, definicao.cidades, indicadorDispersaoAtual, larguraPainel);
+    const resultado = criarPainelDispersao(definicao.nome, definicao.cidades, indicadorDispersaoAtual, larguraPainel, definicao.pctLula);
     regressoesDispersao[definicao.nome] = resultado.regressao;
     conteiner.appendChild(resultado.painel);
   }

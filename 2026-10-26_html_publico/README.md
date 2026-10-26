@@ -141,6 +141,8 @@ Criado em 26/10/2026. Pasta datada: o gerador é regenerável; o contexto abaixo
       - Antes, a cor do ponto era o vencedor e só repetia a altura. Parecia um padrão sem ser (dúvida do Vinicius em 26/10/2026).
       - A legenda explica o eixo vertical (divisão dos votos do 2º turno) e as faixas.
     - Índice no eixo x: alfabetização (Censo 2022) ou PIB per capita (2023, escala log). Fonte: `2026-10-26_indicadores_ibge/`.
+    - Ao lado do nome de cada painel, a pedido do Vinicius, há dois cards com o resultado oficial do 2º turno: Lula x% e Flávio y%, com 2 casas (o Norte deu 50,01 × 49,99). O Brasil inclui o exterior, como no resumo do topo.
+    - A legenda e o parágrafo do cartão saíram a pedido do Vinicius. O aviso "acesso a estudo e renda, não inteligência; relação entre cidades, não entre eleitores" segue em `2026-10-26_indicadores_ibge/README.md`.
     - Cada painel mostra o r de Pearson (cada cidade pesa igual; o PIB entra em log10).
       - A reta de tendência saiu a pedido do Vinicius ("não gostei").
       - O eixo vertical é simétrico ("só Lula", "Lula 75%", "empate", "Flávio 75%", "só Flávio") para não sugerir que mais alto vale mais.
