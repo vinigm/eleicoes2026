@@ -31,12 +31,23 @@ CAMINHO_INDICADORES_UF = PASTA_LEITURA / "indicadores_uf.csv"
 CAMINHO_TRANSFERENCIAS = (
     RAIZ_PROJETO / "2026-10-26_inferencia_ecologica" / "transferencias.csv"
 )
+CAMINHO_TRANSFERENCIAS_UF = (
+    RAIZ_PROJETO / "2026-10-26_migracao_por_uf" / "transferencias_uf.csv"
+)
+CAMINHO_CURVA_VALIDACAO_UF = (
+    RAIZ_PROJETO / "2026-10-26_migracao_por_uf" / "curva_validacao_cruzada.csv"
+)
+# Cobertura empírica dos IC 95% por estado no teste sintético da implementação B
+# (`2026-10-26_migracao_por_uf_reimplementacao/teste_sintetico.md`). Não há CSV com
+# esse número; fica aqui, com a fonte, para não ser digitado no HTML.
+COBERTURA_IC_UF_TESTE_PCT = 87.7
 CAMINHO_BASE_MUNICIPIOS = (
     RAIZ_PROJETO / "dados" / "processados" / "presidente_municipio_turnos.parquet"
 )
 CAMINHO_SAIDA = RAIZ_PROJETO / "docs" / "dados.js"
 
 COLUNA_VOTOS_CAIADO_1T = "votos_1t_55"
+PREFIXO_VOTOS_1T = "votos_1t_"
 
 NOME_VARIAVEL_JS = "DADOS_ELEICAO"
 
@@ -298,6 +309,78 @@ def calcular_pct_caiado_por_uf(caminho_base: pathlib.Path) -> dict[str, float]:
     return pct_caiado_por_uf
 
 
+def calcular_votos_1t_por_candidato(
+    caminho_base: pathlib.Path,
+    validos_1t_oficial: int,
+) -> dict[str, int]:
+    """Soma os votos de cada candidato do 1º turno no Brasil e no exterior.
+
+    Alimenta o resultado nacional do 1º turno na página, que mostra os 12
+    candidatos (os menores agrupados no HTML). Inclui o exterior para bater
+    com o total oficial divulgado pelo TSE.
+
+    Args:
+        caminho_base: Parquet da base por município.
+        validos_1t_oficial: Votos válidos do 1º turno já usados na página,
+            para garantir que a soma dos candidatos feche com eles.
+
+    Returns:
+        Dicionário número do candidato (texto) → votos no 1º turno.
+
+    Raises:
+        FileNotFoundError: Se o parquet não existir.
+        ValueError: Se a soma dos candidatos não fechar com os válidos.
+    """
+    if not caminho_base.exists():
+        raise FileNotFoundError(f"Base por município não encontrada: {caminho_base}")
+
+    base_municipios = pd.read_parquet(caminho_base)
+    colunas_candidatos: list[str] = []
+    for nome_coluna in base_municipios.columns:
+        if nome_coluna.startswith(PREFIXO_VOTOS_1T):
+            colunas_candidatos.append(nome_coluna)
+
+    votos_por_candidato: dict[str, int] = {}
+    for nome_coluna in colunas_candidatos:
+        numero_candidato = nome_coluna.removeprefix(PREFIXO_VOTOS_1T)
+        votos_por_candidato[numero_candidato] = int(base_municipios[nome_coluna].sum())
+
+    soma_candidatos = sum(votos_por_candidato.values())
+    if soma_candidatos != validos_1t_oficial:
+        raise ValueError(
+            "Votos dos candidatos do 1º turno não fecham com os válidos: "
+            f"{soma_candidatos} ≠ {validos_1t_oficial}."
+        )
+
+    LOGGER.info(
+        "Votos do 1º turno somados para %d candidatos (%d válidos).",
+        len(votos_por_candidato),
+        soma_candidatos,
+    )
+    return votos_por_candidato
+
+
+def contar_municipios(caminho_base: pathlib.Path) -> dict[str, int]:
+    """Conta municípios brasileiros e cidades do exterior na base.
+
+    Args:
+        caminho_base: Parquet da base por município.
+
+    Returns:
+        Dicionário com `municipios_brasil` e `cidades_exterior`.
+
+    Raises:
+        FileNotFoundError: Se o parquet não existir.
+    """
+    if not caminho_base.exists():
+        raise FileNotFoundError(f"Base por município não encontrada: {caminho_base}")
+
+    base_municipios = pd.read_parquet(caminho_base, columns=["fl_exterior"])
+    cidades_exterior = int(base_municipios["fl_exterior"].sum())
+    municipios_brasil = int(len(base_municipios) - cidades_exterior)
+    return {"municipios_brasil": municipios_brasil, "cidades_exterior": cidades_exterior}
+
+
 def calcular_diagnosticos_regiao(caminho_base: pathlib.Path) -> list[dict[str, object]]:
     """Calcula, por região, o quanto a estimativa regional de migração é frágil.
 
@@ -395,40 +478,157 @@ def montar_lista_ufs(
     return ufs
 
 
-def montar_migracao(transferencias: pd.DataFrame) -> list[dict[str, object]]:
-    """Converte a tabela longa de transferências em lista de registros.
+def arredondar_ou_nulo(valor: object, casas: int) -> float | None:
+    """Arredonda um número; célula vazia (NaN) vira `None` (→ `null` no JS).
 
-    Mantém todas as especificações (E1 principal, E2 e E3 de sensibilidade)
-    para que o HTML mostre a principal e cite as outras na metodologia.
+    As versões de sensibilidade por estado não têm intervalo de confiança.
+    Sem esta conversão, o NaN viraria o literal `NaN` no JavaScript e
+    apareceria como "NaN%" na página.
 
     Args:
-        transferencias: Tabela longa no formato da especificação.
+        valor: Valor lido do CSV.
+        casas: Casas decimais.
 
     Returns:
-        Lista de registros com β, IC 95% e votos estimados.
+        Valor arredondado, ou `None` se a célula estiver vazia.
+    """
+    if pd.isna(valor):
+        return None
+    return round(float(valor), casas)
+
+
+def inteiro_ou_nulo(valor: object) -> int | None:
+    """Converte um número em inteiro arredondado; célula vazia vira `None`.
+
+    Args:
+        valor: Valor lido do CSV.
+
+    Returns:
+        Inteiro arredondado, ou `None` se a célula estiver vazia.
+    """
+    if pd.isna(valor):
+        return None
+    return int(round(float(valor)))
+
+
+def montar_migracao(
+    transferencias: pd.DataFrame,
+    coluna_recorte: str,
+) -> list[dict[str, object]]:
+    """Converte uma tabela longa de transferências em lista de registros.
+
+    Serve às duas fontes: a regional (E1 principal, E2 e E3 de sensibilidade,
+    recorte na coluna `regiao`) e a por estado (UF, UF_SOZINHO e UF_REGIAO,
+    recorte na coluna `uf`). Na página, as duas ficam na mesma lista, com o
+    recorte (região ou sigla da UF) no campo `regiao`.
+
+    Args:
+        transferencias: Tabela longa no formato das especificações.
+        coluna_recorte: Coluna que identifica o recorte (`regiao` ou `uf`).
+
+    Returns:
+        Lista de registros com β, IC 95% (ou `None`) e votos estimados.
     """
     registros: list[dict[str, object]] = []
 
     for _, linha_transferencia in transferencias.iterrows():
         registro = {
             "especificacao": linha_transferencia["especificacao"],
-            "regiao": linha_transferencia["regiao"],
+            "regiao": linha_transferencia[coluna_recorte],
             "origem": linha_transferencia["origem_1t"],
             "destino": linha_transferencia["destino_2t"],
             "beta": round(float(linha_transferencia["beta"]), CASAS_DECIMAIS_PERCENTUAL),
-            "beta_ic_inf": round(
-                float(linha_transferencia["beta_ic_inf"]), CASAS_DECIMAIS_PERCENTUAL
+            "beta_ic_inf": arredondar_ou_nulo(
+                linha_transferencia["beta_ic_inf"], CASAS_DECIMAIS_PERCENTUAL
             ),
-            "beta_ic_sup": round(
-                float(linha_transferencia["beta_ic_sup"]), CASAS_DECIMAIS_PERCENTUAL
+            "beta_ic_sup": arredondar_ou_nulo(
+                linha_transferencia["beta_ic_sup"], CASAS_DECIMAIS_PERCENTUAL
             ),
             "votos": int(round(float(linha_transferencia["votos"]))),
-            "votos_ic_inf": int(round(float(linha_transferencia["votos_ic_inf"]))),
-            "votos_ic_sup": int(round(float(linha_transferencia["votos_ic_sup"]))),
+            "votos_ic_inf": inteiro_ou_nulo(linha_transferencia["votos_ic_inf"]),
+            "votos_ic_sup": inteiro_ou_nulo(linha_transferencia["votos_ic_sup"]),
         }
         registros.append(registro)
 
     return registros
+
+
+def resumir_validacao_uf(caminho_curva: pathlib.Path) -> dict[str, float]:
+    """Resume a validação cruzada do modelo por estado para a metodologia.
+
+    Args:
+        caminho_curva: CSV da curva de erro por κ (implementação A).
+
+    Returns:
+        κ escolhido, razão entre o erro de "só a região" e o do κ escolhido,
+        e a cobertura dos intervalos no teste sintético.
+
+    Raises:
+        FileNotFoundError: Se a curva não existir.
+        ValueError: Se a curva não tiver a linha de κ infinito.
+    """
+    curva = ler_csv_obrigatorio(caminho_curva)
+    curva["kappa_texto"] = curva["kappa"].astype(str)
+    mascara_infinito = curva["kappa_texto"] == "inf"
+    if mascara_infinito.sum() != 1:
+        raise ValueError("A curva de validação precisa ter uma linha com κ = inf.")
+
+    curva_finita = curva[~mascara_infinito]
+    posicao_minimo = curva_finita["erro_validacao"].astype(float).idxmin()
+    erro_minimo = float(curva_finita.loc[posicao_minimo, "erro_validacao"])
+    kappa_escolhido = float(curva_finita.loc[posicao_minimo, "kappa"])
+    erro_so_regiao = float(curva.loc[mascara_infinito, "erro_validacao"].iloc[0])
+
+    return {
+        "kappa_escolhido": kappa_escolhido,
+        "razao_erro_so_regiao": round(erro_so_regiao / erro_minimo, 2),
+        "cobertura_ic_teste_pct": COBERTURA_IC_UF_TESTE_PCT,
+    }
+
+
+def montar_diagnosticos_uf(
+    transferencias_uf: pd.DataFrame,
+    caminho_base: pathlib.Path,
+) -> dict[str, dict[str, object]]:
+    """Reúne, por estado, os números do aviso de instabilidade da página.
+
+    Tamanho efetivo, κ e peso da região vêm da versão principal (`UF`) da
+    estimativa por estado; o número de municípios vem da base.
+
+    Args:
+        transferencias_uf: Tabela longa da estimativa por estado.
+        caminho_base: Parquet da base por município.
+
+    Returns:
+        Dicionário sigla → {municipios, n_efetivo, kappa, peso_regiao_pct}.
+
+    Raises:
+        ValueError: Se um estado tiver valores de diagnóstico divergentes
+            entre as próprias linhas.
+    """
+    base_municipios = pd.read_parquet(caminho_base, columns=["sg_uf", "fl_exterior"])
+    mascara_brasil = ~base_municipios["fl_exterior"]
+    municipios_por_uf = base_municipios[mascara_brasil].groupby("sg_uf").size()
+
+    mascara_principal = transferencias_uf["especificacao"] == "UF"
+    linhas_principais = transferencias_uf[mascara_principal]
+    colunas_diagnostico = ["n_efetivo", "kappa", "peso_regiao_pct"]
+
+    diagnosticos: dict[str, dict[str, object]] = {}
+    for sigla_uf, linhas_uf in linhas_principais.groupby("uf"):
+        valores_unicos = linhas_uf[colunas_diagnostico].drop_duplicates()
+        if len(valores_unicos) != 1:
+            raise ValueError(f"Diagnóstico inconsistente entre linhas do estado {sigla_uf}.")
+        primeira_linha = valores_unicos.iloc[0]
+        diagnosticos[str(sigla_uf)] = {
+            "municipios": int(municipios_por_uf[sigla_uf]),
+            "n_efetivo": round(float(primeira_linha["n_efetivo"]), 1),
+            "kappa": round(float(primeira_linha["kappa"]), 2),
+            "peso_regiao_pct": round(float(primeira_linha["peso_regiao_pct"]), 1),
+        }
+
+    LOGGER.info("Diagnósticos por estado montados para %d estados.", len(diagnosticos))
+    return diagnosticos
 
 
 def gravar_dados_js(dados_html: dict[str, object], caminho_saida: pathlib.Path) -> None:
@@ -453,6 +653,8 @@ def gerar_dados_html() -> None:
     indicadores_regiao = ler_csv_obrigatorio(CAMINHO_INDICADORES_REGIAO)
     indicadores_uf = ler_csv_obrigatorio(CAMINHO_INDICADORES_UF)
     transferencias = ler_csv_obrigatorio(CAMINHO_TRANSFERENCIAS)
+    transferencias_uf = ler_csv_obrigatorio(CAMINHO_TRANSFERENCIAS_UF)
+    validar_colunas(transferencias_uf, ["uf", "n_efetivo", "kappa", "peso_regiao_pct"], "transferencias_uf")
     pct_caiado_por_uf = calcular_pct_caiado_por_uf(CAMINHO_BASE_MUNICIPIOS)
 
     validar_colunas(indicadores_brasil, COLUNAS_INDICADORES, "indicadores_brasil")
@@ -462,17 +664,30 @@ def gerar_dados_html() -> None:
 
     data_geracao = datetime.date.today().strftime("%d/%m/%Y")
 
+    bloco_brasil = montar_bloco_brasil(indicadores_brasil)
+    bloco_brasil["votos_1t_por_candidato"] = calcular_votos_1t_por_candidato(
+        CAMINHO_BASE_MUNICIPIOS,
+        int(bloco_brasil["validos_1t"]),
+    )
+
+    contagem_municipios = contar_municipios(CAMINHO_BASE_MUNICIPIOS)
+
     dados_html = {
         "meta": {
             "data_geracao": data_geracao,
             "eleicao": "Presidente 2026",
             "data_1t": "04/10/2026",
             "data_2t": "25/10/2026",
+            "municipios_brasil": contagem_municipios["municipios_brasil"],
+            "cidades_exterior": contagem_municipios["cidades_exterior"],
         },
-        "brasil": montar_bloco_brasil(indicadores_brasil),
+        "brasil": bloco_brasil,
         "regioes": montar_lista_regioes(indicadores_regiao),
         "ufs": montar_lista_ufs(indicadores_uf, pct_caiado_por_uf),
-        "migracao": montar_migracao(transferencias),
+        "migracao": montar_migracao(transferencias, "regiao")
+        + montar_migracao(transferencias_uf, "uf"),
+        "diagnosticos_uf": montar_diagnosticos_uf(transferencias_uf, CAMINHO_BASE_MUNICIPIOS),
+        "validacao_uf": resumir_validacao_uf(CAMINHO_CURVA_VALIDACAO_UF),
         "diagnosticos_regiao": calcular_diagnosticos_regiao(CAMINHO_BASE_MUNICIPIOS),
     }
 

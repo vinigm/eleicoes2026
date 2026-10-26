@@ -22,8 +22,15 @@ Atualizado em: 26/10/2026 · Par deste doc: [PENDENCIAS.md](PENDENCIAS.md) · Í
     - Lula recebeu 3,7–4,3 mi dos eliminados e 5,9–6,6 mi de quem anulou ou não votou no 1º turno;
     - o bloco Caiado + Cury + Renan se dividiu 43–46% Lula, 35–38% Flávio e 15–20% branco/nulo.
 
-- **HTML público pronto localmente** — `docs/index.html` + `docs/dados.js`, gerado por `2026-10-26_html_publico/`.
+- **Migração por estado** — `2026-10-26_migracao_por_uf/` (método em `ESPECIFICACAO.md`, veredito em `COMPARACAO_A_B.md`).
+  - Cada estado é estimado com os próprios municípios mais os demais estados da região, que entram como se fossem κ = 4 municípios (κ escolhido por validação cruzada).
+  - Duas implementações (A e B) com estimativas idênticas nas 2.592 linhas.
+  - **Frágil:** 54% das células caem na fronteira 0 ou 1; os IC 95% cobrem só ~88% em teste; o DF é 80% região.
+
+- **HTML público (no ar)** — `docs/index.html` + `docs/dados.js`, gerado por `2026-10-26_html_publico/`.
   - Verificado no Chrome headless: desktop, celular e modo escuro, sem erro no console.
+  - Layout (26/10/2026): cartões "1º × 2º turno" lado a lado com variação ▲▼, botão votos válidos ↔ todo o eleitorado, Sankey com filtro Brasil/região/estado. A página não tem mais seção de metodologia (fica no repositório).
+  - Sem rolagem lateral em 1.440 a 390 px (medido).
   - **No ar em https://vinigm.github.io/eleicoes2026/** (GitHub Pages, branch `main`, pasta `/docs`, desde 26/10/2026).
   - Atualizar a página = regenerar `docs/`, fazer commit e push; o Pages republica sozinho.
 

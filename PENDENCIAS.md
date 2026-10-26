@@ -6,9 +6,15 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
 
 ## Vinicius (decide)
 
-- ⏳ Revisar o HTML (`docs/index.html`, abre direto no navegador) antes de publicar.
-
 - ✅ Migração por região no HTML: incluída com aviso forte de instabilidade (26/10/2026, Vinicius).
+
+- ✅ Redesenho das visualizações (26/10/2026): resultado, saldo, regiões, estados, Sankey, sensibilidade, variação ▲▼, base eleitorado, poda de texto.
+
+- ✅ Abstenção e branco/nulo: botão "votos válidos ↔ todo o eleitorado" nos cartões de resultado, regiões e estados (26/10/2026).
+
+- ✅ Poda de texto e metodologia fora da página; página mais larga, sem rolagem lateral (26/10/2026). Metodologia segue no repositório.
+
+- ✅ Redesenho + migração por estado enviados ao GitHub e publicados (26/10/2026).
 
 - ✅ GitHub Pages ativo (branch `main`, pasta `/docs`): página no ar em https://vinigm.github.io/eleicoes2026/ (26/10/2026).
 
@@ -54,3 +60,5 @@ Atualizado em: 26/10/2026 · Par deste doc: [ESTADO.md](ESTADO.md) · Status: �
   - ✅ HTML: seletor de região na migração, com aviso de instabilidade por região e link `#regiao=`.
   - ✅ Primeiro push para o GitHub (52 arquivos + README).
   - ✅ GitHub Pages ativado; página publicada idêntica à local e renderizando sem erro.
+  - ✅ Migração por estado (κ = 4, A e B idênticas) + Sankey com filtro Brasil/região/estado.
+  - ✅ Página redesenhada (lado a lado, ▲▼, base eleitorado, sem metodologia) enviada ao GitHub.

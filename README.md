@@ -27,6 +27,8 @@ Como o voto para presidente mudou do 1º turno (04/10/2026) para o 2º turno (25
 | [`2026-10-26_primeira_leitura_regiao_uf/`](2026-10-26_primeira_leitura_regiao_uf/) | Indicadores por Brasil, região e UF |
 | [`2026-10-26_inferencia_ecologica/`](2026-10-26_inferencia_ecologica/) | Migração de votos: especificação, implementação e comparação entre duas versões |
 | [`2026-10-26_inferencia_ecologica_reimplementacao/`](2026-10-26_inferencia_ecologica_reimplementacao/) | Segunda implementação, escrita de forma independente para conferência |
+| [`2026-10-26_migracao_por_uf/`](2026-10-26_migracao_por_uf/) | Migração de votos por estado, puxada para o padrão da região |
+| [`2026-10-26_migracao_por_uf_reimplementacao/`](2026-10-26_migracao_por_uf_reimplementacao/) | Segunda implementação da migração por estado, para conferência |
 | [`2026-10-26_html_publico/`](2026-10-26_html_publico/) | Gerador dos dados da página |
 | [`docs/`](docs/) | A página |
 
